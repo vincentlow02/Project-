@@ -1,0 +1,110 @@
+/* Basic Reset and Font Setup */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    height: 100%;
+    overflow: hidden; /* Hide the main scrollbar */
+}
+
+/* Scroll Container */
+.container {
+    /* This enables vertical scroll snapping */
+    scroll-snap-type: y mandatory; 
+    overflow-y: scroll;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Page Section Styling */
+.page {
+    height: 100vh; /* Each section takes up the full screen height */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center;    /* Center content horizontally */
+    text-align: center;
+    position: relative;
+    /* This tells the container where to snap to */
+    scroll-snap-align: start; 
+}
+
+/* Text Content Styling */
+.content h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.content p {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Scroll Indicator Styling */
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #888;
+}
+
+.scroll-indicator span {
+    margin-top: 15px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.scroll-indicator .arrow {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    position: relative;
+    animation: bounce 2s infinite; /* Add bouncing animation */
+}
+
+/* Creating the arrow shape inside the circle */
+.scroll-indicator .arrow::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-right: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* Bouncing Animation for the Arrow */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Audio Icon Styling */
+.audio-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    color: #888;
+}
+
+.audio-icon:hover {
+    color: #333;
+}
