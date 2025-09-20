@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="progressBar"></div>
 
-    <main class="container">
+    <main class="container" id="mainContent">
         <section class="page" id="page1">
             <div class="content">
                 <h1>旅は真の知識の大きな泉である</h1>
@@ -19,17 +20,72 @@
                 <span>Scroll to continue</span>
             </div>
             <div class="audio-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
             </div>
         </section>
 
         <section class="page" id="page2">
-            <div class="content">
+            <div class="content fade-in-section">
                 <h1>目的地というものは決して場所ではなく、<br>物事の新しい見方である。</h1>
                 <p>ヘンリー・ミラー</p>
             </div>
         </section>
+
+        <section class="page" id="page3">
+            <div class="content fade-in-section">
+                <h1>A New Chapter</h1>
+                <p>Your journey continues.</p>
+                
+                <div id="enterButton" style="margin-top: 40px;">
+                    <span>Enter</span>
+                </div>
+                <p class="subtitle">Click enter to continue</p>
+            </div>
+        </section>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+            const progressBar = document.getElementById('progressBar');
+            
+            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator, #page1 .audio-icon');
+            function handlePage1Fade() {
+                const scrollTop = container.scrollTop;
+                const pageHeight = container.clientHeight;
+                const opacity = Math.max(0, 1 - (scrollTop / (pageHeight * 0.5)));
+                page1Elements.forEach(el => {
+                    el.style.opacity = opacity;
+                });
+            }
+
+            function updateProgressBar() {
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight - container.clientHeight;
+                const scrollProgress = (scrollTop / scrollHeight) * 100;
+                progressBar.style.height = scrollProgress + '%';
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const fadeInSections = document.querySelectorAll('.fade-in-section');
+            fadeInSections.forEach(section => observer.observe(section));
+
+            container.addEventListener('scroll', () => {
+                window.requestAnimationFrame(() => {
+                    handlePage1Fade();
+                    updateProgressBar();
+                });
+            });
+        });
+    </script>
 </body>
 </html>
