@@ -15,15 +15,13 @@
                 <h1>旅は真の知識の大きな泉である</h1>
                 <p>ベンジャミン・ディズレーリ</p>
             </div>
-
             <div class="scroll-indicator">
                 <div class="icon-container">
                     <img src="assets/arrow-down.svg" alt="Scroll down arrow">
                 </div>
                 <span>Scroll to continue</span>
             </div>
-
-             <div class="audio-icon">
+            <div class="audio-icon">
                 <div class="icon-container">
                     <img id="audioIconImg" src="assets/volume-on.svg" alt="Audio icon">
                 </div>
@@ -41,8 +39,7 @@
             <div class="content fade-in-section">
                 <h1>A New Chapter</h1>
                 <p>Your journey continues.</p>
-                
-                <div id="enterButton" style="margin-top: 40px;">
+                <div id="enterButton">
                     <span>Enter</span>
                 </div>
                 <p class="subtitle">Click enter to continue</p>
@@ -50,33 +47,57 @@
         </section>
     </main>
 
+    <section class="page hidden" id="searchInterface">
+        <div class="top-left-toolbar">
+            <div class="icon-button"></div>
+            <div class="icon-button active"></div>
+            <div class="icon-button"></div>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Placeholder">
+            <span class="mic-icon">🎤</span>
+        </div>
+        <div class="bottom-right-button"></div>
+    </section>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Add this new block inside your DOMContentLoaded listener
-
-            // --- Logic for Audio Icon Toggle ---
-            const audioIconContainer = document.querySelector('.audio-icon');
-            const audioIconImg = document.getElementById('audioIconImg');
-            let isMuted = false; // Initial state: sound is on
-
-            audioIconContainer.addEventListener('click', () => {
-                // Invert the isMuted state on each click
-                isMuted = !isMuted;
-
-                if (isMuted) {
-                    // If muted, show the 'off' icon
-                    audioIconImg.src = 'assets/volume-off.svg';
-                    // (Future code to pause audio would go here)
-                } else {
-                    // If not muted, show the 'on' icon
-                    audioIconImg.src = 'assets/volume-on.svg';
-                    // (Future code to play audio would go here)
-                }
-            });
+            // --- Element Selections ---
             const container = document.querySelector('.container');
             const progressBar = document.getElementById('progressBar');
+            const enterButton = document.getElementById('enterButton');
+            const mainContent = document.getElementById('mainContent');
+            const searchInterface = document.getElementById('searchInterface');
+            const audioIconContainer = document.querySelector('.audio-icon');
+            const audioIconImg = document.getElementById('audioIconImg');
             
-            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator, #page1 .audio-icon');
+            // --- State Variables ---
+            let isMuted = false;
+
+            // --- Logic for "Enter" button to show Search Interface ---
+            enterButton.addEventListener('click', () => {
+                mainContent.classList.add('fade-out');
+                progressBar.style.display = 'none';
+                setTimeout(() => {
+                    mainContent.style.display = 'none';
+                    searchInterface.classList.remove('hidden');
+                }, 800);
+            });
+
+            // --- Logic for Audio Icon Toggle ---
+            audioIconContainer.addEventListener('click', () => {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    audioIconImg.src = 'assets/volume-off.svg';
+                } else {
+                    audioIconImg.src = 'assets/volume-on.svg';
+                }
+            });
+
+            // --- Logic for Page 1 Fade-out on Scroll ---
+            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator');
             function handlePage1Fade() {
                 const scrollTop = container.scrollTop;
                 const pageHeight = container.clientHeight;
@@ -86,6 +107,7 @@
                 });
             }
 
+            // --- Logic for Progress Bar Update ---
             function updateProgressBar() {
                 const scrollTop = container.scrollTop;
                 const scrollHeight = container.scrollHeight - container.clientHeight;
@@ -93,6 +115,7 @@
                 progressBar.style.height = scrollProgress + '%';
             }
 
+            // --- Logic for Fade-in Sections (Intersection Observer) ---
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -106,6 +129,7 @@
             const fadeInSections = document.querySelectorAll('.fade-in-section');
             fadeInSections.forEach(section => observer.observe(section));
 
+            // --- Main Scroll Event Listener ---
             container.addEventListener('scroll', () => {
                 window.requestAnimationFrame(() => {
                     handlePage1Fade();
