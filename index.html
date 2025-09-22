@@ -48,17 +48,25 @@
     </main>
 
     <section class="page hidden" id="searchInterface">
-        <div class="top-left-toolbar">
-            <div class="icon-button"></div>
-            <div class="icon-button active"></div>
-            <div class="icon-button"></div>
+
+        <div id="sidebar" class="collapsed">
+            <div id="sidebar-toggle">
+                <div class="arrow"></div>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+            </div>
         </div>
+
         <div class="search-bar">
             <span class="search-icon">🔍</span>
             <input type="text" placeholder="Placeholder">
             <span class="mic-icon">🎤</span>
         </div>
         <div class="bottom-right-button"></div>
+
     </section>
 
 
@@ -135,6 +143,12 @@
                     handlePage1Fade();
                     updateProgressBar();
                 });
+            });
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
             });
         });
     </script>

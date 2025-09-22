@@ -199,6 +199,84 @@ html {
     border-color: #333;
     border-width: 2px;
 }
+/* in style.css */
+
+/* --- Search Interface Styles --- */
+
+#searchInterface {
+    justify-content: initial; /* Change alignment for the new layout */
+    align-items: initial;
+    background-color: #f8f8f8;
+}
+
+/* --- New Sidebar Styles --- */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+/* State when the sidebar is collapsed */
+#sidebar.collapsed {
+    width: 80px;
+}
+/* State when the sidebar is expanded */
+#sidebar:not(.collapsed) {
+    width: 250px;
+}
+
+#sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+/* The arrow inside the toggle button */
+.arrow {
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #333;
+    border-right: 2px solid #333;
+    transition: transform 0.4s ease;
+}
+/* Arrow direction when collapsed (points left) */
+#sidebar.collapsed .arrow {
+    transform: rotate(-135deg);
+    margin-left: 3px;
+}
+/* Arrow direction when expanded (points right) */
+#sidebar:not(.collapsed) .arrow {
+    transform: rotate(45deg);
+    margin-right: 3px;
+}
+
+.sidebar-content {
+    transition: opacity 0.3s ease;
+}
+#sidebar.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none; /* Prevents clicking on hidden items */
+}
+
+.sidebar-item {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
 .search-bar {
     position: fixed;
     bottom: 30px;
