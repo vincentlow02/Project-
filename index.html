@@ -15,12 +15,18 @@
                 <h1>旅は真の知識の大きな泉である</h1>
                 <p>ベンジャミン・ディズレーリ</p>
             </div>
+
             <div class="scroll-indicator">
-                <div class="arrow"></div>
+                <div class="icon-container">
+                    <img src="assets/arrow-down.svg" alt="Scroll down arrow">
+                </div>
                 <span>Scroll to continue</span>
             </div>
-            <div class="audio-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+
+             <div class="audio-icon">
+                <div class="icon-container">
+                    <img id="audioIconImg" src="assets/volume-on.svg" alt="Audio icon">
+                </div>
             </div>
         </section>
 
@@ -46,6 +52,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Add this new block inside your DOMContentLoaded listener
+
+            // --- Logic for Audio Icon Toggle ---
+            const audioIconContainer = document.querySelector('.audio-icon');
+            const audioIconImg = document.getElementById('audioIconImg');
+            let isMuted = false; // Initial state: sound is on
+
+            audioIconContainer.addEventListener('click', () => {
+                // Invert the isMuted state on each click
+                isMuted = !isMuted;
+
+                if (isMuted) {
+                    // If muted, show the 'off' icon
+                    audioIconImg.src = 'assets/volume-off.svg';
+                    // (Future code to pause audio would go here)
+                } else {
+                    // If not muted, show the 'on' icon
+                    audioIconImg.src = 'assets/volume-on.svg';
+                    // (Future code to play audio would go here)
+                }
+            });
             const container = document.querySelector('.container');
             const progressBar = document.getElementById('progressBar');
             
