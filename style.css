@@ -206,75 +206,107 @@ html {
 #searchInterface {
     justify-content: initial; /* Change alignment for the new layout */
     align-items: initial;
-    background-color: #f8f8f8;
+    /* background-color: #E2E1E1; */
+    background-color: white;
 }
 
 /* --- New Sidebar Styles --- */
+
+/* --- Main Sidebar Container --- */
 #sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #fff;
-    border-right: 1px solid #e0e0e0;
-    padding: 20px;
-    box-sizing: border-box;
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    position: fixed; /* Keeps the sidebar visible on the screen, even on scroll */
+    top: 0;          /* Aligns it to the top of the viewport */
+    left: 0;         /* Aligns it to the left of the viewport */
+    height: 100%;    /* Makes it span the full height of the screen */
+    background-color: #f7f7f7; /* Sets the sidebar's background color */
+    padding: 15px;   /* Adds some space inside the edges of the sidebar */
+    box-sizing: border-box; /* Ensures padding doesn't add to the total width */
+    display: flex;   /* Enables Flexbox for easy alignment of items */
+    flex-direction: column; /* Stacks the items vertically */
+    gap: 20px;       /* Adds space between the direct children (toggle button and nav list) */
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Creates a smooth animation when the width changes */
 }
-/* State when the sidebar is collapsed */
+
+/* --- Sidebar States --- */
+/* This is the style when the sidebar is collapsed */
 #sidebar.collapsed {
-    width: 80px;
+    width: 80px; /* Sets the narrow width */
 }
-/* State when the sidebar is expanded */
+/* This is the style when the sidebar is expanded (when it DOES NOT have the .collapsed class) */
 #sidebar:not(.collapsed) {
-    width: 250px;
+    width: 120px; /* Sets the wider width */
 }
 
-#sidebar-toggle {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-bottom: 30px;
+/* --- Navigation Items List --- */
+.sidebar-nav {
+    display: flex;          /* Enables Flexbox for the nav items */
+    flex-direction: column; /* Stacks the nav items vertically */
+    gap: 25px;              /* Adds space between each navigation item */
 }
 
-/* The arrow inside the toggle button */
-.arrow {
-    width: 8px;
-    height: 8px;
-    border-top: 2px solid #333;
-    border-right: 2px solid #333;
-    transition: transform 0.4s ease;
-}
-/* Arrow direction when collapsed (points left) */
-#sidebar.collapsed .arrow {
-    transform: rotate(-135deg);
-    margin-left: 3px;
-}
-/* Arrow direction when expanded (points right) */
-#sidebar:not(.collapsed) .arrow {
-    transform: rotate(45deg);
-    margin-right: 3px;
-}
-
-.sidebar-content {
-    transition: opacity 0.3s ease;
-}
-#sidebar.collapsed .sidebar-content {
-    opacity: 0;
-    pointer-events: none; /* Prevents clicking on hidden items */
-}
-
+/* --- Individual Navigation Item --- */
 .sidebar-item {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    margin-bottom: 15px;
+    display: flex;          /* Enables Flexbox for the icon and label */
+    flex-direction: column; /* Stacks the icon on top of the label */
+    align-items: center;    /* Centers the icon and label horizontally */
+    cursor: pointer;        /* Changes the mouse to a pointer on hover */
+}
+
+/* --- Icon Circles --- */
+.sidebar-item .icon {
+    width: 48px;            /* Sets the width of the circle */
+    height: 48px;           /* Sets the height of the circle */
+    border-radius: 50%;     /* This is what makes the container a perfect circle */
+    display: flex;          /* Enables Flexbox to center the image inside */
+    justify-content: center;/* Centers the image horizontally */
+    align-items: center;    /* Centers the image vertically */
+    margin-bottom: 5px;     /* Adds a small space between the icon and the label below it */
+    background-color: #e9e9e9; /* Default background color for the icon circles */
+    transition: background-color 0.2s ease; /* Smoothly animates the background color on hover */
+}
+/* This styles the actual SVG image inside the circle */
+.sidebar-item .icon img {
+    width: 24px;  /* Sets the width of the SVG */
+    height: 24px; /* Sets the height of the SVG */
+}
+
+/* --- Specific Item Styles --- */
+
+/* This targets ONLY the toggle button's icon circle */
+#sidebar-toggle .icon {
+    background-color: white; /* Makes the background see-through */
+    border: 1px solid #ccc;       /* Adds a thin gray border */
+}
+/* This targets ONLY the arrow image inside the toggle button */
+#sidebar-toggle .icon img {
+    transition: transform 0.4s ease; /* Smoothly animates any transformations (like rotation) */
+}
+/* This rotates the arrow when the sidebar is collapsed */
+#sidebar.collapsed #sidebar-toggle .icon img {
+    transform: rotate(180deg); /* Flips the arrow to point the other way */
+}
+
+/* This styles an item that has the ".active" class */
+.sidebar-item.active .icon {
+    background-color: #000; /* Sets the background to black for the active item */
+}
+/* This styles the image inside the active item's icon */
+.sidebar-item.active .icon img {
+    filter: invert(1); /* Inverts the colors of the SVG, turning a black icon white */
+}
+
+/* --- Text Label Styles --- */
+.sidebar-item .label {
+    font-size: 0.75rem;     /* Sets a small font size for the labels */
+    color: #555;            /* Sets a dark gray color for the text */
+    white-space: nowrap;    /* Prevents the text from wrapping to a new line */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smoothly animates the fade and movement */
+}
+/* This hides the labels when the sidebar is collapsed */
+#sidebar.collapsed .label {
+    opacity: 0;             /* Makes the label invisible */
+    transform: scale(0.95); /* A subtle shrink effect for a cleaner animation */
+    pointer-events: none;   /* Prevents the invisible text from being clickable */
 }
 
 .search-bar {
@@ -282,26 +314,39 @@ html {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 400px;
-    height: 50px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 25px;
+    width: 450px;
+    height: 60px;
+    
+    /* Use the empty shape as the background */
+    background-image: url('assets/search-field.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* Use Flexbox to arrange the icons and input */
     display: flex;
     align-items: center;
-    padding: 0 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 0 20px; /* Space from the edges */
+    box-sizing: border-box;
 }
+
 .search-bar input {
-    flex-grow: 1;
+    flex-grow: 1; /* Allows the input to fill the space */
+    width: 100%;
+    height: 100%;
     border: none;
     outline: none;
-    background: none;
+    background: none; /* Make it transparent */
     font-size: 1rem;
-    margin: 0 10px;
+    color: #333;
+    padding: 0 30px; /* Space between icons and text */
 }
-.search-bar .search-icon, .search-bar .mic-icon {
-    color: #888;
+
+/* New style for both icons */
+.search-bar-icon {
+    height: 12px; /* Adjust size as needed */
+    width: 12px;
+    cursor: pointer;
 }
 .bottom-right-button {
     position: fixed;

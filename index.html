@@ -49,21 +49,42 @@
 
     <section class="page hidden" id="searchInterface">
 
-        <div id="sidebar" class="collapsed">
-            <div id="sidebar-toggle">
-                <div class="arrow"></div>
-            </div>
-            <div class="sidebar-content">
-                <div class="sidebar-item"></div>
-                <div class="sidebar-item"></div>
-                <div class="sidebar-item"></div>
+        <div id="sidebar" class="expanded"> <div class="sidebar-item" id="sidebar-toggle">
+                <div class="icon">
+                    <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
+                </div>
+                </div>
+
+            <div class="sidebar-nav">
+                <div class="sidebar-item">
+                    <div class="icon">
+                        <img src="assets/plus.svg" alt="New">
+                    </div>
+                    <span class="label">New Chat</span>
+                </div>
+                <div class="sidebar-item active"> <div class="icon">
+                        <img src="assets/search-icon.svg" alt="Home">
+                    </div>
+                    <span class="label">ホーム</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="icon">
+                        <img src="assets/star.svg" alt="Saved">
+                    </div>
+                    <span class="label">保存</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="icon">
+                        <img src="assets/discover.svg" alt="Discover">
+                    </div>
+                    <span class="label">発見</span>
+                </div>
             </div>
         </div>
-
         <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Placeholder">
-            <span class="mic-icon">🎤</span>
+          
+            <input type="text" placeholder="">
+            <img class="search-bar-icon" src="assets/mic.svg" alt="Voice Search">
         </div>
         <div class="bottom-right-button"></div>
 
