@@ -304,7 +304,7 @@ html {
 }
 /* This hides the labels when the sidebar is collapsed */
 #sidebar.collapsed .label {
-    opacity: 0;             /* Makes the label invisible */
+    opacity: 1;             /* Makes the label invisible */
     transform: scale(0.95); /* A subtle shrink effect for a cleaner animation */
     pointer-events: none;   /* Prevents the invisible text from being clickable */
 }
