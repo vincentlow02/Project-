@@ -210,7 +210,25 @@ html {
     background-color: white;
 }
 
-/* in style.css */
+#page-content {
+    flex-grow: 1; /* Make the content area fill the remaining space */
+    padding: 40px;
+    height: 100vh;
+    box-sizing: border-box;
+
+    /* This makes the margin animate smoothly */
+    transition: margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* When sidebar is collapsed, content margin matches collapsed sidebar width */
+#page-content.sidebar-collapsed {
+    margin-left: 360px; 
+}
+
+/* When sidebar is expanded, content margin matches expanded sidebar width */
+#page-content:not(.sidebar-collapsed) {
+    margin-left: 110px; /* 100px (icon bar) + 260px (content panel) */
+}
 
 /* --- New Sidebar Styles (Two-Column Layout) --- */
 #sidebar {
@@ -309,6 +327,21 @@ html {
     padding: 20px 0; /* Animate padding to prevent text overflow */
     pointer-events: none;
 }
+.widget-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns widget content to the left */
+    gap: 10px;
+    flex-grow: 1;
+    justify-content: center;
+}
+.date { font-size: 1rem; color: #555; }
+.time { font-size: 1rem; font-weight: 200; line-height: 1; letter-spacing: 5px; }
+.weather { display: flex; align-items: center; gap: 10px; flex-direction: column;  }
+.weather-icon { width: 56px; height: 56px; }
+.temperature { font-size: 1rem; font-weight: 300; }
+.location { font-size: 1rem; color: #555; }
+
 
 /* Styles for the content inside the panel */
 .panel-header {
@@ -316,6 +349,10 @@ html {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    
+    /* Add these two lines */
+    border-bottom: 1px solid #e0e0e0; /* Creates the line */
+    padding-bottom: 15px;               /* Adds space below the text */
 }
 .panel-title {
     font-size: 1.1rem;
@@ -323,16 +360,18 @@ html {
 }
 .panel-button {
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     margin-bottom: 30px;
     white-space: nowrap;
+}
+.panel-button img {
+    width: 16px;  /* Adjust this value to make the icon smaller or larger */
+    height: 16px; /* Adjust this value to make the icon smaller or larger */
 }
 .panel-section .subheader {
     font-size: 0.8rem;
@@ -345,7 +384,7 @@ html {
     padding: 0;
     margin: 0;
     text-align: left;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .search-bar {
