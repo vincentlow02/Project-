@@ -210,103 +210,142 @@ html {
     background-color: white;
 }
 
-/* --- New Sidebar Styles --- */
+/* in style.css */
 
-/* --- Main Sidebar Container --- */
+/* --- New Sidebar Styles (Two-Column Layout) --- */
 #sidebar {
-    position: fixed; /* Keeps the sidebar visible on the screen, even on scroll */
-    top: 0;          /* Aligns it to the top of the viewport */
-    left: 0;         /* Aligns it to the left of the viewport */
-    height: 100%;    /* Makes it span the full height of the screen */
-    background-color: #f7f7f7; /* Sets the sidebar's background color */
-    padding: 15px;   /* Adds some space inside the edges of the sidebar */
-    box-sizing: border-box; /* Ensures padding doesn't add to the total width */
-    display: flex;   /* Enables Flexbox for easy alignment of items */
-    flex-direction: column; /* Stacks the items vertically */
-    gap: 20px;       /* Adds space between the direct children (toggle button and nav list) */
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Creates a smooth animation when the width changes */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: transparent;
+    display: flex; /* Arrange icon bar and content panel side-by-side */
 }
 
-/* --- Sidebar States --- */
-/* This is the style when the sidebar is collapsed */
-#sidebar.collapsed {
-    width: 80px; /* Sets the narrow width */
-}
-/* This is the style when the sidebar is expanded (when it DOES NOT have the .collapsed class) */
-#sidebar:not(.collapsed) {
-    width: 120px; /* Sets the wider width */
+/* --- Column 1: Icon Bar --- */
+.sidebar-icon-bar {
+    width: 100px; /* Fixed width for the icon bar */
+    height: 100%;
+    background-color: #f7f7f7;
+    border-right: 1px solid #e0e0e0;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
 }
 
-/* --- Navigation Items List --- */
 .sidebar-nav {
-    display: flex;          /* Enables Flexbox for the nav items */
-    flex-direction: column; /* Stacks the nav items vertically */
-    gap: 25px;              /* Adds space between each navigation item */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
 }
 
-/* --- Individual Navigation Item --- */
 .sidebar-item {
-    display: flex;          /* Enables Flexbox for the icon and label */
-    flex-direction: column; /* Stacks the icon on top of the label */
-    align-items: center;    /* Centers the icon and label horizontally */
-    cursor: pointer;        /* Changes the mouse to a pointer on hover */
+    display: flex;
+    flex-direction: column; /* Stack icon above label */
+    align-items: center;
+    cursor: pointer;
 }
 
-/* --- Icon Circles --- */
 .sidebar-item .icon {
-    width: 48px;            /* Sets the width of the circle */
-    height: 48px;           /* Sets the height of the circle */
-    border-radius: 50%;     /* This is what makes the container a perfect circle */
-    display: flex;          /* Enables Flexbox to center the image inside */
-    justify-content: center;/* Centers the image horizontally */
-    align-items: center;    /* Centers the image vertically */
-    margin-bottom: 5px;     /* Adds a small space between the icon and the label below it */
-    background-color: #e9e9e9; /* Default background color for the icon circles */
-    transition: background-color 0.2s ease; /* Smoothly animates the background color on hover */
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e9e9e9;
+    margin-bottom: 5px;
+    transition: background-color 0.2s ease;
 }
-/* This styles the actual SVG image inside the circle */
 .sidebar-item .icon img {
-    width: 24px;  /* Sets the width of the SVG */
-    height: 24px; /* Sets the height of the SVG */
+    width: 24px;
+    height: 24px;
 }
 
-/* --- Specific Item Styles --- */
-
-/* This targets ONLY the toggle button's icon circle */
 #sidebar-toggle .icon {
-    background-color: white; /* Makes the background see-through */
-    border: 1px solid #ccc;       /* Adds a thin gray border */
+    background-color: transparent;
+    border: 1px solid #ccc;
 }
-/* This targets ONLY the arrow image inside the toggle button */
 #sidebar-toggle .icon img {
-    transition: transform 0.4s ease; /* Smoothly animates any transformations (like rotation) */
+    transition: transform 0.4s ease;
 }
-/* This rotates the arrow when the sidebar is collapsed */
 #sidebar.collapsed #sidebar-toggle .icon img {
-    transform: rotate(180deg); /* Flips the arrow to point the other way */
+    transform: rotate(180deg);
 }
 
-/* This styles an item that has the ".active" class */
 .sidebar-item.active .icon {
-    background-color: #000; /* Sets the background to black for the active item */
+    background-color: #000;
 }
-/* This styles the image inside the active item's icon */
 .sidebar-item.active .icon img {
-    filter: invert(1); /* Inverts the colors of the SVG, turning a black icon white */
+    filter: invert(1);
 }
 
-/* --- Text Label Styles --- */
 .sidebar-item .label {
-    font-size: 0.75rem;     /* Sets a small font size for the labels */
-    color: #555;            /* Sets a dark gray color for the text */
-    white-space: nowrap;    /* Prevents the text from wrapping to a new line */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smoothly animates the fade and movement */
+    font-size: 0.75rem;
+    color: #555;
+    white-space: nowrap;
 }
-/* This hides the labels when the sidebar is collapsed */
-#sidebar.collapsed .label {
-    opacity: 1;             /* Makes the label invisible */
-    transform: scale(0.95); /* A subtle shrink effect for a cleaner animation */
-    pointer-events: none;   /* Prevents the invisible text from being clickable */
+
+/* --- Column 2: Content Panel --- */
+.sidebar-content-panel {
+    width: 260px;
+    height: 100%;
+    background-color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease;
+    overflow: hidden; /* Hide content during transition */
+}
+/* When collapsed, the panel shrinks and fades away */
+#sidebar.collapsed .sidebar-content-panel {
+    width: 0;
+    opacity: 0;
+    padding: 20px 0; /* Animate padding to prevent text overflow */
+    pointer-events: none;
+}
+
+/* Styles for the content inside the panel */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.panel-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.panel-button {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 30px;
+    white-space: nowrap;
+}
+.panel-section .subheader {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+    text-align: left;
+}
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 0.9rem;
 }
 
 .search-bar {

@@ -49,42 +49,62 @@
 
     <section class="page hidden" id="searchInterface">
 
-        <div id="sidebar" class="expanded"> <div class="sidebar-item" id="sidebar-toggle">
-                <div class="icon">
-                    <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
-                </div>
-                </div>
+        <div id="sidebar" class="collapsed">
 
-            <div class="sidebar-nav">
-                <div class="sidebar-item">
+            <div class="sidebar-icon-bar">
+                <div class="sidebar-item" id="sidebar-toggle">
                     <div class="icon">
-                        <img src="assets/plus.svg" alt="New">
+                        <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
                     </div>
-                    <span class="label">New Chat</span>
+                    </div>
+
+                <div class="sidebar-nav">
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/plus.svg" alt="New">
+                        </div>
+                    </div>
+                    <div class="sidebar-item active">
+                        <div class="icon">
+                            <img src="assets/search-icon.svg" alt="Home">
+                        </div>
+                        <span class="label">ホーム</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/star.svg" alt="Saved">
+                        </div>
+                        <span class="label">保存</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/discover.svg" alt="Discover">
+                        </div>
+                        <span class="label">発見</span>
+                    </div>
                 </div>
-                <div class="sidebar-item active"> <div class="icon">
-                        <img src="assets/search-icon.svg" alt="Home">
-                    </div>
-                    <span class="label">ホーム</span>
+            </div>
+
+            <div class="sidebar-content-panel">
+                <div class="panel-header">
+                    <span class="panel-title">ホーム</span>
+                    <img src="assets/pin.svg" alt="Pin">
                 </div>
-                <div class="sidebar-item">
-                    <div class="icon">
-                        <img src="assets/star.svg" alt="Saved">
-                    </div>
-                    <span class="label">保存</span>
+                <div class="panel-button">
+                    <img src="assets/plus.svg" alt="New">
+                    <span>新しいチャット</span>
                 </div>
-                <div class="sidebar-item">
-                    <div class="icon">
-                        <img src="assets/discover.svg" alt="Discover">
-                    </div>
-                    <span class="label">発見</span>
+                <div class="panel-section">
+                    <h3 class="subheader">チャット</h3>
+                    <ul class="chat-list">
+                        <li>海外旅行おすすめ</li>
+                    </ul>
                 </div>
             </div>
         </div>
         <div class="search-bar">
           
-            <input type="text" placeholder="">
-            <img class="search-bar-icon" src="assets/mic.svg" alt="Voice Search">
+            <input type="text" placeholder="気軽に聞く">
         </div>
         <div class="bottom-right-button"></div>
 
