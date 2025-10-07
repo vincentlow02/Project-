@@ -217,7 +217,7 @@ html {
     box-sizing: border-box;
 
     /* This makes the margin animate smoothly */
-    transition: margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* When sidebar is collapsed, content margin matches collapsed sidebar width */
@@ -317,15 +317,56 @@ html {
     padding: 20px;
     box-sizing: border-box;
     border-right: 1px solid #e0e0e0;
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease;
+    transition: width 0.01s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.01s ease, padding 0.01s ease;
     overflow: hidden; /* Hide content during transition */
+    white-space: nowrap; /* Prevents text from wrapping during animation */
 }
+
 /* When collapsed, the panel shrinks and fades away */
 #sidebar.collapsed .sidebar-content-panel {
     width: 0;
     opacity: 0;
     padding: 20px 0; /* Animate padding to prevent text overflow */
     pointer-events: none;
+}
+/* New container for the top-right icons */
+.top-right-nav {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    display: flex; /* Aligns items side-by-side */
+    align-items: center;
+    gap: 15px; /* Space between the two icons */
+    z-index: 50;
+}
+
+/* Style for the new back arrow button */
+#back-arrow-btn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+#back-arrow-btn img {
+    width: 10px;
+    height: 10px;
+}
+
+/* Adjust the old profile icon rule */
+#profile-icon {
+    /* The position property is no longer needed here */
+    width: 50px;
+    height: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+#profile-icon img {
+    width: 100%;
+    height: 100%;
 }
 .widget-container {
     display: flex;
@@ -466,4 +507,38 @@ html {
     30%  { transform: translateY(0); opacity: 1; }
     70%  { transform: translateY(10px); opacity: 0; }
     100% { transform: translateY(-10px); opacity: 0; }
+}
+#appInterface {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* Add this transition for smooth fading */
+    transition: opacity 0.4s ease;
+}
+
+/* --- Profile Page Styles --- */
+/* in style.css */
+
+#profile-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 200;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    
+    /* Set the default position (visible) and the animation properties */
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+}
+
+#profile-page.hidden {
+    /* When hidden, move it down 100% of the viewport height */
+    transform: translateY(100vh);
+    opacity: 0;
+    pointer-events: none;
 }

@@ -103,9 +103,17 @@
             </div>
         </div>
          <main id="page-content">
+             <div class="top-right-nav">
+                <div id="back-arrow-btn">
+                    <img src="assets/arrow-left.svg" alt="Back">
+                </div>
+                <div id="profile-icon">
+                    <img src="assets/avatar.png" alt="View Profile">
+                </div>
+            </div>
             <div class="widget-container">
-                <div class="date">Mon 5</div>
-                <div class="time">9:41</div>
+                <div class="date" id="date-display"></div>
+                <div class="time" id="time-display"></div>
                 <div class="weather">
                     <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
                     <span class="temperature">19°</span>
@@ -114,14 +122,33 @@
             </div>
 
             <div class="search-bar">
-                <input type="text" placeholder="Placeholder">
-                <img class="search-bar-icon" src="assets/mic.svg" alt="Voice Search">
+
+                <input type="text" placeholder="気軽に聞く">
+            </div>
+            
+        </main>
+        <main id="profile-page" class="hidden">
+                <div class="profile-header">
+                    <div class="tabs">
+                        <span class="tab-item active">Profile</span>
+                    </div>
+                    <div id="profile-close-btn">×</div>
+                </div>
+                <div class="profile-content">
+                    <div class="profile-left">
+                        <img class="profile-avatar" src="assets/avatar.png" alt="Alex28">
+                        <h2>Alex28 <span class="verified">[✓ DID Verified]</span></h2>
+                    </div>
+                    <div class="profile-right">
+                        <div class="chart-container">
+                            <img src="assets/radar-chart.png" alt="Statistics Chart">
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
-        <div class="search-bar">
-            <input type="text" placeholder="気軽に聞く">
-        </div>
-        <div class="bottom-right-button"></div>
+       
+        
 
     </section>
 
@@ -211,6 +238,64 @@
                 // ALSO toggle the class on the main content area
                 pageContent.classList.toggle('sidebar-collapsed');
             });
+            // --- Real-Time Clock Logic ---
+            const timeDisplay = document.getElementById('time-display');
+            const dateDisplay = document.getElementById('date-display'); // Get the new date element
+
+            function updateClock() {
+                const now = new Date();
+
+                // --- Update the Date ---
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const dayOfWeek = days[now.getDay()];
+                const dayOfMonth = now.getDate();
+                const dateString = `${dayOfWeek} ${dayOfMonth}`;
+                // Only update the HTML if the date has actually changed
+                if (dateDisplay.textContent !== dateString) {
+                    dateDisplay.textContent = dateString;
+                }
+
+                // --- Update the Time ---
+                const hours = now.getHours();
+                let minutes = now.getMinutes();
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                const timeString = `${hours}:${minutes}`;
+                // Only update the HTML if the time has actually changed
+                if (timeDisplay.textContent !== timeString) {
+                    timeDisplay.textContent = timeString;
+                }
+            }
+
+            // Run the function once on load, then every second
+            updateClock();
+            setInterval(updateClock, 1000);
+            const profileIcon = document.getElementById('profile-icon');
+            const backArrowBtn = document.getElementById('back-arrow-btn'); // Get the new button
+            const profilePage = document.getElementById('profile-page');
+            const profileCloseBtn = document.getElementById('profile-close-btn');
+
+            // A reusable function to open the profile
+            function openProfilePage() {
+                profilePage.classList.remove('hidden');
+            }
+
+            // A reusable function to close the profile
+            function closeProfilePage() {
+                profilePage.classList.add('hidden');
+            }
+
+            // Attach the open function to both buttons
+            if (profileIcon) {
+                profileIcon.addEventListener('click', openProfilePage);
+            }
+            if (backArrowBtn) {
+                backArrowBtn.addEventListener('click', openProfilePage);
+            }
+
+            // Attach the close function to the close button
+            if (profileCloseBtn) {
+                profileCloseBtn.addEventListener('click', closeProfilePage);
+            }
         });
         
     </script>
