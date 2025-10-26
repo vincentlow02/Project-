@@ -215,6 +215,22 @@ html, body {
     letter-spacing: 6px; /* 6px 文字间距 */
 }
 
+/* --- 11. 针对 Page 2 标题的特定字体样式 --- */
+#page2 .content h1 {
+    font-family: "Kozuka Mincho Pro", "Hiragino Mincho ProN", "YuMincho", "游明朝", serif;
+    font-size:43px;
+    font-weight: 400; /* "R" (Regular) 是 400 */
+    line-height: 129%;
+    letter-spacing: 6px;
+}
+
+/* --- 12. 针对 Page 1 和 Page 2 作者姓名的字体样式 --- */
+#page1 .content p,
+#page2 .content p {
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400; /* SF Pro 的常规体 (Regular) 看起来更舒服，你也可以试试 400 */
+}
+
 /* --- 10. Page 1 的 SVG Logo 样式 --- */
 .page1-svg-logo {
     position: absolute; /* 使用绝对定位 */
@@ -234,4 +250,19 @@ html, body {
     /* 为了防止它在手机上太小，或在超大屏幕上太大 */
     min-width: 10px; 
     max-width: 90px;
+}
+
+/* --- 针对 Page 2 的新遮罩样式 --- */
+
+/* 在 Page 2 的视频上添加一个半透明的深色遮罩 */
+#page2::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 40% 透明度的黑色 */
+    z-index: 2; /* 位于视频(1)之上, 内容(3)之下 */
+    pointer-events: none; /* 允许滚动事件穿透遮罩 */
 }
