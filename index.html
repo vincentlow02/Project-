@@ -8,23 +8,29 @@
 </head>
 <body>
     <div id="progressBar"></div>
-
+    
     <main class="container" id="mainContent">
+
         <section class="page" id="page1">
+            <video autoplay muted loop playsinline class="background-video">
+                <source src="herovideopart01.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <img src="weave.svg" alt="Weave Logo" class="page1-svg-logo">
+
             <div class="content">
                 <h1>旅は真の知識の大きな泉である</h1>
                 <p>ベンジャミン・ディズレーリ</p>
             </div>
+
             <div class="scroll-indicator">
-                <div class="icon-container">
-                    <img src="assets/arrow-down.svg" alt="Scroll down arrow">
-                </div>
+                <div class="arrow"></div>
                 <span>Scroll to continue</span>
             </div>
+
             <div class="audio-icon">
-                <div class="icon-container">
-                    <img id="audioIconImg" src="assets/volume-on.svg" alt="Audio icon">
-                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
             </div>
         </section>
 
@@ -34,12 +40,13 @@
                 <p>ヘンリー・ミラー</p>
             </div>
         </section>
-
+        
         <section class="page" id="page3">
             <div class="content fade-in-section">
                 <h1>A New Chapter</h1>
                 <p>Your journey continues.</p>
-                <div id="enterButton">
+                
+                <div id="enterButton" style="margin-top: 40px;">
                     <span>Enter</span>
                 </div>
                 <p class="subtitle">Click enter to continue</p>
@@ -47,148 +54,24 @@
         </section>
     </main>
 
-    <section class="page hidden" id="searchInterface">
-
-        <div id="sidebar" class="collapsed">
-
-            <div class="sidebar-icon-bar">
-                <div class="sidebar-item" id="sidebar-toggle">
-                    <div class="icon">
-                        <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
-                    </div>
-                    </div>
-
-                <div class="sidebar-nav">
-                    <div class="sidebar-item">
-                        <div class="icon">
-                            <img src="assets/plus.svg" alt="New">
-                        </div>
-                    </div>
-                    <div class="sidebar-item active">
-                        <div class="icon">
-                            <img src="assets/search-icon.svg" alt="Home">
-                        </div>
-                        <span class="label">ホーム</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <div class="icon">
-                            <img src="assets/star.svg" alt="Saved">
-                        </div>
-                        <span class="label">保存</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <div class="icon">
-                            <img src="assets/discover.svg" alt="Discover">
-                        </div>
-                        <span class="label">発見</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-content-panel">
-                <div class="panel-header">
-                    <span class="panel-title">ホーム</span>
-                    <img src="assets/pin.svg" alt="Pin">
-                </div>
-                <div class="panel-button">
-                    <img src="assets/plus.svg" alt="New">
-                    <span>新しいチャット</span>
-                </div>
-                <div class="panel-section">
-                    <h3 class="subheader">チャット</h3>
-                    <ul class="chat-list">
-                        <li>海外旅行おすすめ</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-         <main id="page-content">
-             <div class="top-right-nav">
-                <div id="back-arrow-btn">
-                    <img src="assets/arrow-left.svg" alt="Back">
-                </div>
-                <div id="profile-icon">
-                    <img src="assets/avatar.png" alt="View Profile">
-                </div>
-            </div>
-            <div class="widget-container">
-                <div class="date" id="date-display"></div>
-                <div class="time" id="time-display"></div>
-                <div class="weather">
-                    <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
-                    <span class="temperature">19°</span>
-                </div>
-                <div class="location">Tokyo JP</div>
-            </div>
-
-            <div class="search-bar">
-
-                <input type="text" placeholder="気軽に聞く">
-            </div>
-            
-        </main>
-        <main id="profile-page" class="hidden">
-                <div class="profile-header">
-                    <div class="tabs">
-                        <span class="tab-item active">Profile</span>
-                    </div>
-                    <div id="profile-close-btn">×</div>
-                </div>
-                <div class="profile-content">
-                    <div class="profile-left">
-                        <img class="profile-avatar" src="assets/avatar.png" alt="Alex28">
-                        <h2>Alex28 <span class="verified">[✓ DID Verified]</span></h2>
-                    </div>
-                    <div class="profile-right">
-                        <div class="chart-container">
-                            <img src="assets/radar-chart.png" alt="Statistics Chart">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-       
-        
-
-    </section>
-
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Element Selections ---
             const container = document.querySelector('.container');
             const progressBar = document.getElementById('progressBar');
-            const enterButton = document.getElementById('enterButton');
-            const mainContent = document.getElementById('mainContent');
-            const searchInterface = document.getElementById('searchInterface');
-            const audioIconContainer = document.querySelector('.audio-icon');
-            const audioIconImg = document.getElementById('audioIconImg');
             
-            // --- State Variables ---
-            let isMuted = false;
+            // --- 声音按钮功能 ---
+            const video = document.querySelector('.background-video');
+            const audioIcon = document.querySelector('.audio-icon');
 
-            // --- Logic for "Enter" button to show Search Interface ---
-            enterButton.addEventListener('click', () => {
-                mainContent.classList.add('fade-out');
-                progressBar.style.display = 'none';
-                setTimeout(() => {
-                    mainContent.style.display = 'none';
-                    searchInterface.classList.remove('hidden');
-                }, 800);
+            audioIcon.addEventListener('click', () => {
+                video.muted = !video.muted; // 切换静音
+                audioIcon.classList.toggle('is-unmuted', !video.muted); // 切换CSS class
             });
-
-            // --- Logic for Audio Icon Toggle ---
-            audioIconContainer.addEventListener('click', () => {
-                isMuted = !isMuted;
-                if (isMuted) {
-                    audioIconImg.src = 'assets/volume-off.svg';
-                } else {
-                    audioIconImg.src = 'assets/volume-on.svg';
-                }
-            });
-
-            // --- Logic for Page 1 Fade-out on Scroll ---
-            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator');
+            // --- 声音按钮结束 ---
+            
+            
+            // --- 页面1淡出功能 ---
+            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator, #page1 .audio-icon');
             function handlePage1Fade() {
                 const scrollTop = container.scrollTop;
                 const pageHeight = container.clientHeight;
@@ -198,7 +81,7 @@
                 });
             }
 
-            // --- Logic for Progress Bar Update ---
+            // --- 进度条功能 ---
             function updateProgressBar() {
                 const scrollTop = container.scrollTop;
                 const scrollHeight = container.scrollHeight - container.clientHeight;
@@ -206,7 +89,7 @@
                 progressBar.style.height = scrollProgress + '%';
             }
 
-            // --- Logic for Fade-in Sections (Intersection Observer) ---
+            // --- 页面2, 3 淡入功能 ---
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -220,84 +103,14 @@
             const fadeInSections = document.querySelectorAll('.fade-in-section');
             fadeInSections.forEach(section => observer.observe(section));
 
-            // --- Main Scroll Event Listener ---
+            // --- 滚动事件监听 ---
             container.addEventListener('scroll', () => {
                 window.requestAnimationFrame(() => {
                     handlePage1Fade();
                     updateProgressBar();
                 });
             });
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebar-toggle');
-            const pageContent = document.getElementById('page-content');
-
-            sidebarToggle.addEventListener('click', () => {
-                // Toggle the class on the sidebar itself
-                sidebar.classList.toggle('collapsed');
-                
-                // ALSO toggle the class on the main content area
-                pageContent.classList.toggle('sidebar-collapsed');
-            });
-            // --- Real-Time Clock Logic ---
-            const timeDisplay = document.getElementById('time-display');
-            const dateDisplay = document.getElementById('date-display'); // Get the new date element
-
-            function updateClock() {
-                const now = new Date();
-
-                // --- Update the Date ---
-                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                const dayOfWeek = days[now.getDay()];
-                const dayOfMonth = now.getDate();
-                const dateString = `${dayOfWeek} ${dayOfMonth}`;
-                // Only update the HTML if the date has actually changed
-                if (dateDisplay.textContent !== dateString) {
-                    dateDisplay.textContent = dateString;
-                }
-
-                // --- Update the Time ---
-                const hours = now.getHours();
-                let minutes = now.getMinutes();
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                const timeString = `${hours}:${minutes}`;
-                // Only update the HTML if the time has actually changed
-                if (timeDisplay.textContent !== timeString) {
-                    timeDisplay.textContent = timeString;
-                }
-            }
-
-            // Run the function once on load, then every second
-            updateClock();
-            setInterval(updateClock, 1000);
-            const profileIcon = document.getElementById('profile-icon');
-            const backArrowBtn = document.getElementById('back-arrow-btn'); // Get the new button
-            const profilePage = document.getElementById('profile-page');
-            const profileCloseBtn = document.getElementById('profile-close-btn');
-
-            // A reusable function to open the profile
-            function openProfilePage() {
-                profilePage.classList.remove('hidden');
-            }
-
-            // A reusable function to close the profile
-            function closeProfilePage() {
-                profilePage.classList.add('hidden');
-            }
-
-            // Attach the open function to both buttons
-            if (profileIcon) {
-                profileIcon.addEventListener('click', openProfilePage);
-            }
-            if (backArrowBtn) {
-                backArrowBtn.addEventListener('click', openProfilePage);
-            }
-
-            // Attach the close function to the close button
-            if (profileCloseBtn) {
-                profileCloseBtn.addEventListener('click', closeProfilePage);
-            }
         });
-        
     </script>
 </body>
 </html>
