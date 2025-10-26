@@ -127,6 +127,7 @@
             </div>
             
         </main>
+        
         <main id="profile-page" class="hidden">
                 <div class="profile-header">
                     <div class="tabs">
@@ -148,8 +149,6 @@
             </div>
         </main>
        
-        
-
     </section>
 
 
@@ -269,30 +268,53 @@
             // Run the function once on load, then every second
             updateClock();
             setInterval(updateClock, 1000);
+            // in your <script> tag
+
+            // --- Profile Page Toggle Logic ---
             const profileIcon = document.getElementById('profile-icon');
-            const backArrowBtn = document.getElementById('back-arrow-btn'); // Get the new button
+            const backArrowBtn = document.getElementById('back-arrow-btn');
             const profilePage = document.getElementById('profile-page');
             const profileCloseBtn = document.getElementById('profile-close-btn');
+            const appInterface = document.getElementById('appInterface');
 
-            // A reusable function to open the profile
+            // This function now handles the transition
             function openProfilePage() {
-                profilePage.classList.remove('hidden');
+                // Check if the browser supports the View Transitions API
+                if (!document.startViewTransition) {
+                    // If not, just do the simple switch
+                    appInterface.classList.add('hidden');
+                    profilePage.classList.remove('hidden');
+                    return;
+                }
+
+                // If supported, run the transition!
+                document.startViewTransition(() => {
+                    appInterface.classList.add('hidden');
+                    profilePage.classList.remove('hidden');
+                });
             }
 
-            // A reusable function to close the profile
+            // This function handles the transition back
             function closeProfilePage() {
-                profilePage.classList.add('hidden');
+                if (!document.startViewTransition) {
+                    profilePage.classList.add('hidden');
+                    appInterface.classList.remove('hidden');
+                    return;
+                }
+
+                document.startViewTransition(() => {
+                    profilePage.classList.add('hidden');
+                    appInterface.classList.remove('hidden');
+                });
             }
 
-            // Attach the open function to both buttons
+            // Attach the functions to the buttons
             if (profileIcon) {
                 profileIcon.addEventListener('click', openProfilePage);
             }
             if (backArrowBtn) {
                 backArrowBtn.addEventListener('click', openProfilePage);
             }
-
-            // Attach the close function to the close button
             if (profileCloseBtn) {
                 profileCloseBtn.addEventListener('click', closeProfilePage);
             }
