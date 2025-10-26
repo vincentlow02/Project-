@@ -1,544 +1,237 @@
-/* --- Basic Setup --- */
-body, html {
+/* --- 1. 基本重置和页面设置 --- */
+* {
     margin: 0;
     padding: 0;
-    font-family: "kozuka-mincho-pro", serif; /* Changed this line */
-    background-color: #f8f8f8;
-    color: #333;
-    height: 100%;
-    overflow: hidden;
-}
-html {
-    scroll-behavior: smooth;
+    box-sizing: border-box;
 }
 
-/* --- Scrollbar & Progress Bar --- */
-.container {
-    scroll-snap-type: y mandatory; 
-    overflow-y: scroll;
-    height: 100vh;
-    scrollbar-width: thin;
-    scrollbar-color: #e67e22 #2c3e50;
-}
-.container::-webkit-scrollbar { width: 4px; }
-.container::-webkit-scrollbar-track { background: #2c3e50; }
-.container::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 0; }
-#progressBar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 4px;
-    height: 0%;
-    background-color: #e67e22;
-    z-index: 100;
-}
-
-/* --- Page & Content Structure --- */
-.page {
-    height: 100vh;
+html, body {
     width: 100%;
+    height: 100%;
+    overflow: hidden; /* 隐藏浏览器的默认滚动条 */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #111; /* 页面加载时的背景色 */
+    color: #ffffff;
+}
+
+/* --- 2. 滚动容器和页面布局 --- */
+.container {
+    width: 100%;
+    height: 100vh; /* 占满整个视口高度 */
+    overflow-y: scroll; /* !! 关键：只在这个容器内部启用滚动 */
+    scroll-snap-type: y mandatory; /* 逐页滚动的效果 */
+    position: relative; /* 用于进度条的定位上下文 */
+    
+    /* 隐藏滚动条 (适用于 Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    /* 隐藏滚动条 (适用于 Firefox) */
+    scrollbar-width: none;
+    /* 隐藏滚动条 (适用于 IE/Edge) */
+    -ms-overflow-style: none;
+}
+
+.page {
+    width: 100%;
+    height: 100vh; /* 每一个 <section> 都占满全屏 */
+    scroll-snap-align: start; /* 滚动时对齐到此元素的顶部 */
+    position: relative; /* 用于内部元素的绝对定位 */
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    position: relative;
-    scroll-snap-align: start; 
+    overflow: hidden; /* 确保内容不会溢出 */
 }
+
+/* --- 3. 页面内容样式 --- */
 .content {
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-.content h1 {
-    font-size: 2.5rem;
-    font-weight: 300;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-.content p {
-    font-size: 1rem;
-    font-weight: 400;
-}
-
-/* --- Last Page Button Styles --- */
-#enterButton {
-    width: 150px;
-    height: 150px;
-    border: 1px solid #333;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-    margin-top: 40px;
-    margin-left: auto;
-    margin-right: auto;
-}
-#enterButton:hover {
-    background-color: #333;
-    color: #fff;
-}
-.subtitle {
-    margin-top: 20px;
-    color: #888;
-    font-size: 0.9rem;
-}
-
-/* --- Icons & Indicators --- */
-.icon-container {
-    width: 44px;
-    height: 44px;
-    border: 1px solid #aaa;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
-    transition: background-color 0.3s ease;
+    z-index: 3; /* 确保内容在视频和遮罩之上 */
+    padding: 20px;
 }
-.scroll-indicator {
-    position: absolute;
-    bottom: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #888;
+
+.content h1 {
+    font-size: 2.5rem; /* 默认 h1 字体大小 */
+    margin-bottom: 1rem;
+    line-height: 1.4;
 }
-.scroll-indicator .icon-container::after {
-    content: '';
+
+.content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* --- 4. Page 1: 视频背景和遮罩 --- */
+.background-video {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    border: 1px solid #aaa;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    box-sizing: border-box; 
+    object-fit: cover; /* 视频将填满容器 */
+    z-index: 1;
+    pointer-events: none; /* 允许滚动事件穿透视频 */
 }
-.scroll-indicator img {
-    width: 24px;
-    height: 24px;
-    animation: fallAndRepeat 2s ease-out infinite;
-    z-index: 2; 
+
+/* 在视频上添加一个半透明的深色遮罩 */
+#page1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 40% 透明度的黑色 */
+    z-index: 2;
+    pointer-events: none; /* 允许滚动事件穿透遮罩 */
 }
-.scroll-indicator span {
-    margin-top: 15px;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-}
+
+/* --- 5. Page 1: 图标和指示器 --- */
 .audio-icon {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    cursor: pointer;
-}
-
-/* The container must have overflow:hidden to create the "porthole" effect */
-.audio-icon .icon-container {
-    overflow: hidden;
-}
-
-/* This is a full black circle, initially positioned BELOW the container */
-.audio-icon .icon-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    border-radius: 50%;
-    /* Start with the circle positioned one full height down (hidden) */
-    transform: translateY(100%); 
-    z-index: 1;
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* On hover, the hidden circle slides up to cover the container */
-.audio-icon .icon-container:hover::before {
-    transform: translateY(0);
-}
-
-/* This styles your SVG audio icon */
-.audio-icon img {
-    width: 20px;
-    height: 20px;
-    display: block;
-    position: relative;
-    z-index: 2; /* Keeps the icon on top */
-    transition: filter 0.4s ease;
-}
-
-/* When you hover, the icon inverts its color to white */
-.audio-icon .icon-container:hover img {
-    filter: invert(1);
-}
-
-/* --- Search Interface Styles --- */
-#searchInterface {
-    justify-content: space-between;
-    background-color: #f8f8f8;
-}
-.top-left-toolbar {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.icon-button {
-    width: 40px;
-    height: 40px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-}
-.icon-button.active {
-    border-color: #333;
-    border-width: 2px;
-}
-/* in style.css */
-
-/* --- Search Interface Styles --- */
-
-#searchInterface {
-    justify-content: initial; /* Change alignment for the new layout */
-    align-items: initial;
-    /* background-color: #E2E1E1; */
-    background-color: white;
-}
-
-#page-content {
-    flex-grow: 1; /* Make the content area fill the remaining space */
-    padding: 40px;
-    height: 100vh;
-    box-sizing: border-box;
-
-    /* This makes the margin animate smoothly */
-    transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* When sidebar is collapsed, content margin matches collapsed sidebar width */
-#page-content.sidebar-collapsed {
-    margin-left: 360px; 
-}
-
-/* When sidebar is expanded, content margin matches expanded sidebar width */
-#page-content:not(.sidebar-collapsed) {
-    margin-left: 110px; /* 100px (icon bar) + 260px (content panel) */
-}
-
-/* --- New Sidebar Styles (Two-Column Layout) --- */
-#sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: transparent;
-    display: flex; /* Arrange icon bar and content panel side-by-side */
-}
-
-/* --- Column 1: Icon Bar --- */
-.sidebar-icon-bar {
-    width: 100px; /* Fixed width for the icon bar */
-    height: 100%;
-    background-color: #f7f7f7;
-    border-right: 1px solid #e0e0e0;
-    padding: 15px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    z-index: 10;
-}
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-}
-
-.sidebar-item {
-    display: flex;
-    flex-direction: column; /* Stack icon above label */
-    align-items: center;
-    cursor: pointer;
-}
-
-.sidebar-item .icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #e9e9e9;
-    margin-bottom: 5px;
-    transition: background-color 0.2s ease;
-}
-.sidebar-item .icon img {
-    width: 24px;
-    height: 24px;
-}
-
-#sidebar-toggle .icon {
-    background-color: transparent;
-    border: 1px solid #ccc;
-}
-#sidebar-toggle .icon img {
-    transition: transform 0.4s ease;
-}
-#sidebar.collapsed #sidebar-toggle .icon img {
-    transform: rotate(180deg);
-}
-
-.sidebar-item.active .icon {
-    background-color: #000;
-}
-.sidebar-item.active .icon img {
-    filter: invert(1);
-}
-
-.sidebar-item .label {
-    font-size: 0.75rem;
-    color: #555;
-    white-space: nowrap;
-}
-
-/* --- Column 2: Content Panel --- */
-.sidebar-content-panel {
-    width: 260px;
-    height: 100%;
-    background-color: #fff;
-    padding: 20px;
-    box-sizing: border-box;
-    border-right: 1px solid #e0e0e0;
-    transition: width 0.01s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.01s ease, padding 0.01s ease;
-    overflow: hidden; /* Hide content during transition */
-    white-space: nowrap; /* Prevents text from wrapping during animation */
-}
-
-/* When collapsed, the panel shrinks and fades away */
-#sidebar.collapsed .sidebar-content-panel {
-    width: 0;
-    opacity: 0;
-    padding: 20px 0; /* Animate padding to prevent text overflow */
-    pointer-events: none;
-}
-/* New container for the top-right icons */
-.top-right-nav {
-    position: absolute;
     top: 30px;
-    right: 40px;
-    display: flex; /* Aligns items side-by-side */
-    align-items: center;
-    gap: 15px; /* Space between the two icons */
-    z-index: 50;
-}
-
-/* Style for the new back arrow button */
-#back-arrow-btn {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    right: 30px;
+    z-index: 3;
     cursor: pointer;
-}
-#back-arrow-btn img {
-    width: 10px;
-    height: 10px;
-}
-
-/* Adjust the old profile icon rule */
-#profile-icon {
-    /* The position property is no longer needed here */
-    width: 50px;
-    height: relative;
-    border-radius: 50%;
-    overflow: hidden;
-}
-#profile-icon img {
-    width: 100%;
-    height: 100%;
-}
-.widget-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Aligns widget content to the left */
-    gap: 10px;
-    flex-grow: 1;
-    justify-content: center;
-}
-.date { font-size: 1rem; color: #555; }
-.time { font-size: 1rem; font-weight: 200; line-height: 1; letter-spacing: 5px; }
-.weather { display: flex; align-items: center; gap: 10px; flex-direction: column;  }
-.weather-icon { width: 56px; height: 56px; }
-.temperature { font-size: 1rem; font-weight: 300; }
-.location { font-size: 1rem; color: #555; }
-
-
-/* Styles for the content inside the panel */
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+    color: white;
     
-    /* Add these two lines */
-    border-bottom: 1px solid #e0e0e0; /* Creates the line */
-    padding-bottom: 15px;               /* Adds space below the text */
-}
-.panel-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-.panel-button {
-    width: 100%;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-bottom: 30px;
-    white-space: nowrap;
-}
-.panel-button img {
-    width: 16px;  /* Adjust this value to make the icon smaller or larger */
-    height: 16px; /* Adjust this value to make the icon smaller or larger */
-}
-.panel-section .subheader {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 15px;
-    text-align: left;
-}
-.chat-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-    font-size: 1rem;
+    /* 默认设为半透明，表示“静音”状态 */
+    opacity: 0.5; 
+    transition: opacity 0.3s ease;
 }
 
-.search-bar {
-    position: fixed;
+/* 当图标被点击时，JS会添加这个 class */
+.audio-icon.is-unmuted {
+    opacity: 1; /* 变为不透明，表示“正在播放” */
+}
+
+.scroll-indicator {
+    position: absolute;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 450px;
-    height: 60px;
-    
-    /* Use the empty shape as the background */
-    background-image: url('assets/search-field.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-
-    /* Use Flexbox to arrange the icons and input */
-    display: flex;
-    align-items: center;
-    padding: 0 20px; /* Space from the edges */
-    box-sizing: border-box;
+    z-index: 3;
+    color: white;
+    text-align: center;
 }
 
-.search-bar input {
-    flex-grow: 1; /* Allows the input to fill the space */
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    background: none; /* Make it transparent */
-    font-size: 1rem;
-    color: #333;
-    padding: 0 30px; /* Space between icons and text */
+.scroll-indicator span {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* New style for both icons */
-.search-bar-icon {
-    height: 12px; /* Adjust size as needed */
+/* 滚动箭头动画 */
+.arrow {
     width: 12px;
-    cursor: pointer;
-}
-.bottom-right-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    cursor: pointer;
+    height: 12px;
+    border-bottom: 2px solid white;
+    border-right: 2px solid white;
+    transform: rotate(45deg);
+    margin: 0 auto;
+    animation: bounce 2s infinite;
 }
 
-/* --- Animation Helpers --- */
-.hidden {
-    display: none;
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) rotate(45deg);
+    }
+    40% {
+        transform: translateY(10px) rotate(45deg);
+    }
+    60% {
+        transform: translateY(5px) rotate(45deg);
+    }
 }
-.fade-out {
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
+
+/* --- 6. 进度条 (JS 控制) --- */
+#progressBar {
+    position: fixed; /* 固定在视口上 */
+    top: 0;
+    right: 0; /* 放在右侧 */
+    width: 5px; /* 进度条宽度 */
+    height: 0%; /* JavaScript 会更新这个高度 */
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 100; /* 确保在最顶层 */
+    transition: height 0.1s linear;
 }
+
+/* --- 7. 淡入动画 (JS 控制) --- */
 .fade-in-section {
     opacity: 0;
     transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-.is-visible {
+
+.fade-in-section.is-visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* --- Keyframe Animations --- */
-@keyframes pulse {
-    0%   { transform: scale(1); opacity: 0.8; }
-    80%  { transform: scale(1.6); opacity: 0; }
-    100% { opacity: 0; }
-}
-@keyframes fallAndRepeat {
-    0%   { transform: translateY(-10px); opacity: 0; }
-    30%  { transform: translateY(0); opacity: 1; }
-    70%  { transform: translateY(10px); opacity: 0; }
-    100% { transform: translateY(-10px); opacity: 0; }
-}
-#appInterface {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    /* Add this transition for smooth fading */
-    transition: opacity 0.4s ease;
+/* --- 8. 其他页面样式 --- */
+#page2 {
+    background-color: #333; /* Page 2 的背景色 */
 }
 
-/* --- Profile Page Styles --- */
-/* in style.css */
+#page3 {
+    background-color: #222; /* Page 3 的背景色 */
+}
 
-#profile-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    z-index: 200;
-    padding: 20px 40px;
-    box-sizing: border-box;
+/* Page 3 的按钮和副标题 */
+#enterButton {
+    display: inline-block;
+    padding: 12px 30px;
+    border: 2px solid white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#enterButton span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#enterButton:hover {
+    background-color: white;
+    color: black;
+}
+
+.subtitle {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* --- 9. 【Page 1 标题的特定字体样式】 --- */
+#page1 .content h1 {
+    font-family: "Kozuka Mincho Pro R", "Hiragino Mincho ProN", "YuMincho", "游明朝", serif;
+    font-size: 57px;
+    font-weight: 400; /* "R" (Regular) 是 400 */
+    letter-spacing: 6px; /* 6px 文字间距 */
+}
+
+/* --- 10. Page 1 的 SVG Logo 样式 --- */
+.page1-svg-logo {
+    position: absolute; /* 使用绝对定位 */
+    top: 50px;  /* 距离顶部 30px (和右边的声音图标对称) */
+    left: 50px; /* 距离左侧 30px */
+    z-index: 3; /* 确保它在视频和遮罩之上 */
     
-    /* Set the default position (visible) and the animation properties */
-    transform: translateY(0);
-    opacity: 1;
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
-}
-
-#profile-page.hidden {
-    /* When hidden, move it down 100% of the viewport height */
-    transform: translateY(100vh);
-    opacity: 0;
-    pointer-events: none;
+    /* --- 关键：自适应大小 --- */
+    
+    /* 设置宽度为视口宽度的 12%。
+       调整这个 "12" 来改变它的大小 */
+    width: 12vw; 
+    
+    /* 保持SVG的原始比例 */
+    height: auto; 
+    
+    /* 为了防止它在手机上太小，或在超大屏幕上太大 */
+    min-width: 10px; 
+    max-width: 90px;
 }
