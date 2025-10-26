@@ -35,13 +35,27 @@
         </section>
 
         <section class="page" id="page2">
+            
+            <img src="weave.svg" alt="Weave Logo" class="page1-svg-logo">
+
+            <video autoplay muted loop playsinline class="background-video">
+                <source src="herovideopart02.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
             <div class="content fade-in-section">
                 <h1>目的地というものは決して場所ではなく、<br>物事の新しい見方である。</h1>
                 <p>ヘンリー・ミラー</p>
             </div>
         </section>
-        
         <section class="page" id="page3">
+
+                        
+            <img src="weave.svg" alt="Weave Logo" class="page1-svg-logo">
+
+            <video autoplay muted loop playsinline class="background-video">
+                <source src="herovideopart03.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
             <div class="content fade-in-section">
                 <h1>A New Chapter</h1>
                 <p>Your journey continues.</p>
@@ -52,7 +66,6 @@
                 <p class="subtitle">Click enter to continue</p>
             </div>
         </section>
-    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -71,7 +84,11 @@
             
             
             // --- 页面1淡出功能 ---
-            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator, #page1 .audio-icon');
+
+            // 修正 2：从这里移除了 ', #page1 .audio-icon'
+            // 我们不希望声音图标在滚动时淡出
+            const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator');
+            
             function handlePage1Fade() {
                 const scrollTop = container.scrollTop;
                 const pageHeight = container.clientHeight;
