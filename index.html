@@ -66,12 +66,105 @@
                 <p class="subtitle">Click enter to continue</p>
             </div>
         </section>
+    </main>
+     <section class="page hidden" id="searchInterface">
+
+        <div id="sidebar" class="collapsed"> <div class="sidebar-icon-bar">
+                <div class="sidebar-item" id="sidebar-toggle">
+                    <div class="icon">
+                        <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
+                    </div>
+                    </div>
+
+                <div class="sidebar-nav">
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/plus.svg" alt="New">
+                        </div>
+                    </div>
+                    <div class="sidebar-item active"> <div class="icon">
+                            <img src="assets/search-icon.svg" alt="Home">
+                        </div>
+                        <span class="label">ホーム</span> </div>
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/star.svg" alt="Saved">
+                        </div>
+                        <span class="label">保存</span> </div>
+                    <div class="sidebar-item">
+                        <div class="icon">
+                            <img src="assets/discover.svg" alt="Discover">
+                        </div>
+                        <span class="label">発見</span> </div>
+                </div>
+            </div>
+
+            <div class="sidebar-content-panel">
+                <div class="panel-header">
+                    <span class="panel-title">ホーム</span> <img src="assets/pin.svg" alt="Pin"> </div>
+                <div class="panel-button">
+                    <img src="assets/plus.svg" alt="New">
+                    <span>新しいチャット</span> </div>
+                <div class="panel-section">
+                    <h3 class="subheader">チャット</h3> <ul class="chat-list">
+                        <li>海外旅行おすすめ</li> </ul>
+                </div>
+            </div>
+        </div>
+         
+         <main id="page-content">
+               <div class="top-right-nav">
+                   <div id="back-arrow-btn">
+                       <img src="assets/arrow-left.svg" alt="Back">
+                   </div>
+                   <div id="profile-icon">
+                       <img src="assets/avatar.png" alt="View Profile">
+                   </div>
+               </div>
+               
+               <div class="widget-container">
+                   <div class="date" id="date-display"></div>
+                   <div class="time" id="time-display"></div>
+                   <div class="weather">
+                       <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
+                       <span class="temperature">19°</span>
+                   </div>
+               </div>
+
+               <div class="search-bar">
+                   <input type="text" placeholder="気軽に聞く"> </div>
+         </main> <div class="search-bar">
+             <input type="text" placeholder="気軽に聞く"> </div>
+         <div class="bottom-right-button"></div>
+         
+         <main id="profile-page" class="hidden">
+                 <div class="profile-header">
+                     <div class="tabs">
+                         <span class="tab-item active">Profile</span>
+                     </div>
+                     <div id="profile-close-btn">×</div> </div>
+                 <div class="profile-content">
+                     <div class="profile-left">
+                         <img class="profile-avatar" src="assets/avatar.png" alt="Alex28">
+                         <h2>Alex28 <span class="verified">[✓ DID Verified]</span></h2>
+                     </div>
+                     <div class="profile-right">
+                         <div class="chart-container">
+                             <img src="assets/radar-chart.png" alt="Statistics Chart">
+                         </div>
+                     </div>
+                 </div>
+         </main> </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.querySelector('.container');
             const progressBar = document.getElementById('progressBar');
-            
+            const searchInterface = document.getElementById('searchInterface');
+            const enterButton = document.getElementById('enterButton');
+            const pages = document.querySelectorAll('#mainContent .page');
+
+
             // --- 声音按钮功能 ---
             const video = document.querySelector('.background-video');
             const audioIcon = document.querySelector('.audio-icon');
@@ -127,6 +220,89 @@
                     updateProgressBar();
                 });
             });
+            if (enterButton) {
+                enterButton.addEventListener('click', function() {
+                    mainContent.classList.add('hidden'); // 隐藏引导画面
+                    searchInterface.classList.remove('hidden'); // 显示搜索界面
+                });
+            }
+                        // --- 搜索界面的逻辑 ---
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const pageContent = document.getElementById('page-content'); // 主内容区域
+
+            // 侧边栏切换按钮的点击事件
+            sidebarToggle.addEventListener('click', function() {
+                // 切换 sidebar 上的 'collapsed' 类
+                sidebar.classList.toggle('collapsed');
+                // 同时切换 pageContent 上的 'sidebar-collapsed' 类 (用于调整主内容区域的边距)
+                pageContent.classList.toggle('sidebar-collapsed');
+            });
+
+            // --- 实时时钟逻辑 ---
+            const timeDisplay = document.getElementById('time-display');
+            const dateDisplay = document.getElementById('date-display'); // 获取日期显示的元素
+
+            function updateClock() {
+                const now = new Date(); // 获取当前时间
+
+                // --- 更新日期 ---
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const dayOfWeek = days[now.getDay()]; // 获取星期几
+                const dayOfMonth = now.getDate(); // 获取几号
+                const dateString = `${dayOfWeek} ${dayOfMonth}`;
+                
+                // 仅在内容不同时才更新 DOM (优化性能)
+                if (dateDisplay.textContent !== dateString) {
+                    dateDisplay.textContent = dateString;
+                }
+
+                // --- 更新时间 ---
+                const hours = now.getHours(); // 获取小时
+                let minutes = now.getMinutes(); // 获取分钟
+                minutes = minutes < 10 ? '0' + minutes : minutes; // 如果分钟小于10，前面补0 (例如: 9:05)
+                const timeString = `${hours}:${minutes}`;
+                
+                // 仅在内容不同时才更新 DOM
+                if (timeDisplay.textContent !== timeString) {
+                    timeDisplay.textContent = timeString;
+                }
+            }
+
+            // 页面加载时立即运行一次，然后每秒 (1000ms) 运行一次
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // --- 个人资料页面显示逻辑 ---
+            const profileIcon = document.getElementById('profile-icon');
+            const backArrowBtn = document.getElementById('back-arrow-btn'); // 获取返回按钮
+            const profilePage = document.getElementById('profile-page');
+            const profileCloseBtn = document.getElementById('profile-close-btn');
+
+            // 打开个人资料页面的函数
+            function openProfilePage() {
+                profilePage.classList.remove('hidden'); // 移除 'hidden' 类
+            }
+
+            // 关闭个人资料页面的函数
+            function closeProfilePage() {
+                profilePage.classList.add('hidden'); // 添加 'hidden' 类
+            }
+
+            // 为个人资料图标添加点击事件
+            if (profileIcon) {
+                profileIcon.addEventListener('click', openProfilePage);
+            }
+            // 为返回箭头按钮也添加点击事件 (根据 UI 设计)
+            if (backArrowBtn) {
+                backArrowBtn.addEventListener('click', openProfilePage);
+            }
+
+            // 为关闭按钮 (×) 添加点击事件
+            if (profileCloseBtn) {
+                profileCloseBtn.addEventListener('click', closeProfilePage);
+            }
+
         });
     </script>
 </body>
