@@ -308,11 +308,11 @@ html, body {
 /* --- Search Interface Styles --- */
 
 #searchInterface {
- 	justify-content: initial;
- 	align-items: initial;
- 	background-color: white;  /* <-- 已修复 */
- 	color: #333;            /* <-- 已修复 */
- 	display: flex;           /* <-- 这里的错误会消失 */
+    justify-content: initial;
+    align-items: initial;
+    background-color: white;  /* <-- 已修复 */
+    color: #333;              /* <-- 已修复 */
+    display: flex;            /* <-- 这里的错误会消失 */
 }
 #page-content {
     flex-grow: 1; /* Make the content area fill the remaining space */
@@ -325,8 +325,8 @@ html, body {
     transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* When sidebar is collapsed, content margin matches collapsed sidebar width */
-@ -317,9 +317,11 @@ html {
+/* You need to add this selector back in */
+#sidebar .sidebar-content-panel {
     padding: 20px;
     box-sizing: border-box;
     border-right: 1px solid #e0e0e0;
@@ -339,7 +339,7 @@ html, body {
 /* When collapsed, the panel shrinks and fades away */
 #sidebar.collapsed .sidebar-content-panel {
     width: 0;
-@ -327,143 +329,216 @@
+/* --- (REMOVED INVALID LINE) --- */
     padding: 20px 0; /* Animate padding to prevent text overflow */
     pointer-events: none;
 }
@@ -370,18 +370,29 @@ html, body {
     height: 10px;
 }
 
-/* Adjust the old profile icon rule */
-#profile-icon {
-    /* The position property is no longer needed here */
-    width: 50px;
-    height: relative;
+profile-icon {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    overflow: hidden;
-}
+    margin-left: 20px; /* move right within the flex row */
+    overflow: hidden;  /* keeps img from overflowing the circle */
+    }
+    
 #profile-icon img {
-    width: 100%;
-    height: 100%;
-}
+    width: 80%;
+    height: 0%;
+    object-fit: cover;
+    }
+    
+.top-right-nav {
+    position: absolute;
+    top: 30px;
+    left: 2240px; /* try 60px or 80px */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 50;
+    } 
 .widget-container {
     display: flex;
     flex-direction: column;
@@ -407,7 +418,7 @@ html, body {
     
     /* Add these two lines */
     border-bottom: 1px solid #e0e0e0; /* Creates the line */
-    padding-bottom: 15px;               /* Adds space below the text */
+    padding-bottom: 15px;             /* Adds space below the text */
 }
 .panel-title {
     font-size: 1.1rem;
@@ -442,6 +453,7 @@ html, body {
     font-size: 1rem;
 }
 
+/* --- (RE-ADDED THIS MISSING RULE) --- */
 .search-bar {
     position: fixed;
     bottom: 30px;
@@ -462,6 +474,7 @@ html, body {
     padding: 0 20px; /* Space from the edges */
     box-sizing: border-box;
 }
+
 
 .search-bar input {
     flex-grow: 1; /* Allows the input to fill the space */
@@ -554,4 +567,44 @@ html, body {
     transform: translateY(100vh);
     opacity: 0;
     pointer-events: none;
+}
+
+/* --- Page Content Background & Layers --- */
+
+/* 1. Set the main content area as the 'stage' for our layers.
+   This is the most important step. */
+#page-content {
+    position: relative;
+    overflow: hidden; /* Prevents video from spilling out */
+}
+
+/* 2. Make the video a fullscreen background layer */
+.background-video-pagecontent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Stretches video to cover the whole area */
+    z-index: 1; /* Lowest layer */
+    /* opacity: 0.7; (You already have this inline, which is fine) */
+}
+
+/* 3. Place the rectangle overlay on top of the video */
+.overlay-rectangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%; /* Makes it full height */
+    width: auto;  /* Lets the SVG decide its own width */
+    z-index: 2; /* Layer 2: On top of the video */
+    pointer-events: none; /* Makes the overlay un-clickable */
+}
+
+/* 4. Ensure all other UI elements are on the top layer */
+#page-content > .top-right-nav,
+#page-content > .widget-container,
+#page-content > .bottom-right-button {
+    position: relative; /* Keeps them in the layout flow */
+    z-index: 3; /* Layer 3: On top of everything */
 }
