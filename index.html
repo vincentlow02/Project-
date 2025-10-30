@@ -81,8 +81,6 @@
 
   <!-- SEARCH INTERFACE -->
   <section class="page hidden" id="searchInterface">
-    
-    
 
     <div id="sidebar" class="collapsed">
       <div class="sidebar-icon-bar">
@@ -103,21 +101,21 @@
             <div class="icon">
               <img src="assets/search-icon.svg" alt="Home">
             </div>
-            <span class="label">ホーム</span>
+            <span class="label1">ホーム</span>
           </div>
 
           <div class="sidebar-item">
             <div class="icon">
               <img src="assets/star.svg" alt="Saved">
             </div>
-            <span class="label">保存</span>
+            <span class="label2">保存</span>
           </div>
 
           <div class="sidebar-item">
             <div class="icon">
               <img src="assets/discover.svg" alt="Discover">
             </div>
-            <span class="label">発見</span>
+            <span class="label3">発見</span>
           </div>
         </div>
       </div>
@@ -144,6 +142,7 @@
 
     <!-- PAGE CONTENT -->
     <main id="page-content">
+      <img src="assets/Weavehome.svg" alt="WeaveHomeLogo" id="page-content-logo">
       <div class="widget-container">
         <div class="date" id="date-display"></div>
         <div class="time" id="time-display"></div>
@@ -156,7 +155,7 @@
 </div>
       </div>
 
-      <div class="bottom-right-button"></div>
+
 
       <main class="video-container">
         <video id="skyVideo" autoplay muted loop playsinline
@@ -177,149 +176,151 @@
     </main>
   </section>
 
+  <section id="save-page" class="page hidden">
+  <div class="save-header">
+    <button id="save-back-btn">← 戻る</button>
+    <h1>保存したアイテム</h1>
+  </div>
+  <p>ここに保存したコンテンツが表示されます。</p>
+</section>
+
+
   <!-- SCRIPT -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.querySelector('.container');
-      const progressBar = document.getElementById('progressBar');
-      const searchInterface = document.getElementById('searchInterface');
-      const enterButton = document.getElementById('enterButton');
-      const pages = document.querySelectorAll('#mainContent .page');
+  document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector('.container');
+  const progressBar = document.getElementById('progressBar');
+  const searchInterface = document.getElementById('searchInterface');
+  const enterButton = document.getElementById('enterButton');
+  const mainContent = document.getElementById('mainContent');
+  const savePage = document.getElementById('save-page');
 
-      // --- 声音按钮功能 ---
-      const video = document.querySelector('.background-video');
-      const audioIcon = document.querySelector('.audio-icon');
-      audioIcon.addEventListener('click', () => {
-        video.muted = !video.muted;
-        audioIcon.classList.toggle('is-unmuted', !video.muted);
-      });
-
-      // --- 页面1淡出功能 ---
-      const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator');
-      function handlePage1Fade() {
-        const scrollTop = container.scrollTop;
-        const pageHeight = container.clientHeight;
-        const opacity = Math.max(0, 1 - (scrollTop / (pageHeight * 0.5)));
-        page1Elements.forEach(el => {
-          el.style.opacity = opacity;
-        });
-      }
-
-      // --- 进度条功能 ---
-      function updateProgressBar() {
-        const scrollTop = container.scrollTop;
-        const scrollHeight = container.scrollHeight - container.clientHeight;
-        const scrollProgress = (scrollTop / scrollHeight) * 100;
-        progressBar.style.height = scrollProgress + '%';
-      }
-
-      // --- 页面2,3 淡入功能 ---
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('is-visible');
-          else entry.target.classList.remove('is-visible');
-        });
-      }, { threshold: 0.5 });
-
-      const fadeInSections = document.querySelectorAll('.fade-in-section');
-      fadeInSections.forEach(section => observer.observe(section));
-
-      // --- 滚动事件监听 ---
-      container.addEventListener('scroll', () => {
-        window.requestAnimationFrame(() => {
-          handlePage1Fade();
-          updateProgressBar();
-        });
-      });
-
-      if (enterButton) {
-        enterButton.addEventListener('click', function() {
-          mainContent.classList.add('hidden');
-          searchInterface.classList.remove('hidden');
-        });
-      }
-
-      // --- 搜索界面的逻辑 ---
-      const sidebar = document.getElementById('sidebar');
-      const sidebarToggle = document.getElementById('sidebar-toggle');
-      const pageContent = document.getElementById('page-content');
-      sidebarToggle.addEventListener('click', function() {
-        sidebar.classList.toggle('collapsed');
-        pageContent.classList.toggle('sidebar-collapsed');
-      });
-
-      // --- 实时时钟逻辑 ---
-      const timeDisplay = document.getElementById('time-display');
-      const dateDisplay = document.getElementById('date-display');
-      function updateClock() {
-        const now = new Date();
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        const dayOfWeek = days[now.getDay()];
-        const dayOfMonth = now.getDate();
-        const dateString = `${dayOfWeek} ${dayOfMonth}`;
-        if (dateDisplay.textContent !== dateString) dateDisplay.textContent = dateString;
-        const hours = now.getHours();
-        let minutes = now.getMinutes();
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        const timeString = `${hours}:${minutes}`;
-        if (timeDisplay.textContent !== timeString) timeDisplay.textContent = timeString;
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-
-      // --- 个人资料页面显示逻辑 ---
-      const profileIcon = document.getElementById('profile-icon');
-      const backArrowBtn = document.getElementById('back-arrow-btn');
-      const profilePage = document.getElementById('profile-page');
-      const profileCloseBtn = document.getElementById('profile-close-btn');
-
-      function openProfilePage() {
-        profilePage.classList.remove('hidden');
-      }
-
-      function closeProfilePage() {
-        profilePage.classList.add('hidden');
-      }
-
-      if (profileIcon) profileIcon.addEventListener('click', openProfilePage);
-      if (backArrowBtn) backArrowBtn.addEventListener('click', openProfilePage);
-      if (profileCloseBtn) profileCloseBtn.addEventListener('click', closeProfilePage);
+  // --- 声音按钮功能 ---
+  const video = document.querySelector('.background-video');
+  const audioIcon = document.querySelector('.audio-icon');
+  if (audioIcon && video) {
+    audioIcon.addEventListener('click', () => {
+      video.muted = !video.muted;
+      audioIcon.classList.toggle('is-unmuted', !video.muted);
     });
+  }
 
-   document.addEventListener('DOMContentLoaded', () => {
+  // --- 页面1淡出功能 ---
+  const page1Elements = document.querySelectorAll('#page1 .content, #page1 .scroll-indicator');
+  function handlePage1Fade() {
+    const scrollTop = container.scrollTop;
+    const pageHeight = container.clientHeight;
+    const opacity = Math.max(0, 1 - (scrollTop / (pageHeight * 0.5)));
+    page1Elements.forEach(el => el.style.opacity = opacity);
+  }
+
+  // --- 进度条功能 ---
+  function updateProgressBar() {
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight - container.clientHeight;
+    progressBar.style.height = (scrollTop / scrollHeight * 100) + '%';
+  }
+
+  // --- 页面2,3淡入功能 ---
+  const fadeInSections = document.querySelectorAll('.fade-in-section');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('is-visible', entry.isIntersecting);
+    });
+  }, { threshold: 0.5 });
+  fadeInSections.forEach(section => observer.observe(section));
+
+  // --- 滚动事件 ---
+  container.addEventListener('scroll', () => {
+    window.requestAnimationFrame(() => {
+      handlePage1Fade();
+      updateProgressBar();
+    });
+  });
+
+  // --- Enter 按钮 ---
+  if (enterButton) {
+    enterButton.addEventListener('click', () => {
+      mainContent.classList.add('hidden');
+      searchInterface.classList.remove('hidden');
+    });
+  }
+
+  // --- 搜索界面侧边栏 ---
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const pageContent = document.getElementById('page-content');
+  if (sidebarToggle && sidebar && pageContent) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      pageContent.classList.toggle('sidebar-collapsed');
+    });
+  }
+
+  // --- 实时时钟 ---
+  const timeDisplay = document.getElementById('time-display');
+  const dateDisplay = document.getElementById('date-display');
+  function updateClock() {
+    const now = new Date();
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayOfWeek = days[now.getDay()];
+    const dayOfMonth = now.getDate();
+    dateDisplay.textContent = `${dayOfWeek} ${dayOfMonth}`;
+    const hours = now.getHours();
+    let minutes = now.getMinutes();
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    timeDisplay.textContent = `${hours}:${minutes}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // --- star 点击显示 save-page ---
+  const starIcon = document.querySelector('.sidebar-item img[alt="Saved"]');
+  const saveBackBtn = document.getElementById('save-back-btn');
+  let isBlack = false;
+
+  if (starIcon) {
+    starIcon.addEventListener('click', () => {
+      starIcon.src = isBlack ? 'assets/star.svg' : 'assets/starblack.svg';
+      isBlack = !isBlack;
+      if (savePage) savePage.classList.remove('hidden');
+      if (mainContent) mainContent.classList.add('hidden');
+      if (searchInterface) searchInterface.classList.add('hidden');
+    });
+  }
+
+  if (saveBackBtn) {
+    saveBackBtn.addEventListener('click', () => {
+      if (savePage) savePage.classList.add('hidden');
+      if (mainContent) mainContent.classList.remove('hidden');
+      if (searchInterface) searchInterface.classList.remove('hidden');
+      if (starIcon) starIcon.src = 'assets/star.svg';
+      isBlack = false;
+    });
+  }
+
+  // --- 地理位置显示 ---
   const locationDisplay = document.getElementById('location-display');
-
-  if (navigator.geolocation) {
+  if (navigator.geolocation && locationDisplay) {
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
-
       try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en&zoom=18`);
-        const data = await response.json();
-
-        if (data?.address) {
-          const addr = data.address;
-          const parts = [
-            addr.city || addr.town || addr.village,
-            addr.suburb,
-            addr.state,
-            addr.country
-          ].filter(Boolean); // 过滤空值
-          locationDisplay.textContent = parts.join(", ");
-        } else {
-          locationDisplay.textContent = "Hachioji, Tokyo, Japan"; // fallback
-        }
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en&zoom=18`);
+        const data = await res.json();
+        const addr = data.address;
+        locationDisplay.textContent = addr ? [addr.city||addr.town||addr.village, addr.suburb, addr.state, addr.country].filter(Boolean).join(', ') : "Hachioji, Tokyo, Japan";
       } catch {
-        locationDisplay.textContent = "Hachioji, Tokyo, Japan"; // fallback
+        locationDisplay.textContent = "Hachioji, Tokyo, Japan";
       }
-    }, () => {
-      locationDisplay.textContent = "Hachioji, Tokyo, Japan"; // fallback
-    }, { enableHighAccuracy: true });
-  } else {
+    }, () => locationDisplay.textContent = "Hachioji, Tokyo, Japan", { enableHighAccuracy: true });
+  } else if (locationDisplay) {
     locationDisplay.textContent = "Location not supported";
   }
+
 });
+
+
   </script>
 
   
