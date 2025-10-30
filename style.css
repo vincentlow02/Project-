@@ -297,6 +297,9 @@ html, body {
     border: 1px solid #ddd;
     border-radius: 50%;
     cursor: pointer;
+    position: relative;
+    top: 30px;
+
 }
 .icon-button.active {
     border-color: #333;
@@ -364,35 +367,39 @@ html, body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    position: relative;
+    top: 130px;
+    left: 30px;
 }
 #back-arrow-btn img {
-    width: 10px;
-    height: 10px;
+    width: 100px;
+    height: 100px;
 }
 
-profile-icon {
+#profile-icon {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-left: 20px; /* move right within the flex row */
-    overflow: hidden;  /* keeps img from overflowing the circle */
-    }
-    
+    margin-left: 20px;
+    overflow: hidden;
+}
+
 #profile-icon img {
-    width: 80%;
-    height: 0%;
-    object-fit: cover;
-    }
-    
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 让图片填满圆形框 */
+}
+
 .top-right-nav {
     position: absolute;
     top: 30px;
-    left: 2240px; /* try 60px or 80px */
+    right: 31px; /* 代替left: 2240px，更通用 */
     display: flex;
     align-items: center;
     gap: 15px;
     z-index: 50;
-    } 
+}
+
 .widget-container {
     display: flex;
     flex-direction: column;
@@ -401,12 +408,46 @@ profile-icon {
     flex-grow: 1;
     justify-content: center;
 }
-.date { font-size: 1rem; color: #555; }
-.time { font-size: 1rem; font-weight: 200; line-height: 1; letter-spacing: 5px; }
-.weather { display: flex; align-items: center; gap: 10px; flex-direction: column;  }
-.weather-icon { width: 56px; height: 56px; }
-.temperature { font-size: 1rem; font-weight: 300; }
-.location { font-size: 1rem; color: #555; }
+.date {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 680px; /* 粗细，可以改成 400 / 500 / 700 */
+  font-size: 15px; /* 字大小，可根据需求调整 */
+  color: #111;
+  position: relative;
+  left: 70px;
+  top:-14px;
+}
+.time {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 34px;        /* 可调整大小 */
+  color: #111;
+  letter-spacing: 1px;
+  position: relative;
+  left: 70px;
+  top:-22px;
+}
+.weather { display: flex; gap: 10px; flex-direction: column;position: relative; left: 70px; top: -20px;}
+.weather-icon { width: 32px; height: 32px; }
+.temperature {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 30px;       /* 可根据需要微调大小 */
+  font-weight: 100;       /* 300 稍细，400 普通，500 稍粗 */
+  line-height: 1.2;       /* 与 .date 和 .time 保持一致 */
+  color:white;            /* 和其他文字颜色统一 */
+  position: relative;
+  left:4px;
+  letter-spacing: 4px;
+  top: -7px;
+}
+.location {
+    font-size: 14px;
+    color:black;
+    position: relative; /* 或 absolute，依布局而定 */
+    z-index: 10; /* 确保位于影片前面 */
+    left: -566px;
+    top: -24px;
+}
+
 
 
 /* Styles for the content inside the panel */
