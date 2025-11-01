@@ -493,8 +493,9 @@ html, body {
 
 .weather-main {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
 }
 
 .weather-icon {
@@ -512,6 +513,7 @@ html, body {
 }
 
 .location {
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 14px;
     color: #333;
 }
