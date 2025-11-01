@@ -677,8 +677,10 @@ html, body {
 .profile-card {
     position: relative;
     z-index: 202;
-    width: clamp(560px, 80vw, 1280px);
-    max-height: 90vh;
+    width: clamp(720px, 88vmin, 1680px);
+    max-width: min(92vw, 1680px);
+    max-height: 92vh;
     height: auto;
     display: block;
+    margin: 0 auto;
 }
