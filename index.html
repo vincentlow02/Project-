@@ -483,11 +483,18 @@ html, body {
 
 .weather {
     display: flex;
-    gap: 10px;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     position: relative;
     left: 70px;
     top: -20px;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .weather-icon {
@@ -500,20 +507,13 @@ html, body {
     font-size: 30px;
     font-weight: 100;
     line-height: 1.2;
-    color: white;
-    position: relative;
-    left: 4px;
+    color: #111;
     letter-spacing: 4px;
-    top: -7px;
 }
 
 .location {
     font-size: 14px;
-    color: black;
-    position: relative;
-    z-index: 10;
-    left: -566px;
-    top: -24px;
+    color: #333;
 }
 
 /* ========================================
@@ -849,10 +849,12 @@ html, body {
         <div class="date" id="date-display"></div>
         <div class="time" id="time-display"></div>
         <div class="weather">
-          <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
-          <span class="temperature">19°</span>
+          <div class="weather-main">
+            <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
+            <span class="temperature">19°</span>
+          </div>
+          <div class="location" id="location-display">取得中...</div>
         </div>
-        <div class="location" id="location-display">取得中...</div>
       </div>
       <div class="search-bar">
                    <input type="text" placeholder="気軽に聞く"> </div>
