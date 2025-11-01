@@ -4,7 +4,683 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inspirational Quotes</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+/* ========================================
+   1. BASIC RESET & PAGE SETUP
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #111;
+    color: #ffffff;
+}
+
+/* ========================================
+   2. SCROLL CONTAINER & PAGE LAYOUT
+   ======================================== */
+.container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Hide scrollbar */
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.page {
+    width: 100%;
+    height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* ========================================
+   3. PAGE CONTENT STYLES
+   ======================================== */
+.content {
+    position: relative;
+    z-index: 3;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* ========================================
+   4. VIDEO BACKGROUND & OVERLAY
+   ======================================== */
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#page1::after,
+#page2::after,
+#page3::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ========================================
+   5. PAGE 1 - ICONS & INDICATORS
+   ======================================== */
+.audio-icon {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    z-index: 3;
+    cursor: pointer;
+    color: white;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.audio-icon.is-unmuted {
+    opacity: 1;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: white;
+    text-align: center;
+}
+
+.scroll-indicator span {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.arrow {
+    width: 12px;
+    height: 12px;
+    border-bottom: 2px solid white;
+    border-right: 2px solid white;
+    transform: rotate(45deg);
+    margin: 0 auto;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) rotate(45deg);
+    }
+    40% {
+        transform: translateY(10px) rotate(45deg);
+    }
+    60% {
+        transform: translateY(5px) rotate(45deg);
+    }
+}
+
+/* ========================================
+   6. PROGRESS BAR
+   ======================================== */
+#progressBar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 0%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 100;
+    transition: height 0.1s linear;
+}
+
+/* ========================================
+   7. FADE IN ANIMATIONS
+   ======================================== */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+/* ========================================
+   8. PAGE 2 & 3 STYLES
+   ======================================== */
+#page2 {
+    background-color: #333;
+}
+
+#page3 {
+    background-color: #222;
+}
+
+#enterButton {
+    display: inline-block;
+    padding: 12px 30px;
+    border: 2px solid white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#enterButton span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#enterButton:hover {
+    background-color: white;
+    color: black;
+}
+
+.subtitle {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* ========================================
+   9. TYPOGRAPHY - PAGE SPECIFIC
+   ======================================== */
+#page1 .content h1 {
+    font-family: "Kozuka Mincho Pro R", "Hiragino Mincho ProN", "YuMincho", "游明朝", serif;
+    font-size: 57px;
+    font-weight: 400;
+    letter-spacing: 6px;
+}
+
+#page2 .content h1 {
+    font-family: "Kozuka Mincho Pro", "Hiragino Mincho ProN", "YuMincho", "游明朝", serif;
+    font-size: 43px;
+    font-weight: 400;
+    line-height: 129%;
+    letter-spacing: 6px;
+}
+
+#page1 .content p,
+#page2 .content p {
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+}
+
+/* ========================================
+   10. LOGO STYLES
+   ======================================== */
+.page1-svg-logo {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    z-index: 3;
+    width: 12vw;
+    height: auto;
+    min-width: 10px;
+    max-width: 90px;
+}
+
+#page-content-logo {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: auto;
+    opacity: 0.95;
+    z-index: 20;
+}
+
+/* ========================================
+   11. SEARCH INTERFACE
+   ======================================== */
+#searchInterface {
+    justify-content: initial;
+    align-items: initial;
+    background-color: white;
+    color: #333;
+   
+}
+
+#searchInterface:not(.hidden) {
+    display: flex;
+}
+
+#page-content {
+    flex-grow: 1;
+    padding: 40px;
+    height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ========================================
+   12. SIDEBAR STYLES
+   ======================================== */
+#sidebar .sidebar-content-panel {
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0;
+    transition: width 0.01s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.01s ease, padding 0.01s ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#sidebar.collapsed .sidebar-content-panel {
+    width: 0;
+    padding: 20px 0;
+    pointer-events: none;
+}
+
+.sidebar-item .icon img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    align-items: center;
+    position: relative;
+    left: 34px;
+    top: 30px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.sidebar-item .icon img[alt="New"] {
+    top: 70px;
+}
+
+.sidebar-item .icon img[alt="Home"] {
+    top: 100px;
+}
+
+.sidebar-item .icon img[alt="Saved"] {
+    top: 104px;
+}
+
+.sidebar-item .icon img[alt="Discover"] {
+    top: 108px;
+}
+
+.label1 {
+    top: 200px;
+}
+
+.label2 {
+    top: 190px;
+}
+
+.label3 {
+    top: 250px;
+}
+
+/* ========================================
+   13. PANEL STYLES
+   ======================================== */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.panel-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.panel-button {
+    width: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 30px;
+    white-space: nowrap;
+}
+
+.panel-button img {
+    width: 16px;
+    height: 16px;
+}
+
+.panel-section .subheader {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 1rem;
+}
+
+/* ========================================
+   14. TOP RIGHT NAVIGATION
+   ======================================== */
+.top-right-nav {
+    position: absolute;
+    top: 40px;
+    right: 47px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 50;
+}
+
+#profile-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+#profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#arrow-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#arrow-icon:hover {
+    transform: translateX(-3px);
+}
+
+/* ========================================
+   15. WIDGET CONTAINER (Date, Time, Weather)
+   ======================================== */
+.widget-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.date {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 680px;
+    font-size: 15px;
+    color: #111;
+    position: relative;
+    left: 70px;
+    top: -14px;
+}
+
+.time {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 34px;
+    color: #111;
+    letter-spacing: 1px;
+    position: relative;
+    left: 70px;
+    top: -22px;
+}
+
+.weather {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    position: relative;
+    left: 70px;
+    top: -20px;
+}
+
+.weather-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.temperature {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 30px;
+    font-weight: 100;
+    line-height: 1.2;
+    color: white;
+    position: relative;
+    left: 4px;
+    letter-spacing: 4px;
+    top: -7px;
+}
+
+.location {
+    font-size: 14px;
+    color: black;
+    position: relative;
+    z-index: 10;
+    left: -566px;
+    top: -24px;
+}
+
+/* ========================================
+   16. BACKGROUND VIDEO & LAYERS
+   ======================================== */
+.background-video-pagecontent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.overlay-rectangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: auto;
+    z-index: 2;
+    pointer-events: none;
+}
+
+#page-content > .top-right-nav,
+#page-content > .widget-container,
+#page-content > .bottom-right-button {
+    position: relative;
+    z-index: 3;
+}
+
+/* ========================================
+   17. SEARCH BAR (Not Currently Visible)
+   ======================================== */
+.search-bar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    height: 60px;
+    background-image: url('assets/search-field.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index:5; /
+}
+
+.search-bar input {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1rem;
+    color: #333;
+    padding: 0 30px;
+}
+
+.search-bar-icon {
+    height: 12px;
+    width: 12px;
+    cursor: pointer;
+}
+
+/* ========================================
+   18. UTILITY CLASSES
+   ======================================== */
+.hidden {
+    display: none;
+}
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    top: 30px;
+}
+
+.icon-button.active {
+    border-color: #333;
+    border-width: 2px;
+}
+
+.bottom-right-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* ========================================
+   19. ADDITIONAL ANIMATIONS
+   ======================================== */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    80% { transform: scale(1.6); opacity: 0; }
+    100% { opacity: 0; }
+}
+
+@keyframes fallAndRepeat {
+    0% { transform: translateY(-10px); opacity: 0; }
+    30% { transform: translateY(0); opacity: 1; }
+    70% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(-10px); opacity: 0; }
+}
+
+#appInterface {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.4s ease;
+}
+
+/* ========================================
+   20. PROFILE PAGE
+   ======================================== */
+.profile-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 200;
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-page.slide-up {
+    transform: translateY(0);
+}
+
+#close-profile-btn {
+    position: absolute;
+    top: 40px;
+    left: 47px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 201;
+    transition: transform 0.2s ease;
+}
+
+#close-profile-btn:hover {
+    transform: scale(1.1);
+}
+
+#close-profile-btn img {
+    width: 100%;
+    height: 100%;
+}
+  </style>
 </head>
 
 <body>
@@ -160,7 +836,9 @@
         </div>
         <div class="location" id="location-display">取得中...</div>
       </div>
-
+      <div class="search-bar">
+                   <input type="text" placeholder="気軽に聞く"> </div>
+         <div class="bottom-right-button"></div>
       <!-- Video Container -->
       <main class="video-container">
         <video id="skyVideo" autoplay muted loop playsinline
