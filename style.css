@@ -675,14 +675,10 @@ html, body {
 }
 
 .profile-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 202;
-    width: clamp(320px, 70vw, 960px);
-    max-width: 90vw;
-    max-height: 85vh;
+    width: clamp(560px, 80vw, 1280px);
+    max-height: 90vh;
     height: auto;
     display: block;
 }
