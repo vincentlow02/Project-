@@ -658,7 +658,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 60px 40px;
+    padding: clamp(20px, 6vw, 60px) clamp(16px, 5vw, 40px);
 }
 
 .profile-page.slide-up {
@@ -688,11 +688,15 @@ html, body {
 .profile-card {
     position: relative;
     z-index: 202;
-    width: clamp(320px, 70vw, 960px);
-    max-height: 80vh;
+    display: block;
+    width: clamp(320px, 75vmin, 1200px);
+    max-width: 90vw;
+    max-height: 85vh;
     height: auto;
+    margin: 0 auto;
     object-fit: contain;
     filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.35));
+    transition: width 0.3s ease, max-width 0.3s ease;
 }
   </style>
 </head>
