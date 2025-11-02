@@ -320,6 +320,36 @@ html, body {
     transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.page-content-buttons {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin: 0 auto;
+    padding-top: 32px;
+    width: fit-content;
+}
+
+.page-content-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.page-content-button img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    transition: filter 0.2s ease;
+}
+
+.page-content-button:hover img {
+    filter: brightness(0.75);
+}
+
 /* ========================================
    12. SIDEBAR STYLES
    ======================================== */
@@ -895,6 +925,17 @@ html, body {
           </div>
           <div class="location" id="location-display">取得中...</div>
         </div>
+      </div>
+      <div class="page-content-buttons">
+        <button type="button" class="page-content-button" aria-label="Culture">
+          <img src="culturebutton.svg" alt="Culture">
+        </button>
+        <button type="button" class="page-content-button" aria-label="Overseas">
+          <img src="overseasbutton.svg" alt="Overseas">
+        </button>
+        <button type="button" class="page-content-button" aria-label="Outdoor">
+          <img src="outdoor.svg" alt="Outdoor">
+        </button>
       </div>
       <div class="search-bar">
                    <input type="text" placeholder="気軽に聞く"> </div>
