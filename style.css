@@ -314,11 +314,13 @@ html, body {
 
 .page-content-buttons {
     position: relative;
-    top: 70px;
+    top: 30px;
     z-index: 3;
     display: flex;
     justify-content: center;
-    transform: scale(0.7);
+    align-items: center;
+    gap: 32px;
+    transform: scale(0.75);
 }
 
 .page-content-button {
@@ -329,32 +331,7 @@ html, body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-}
-
-.page-content-button:nth-child(1) {
-    top: 94px;
-    left: 370px;
-}
-
-.page-content-button:nth-child(2) {
-    top: 94px;
-    left: 290px;
-}
-
-.page-content-button:nth-child(3) {
-    top: 94px;
-    left: -27px;
-}
-
-.page-content-button:nth-child(4) {
-    top: 94px;
-    left: -127px;
-}
-
-.page-content-button:nth-child(5) {
-    top: 94px;
-    left: -180px;
+    position: static;
 }
 
 .page-content-button img {
