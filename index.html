@@ -244,6 +244,7 @@
       const enterButton = document.getElementById('enterButton');
       const mainContent = document.getElementById('mainContent');
       const savePage = document.getElementById('save-page');
+      const searchInput = document.querySelector('.search-bar input');
 
       // ========================================
       // Audio Icon (Mute/Unmute)
@@ -316,6 +317,28 @@
         enterButton.addEventListener('click', () => {
           mainContent.classList.add('hidden');
           searchInterface.classList.remove('hidden');
+        });
+      }
+
+      // ========================================
+      // Search Submission
+      // ========================================
+      if (searchInput) {
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter') {
+            return;
+          }
+
+          event.preventDefault();
+
+          const query = searchInput.value.trim();
+          if (!query) {
+            return;
+          }
+
+          const targetUrl = new URL('pagetravel.html', window.location.href);
+          targetUrl.searchParams.set('q', query);
+          window.location.href = targetUrl.toString();
         });
       }
 
