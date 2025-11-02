@@ -321,45 +321,35 @@ html, body {
     pointer-events: none;
 }
 
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 36px;
+}
+
+.sidebar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
 .sidebar-item .icon img {
     width: 44px;
     height: 44px;
     object-fit: contain;
     transition: transform 0.2s ease;
-    align-items: center;
-    position: relative;
-    left: 34px;
-    top: 30px;
-    z-index: 10;
     cursor: pointer;
 }
 
-.sidebar-item .icon img[alt="New"] {
-    top: 70px;
-}
-
-.sidebar-item .icon img[alt="Home"] {
-    top: 100px;
-}
-
-.sidebar-item .icon img[alt="Saved"] {
-    top: 104px;
-}
-
-.sidebar-item .icon img[alt="Discover"] {
-    top: 108px;
-}
-
-.label1 {
-    top: 200px;
-}
-
-.label2 {
-    top: 190px;
-}
-
-.label3 {
-    top: 250px;
+.sidebar-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #333;
+    letter-spacing: 0.08em;
+    text-align: center;
 }
 
 /* ========================================
