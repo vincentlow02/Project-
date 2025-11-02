@@ -798,21 +798,21 @@ html, body {
             <div class="icon">
               <img src="assets/search-icon.svg" alt="Home">
             </div>
-            <span class="label1">ホーム</span>
+            <span class="sidebar-label">ホーム</span>
           </div>
 
           <div class="sidebar-item">
             <div class="icon">
               <img src="assets/star.svg" alt="Saved">
             </div>
-            <span class="label2">保存</span>
+            <span class="sidebar-label">保存</span>
           </div>
 
           <div class="sidebar-item">
             <div class="icon">
               <img src="assets/discover.svg" alt="Discover">
             </div>
-            <span class="label3">発見</span>
+            <span class="sidebar-label">発見</span>
           </div>
         </div>
       </div>
@@ -848,10 +848,12 @@ html, body {
         <div class="date" id="date-display"></div>
         <div class="time" id="time-display"></div>
         <div class="weather">
-          <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
-          <span class="temperature">19°</span>
+          <div class="weather-main">
+            <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
+            <span class="temperature">19°</span>
+          </div>
+          <div class="location" id="location-display">取得中...</div>
         </div>
-        <div class="location" id="location-display">取得中...</div>
       </div>
       <div class="search-bar">
                    <input type="text" placeholder="気軽に聞く"> </div>
