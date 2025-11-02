@@ -337,6 +337,9 @@ html, body {
     border: none;
     padding: 0;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .page-content-button img {
@@ -926,15 +929,21 @@ html, body {
           <div class="location" id="location-display">取得中...</div>
         </div>
       </div>
-      <div class="page-content-buttons">
+      <div class="page-content-buttons" role="group" aria-label="Travel Categories">
         <button type="button" class="page-content-button" aria-label="Culture">
           <img src="culturebutton.svg" alt="Culture">
         </button>
         <button type="button" class="page-content-button" aria-label="Overseas">
-          <img src="overseasbutton.svg" alt="Overseas">
+          <img src="overseas.svg" alt="Overseas">
         </button>
-        <button type="button" class="page-content-button" aria-label="Outdoor">
-          <img src="outdoor.svg" alt="Outdoor">
+        <button type="button" class="page-content-button" aria-label="Domestic">
+          <img src="domestic.svg" alt="Domestic">
+        </button>
+        <button type="button" class="page-content-button" aria-label="Natural">
+          <img src="natural.svg" alt="Natural">
+        </button>
+        <button type="button" class="page-content-button" aria-label="Hiking">
+          <img src="hiking.svg" alt="Hiking">
         </button>
       </div>
       <div class="search-bar">
