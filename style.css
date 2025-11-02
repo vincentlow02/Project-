@@ -561,7 +561,13 @@ html, body {
     pointer-events: none;
 }
 
-#page-content > .top-right-nav,
+#page-content > .top-right-nav {
+    position: absolute;
+    top: 40px;
+    right: 47px;
+    z-index: 3;
+}
+
 #page-content > .widget-container,
 #page-content > .bottom-right-button {
     position: relative;
