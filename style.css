@@ -314,7 +314,7 @@ html, body {
 
 .page-content-buttons {
     position: relative;
-    top: 70px;
+    top: 100px;
     z-index: 3;
     display: flex;
     justify-content: center;
@@ -333,22 +333,22 @@ html, body {
 }
 
 .page-content-button:nth-child(1) {
-    top: 94px;
+    top: 120px;
     left: 370px;
 }
 
 .page-content-button:nth-child(2) {
-    top: 94px;
+    top: 120px;
     left: 290px;
 }
 
 .page-content-button:nth-child(3) {
-    top: 94px;
+    top: 120px;
     left: -27px;
 }
 
 .page-content-button:nth-child(4) {
-    top: 94px;
+    top: 120px;
     left: -127px;
 }
 
