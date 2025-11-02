@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
+</head>
+
+<body class="search-results-page">
+  <section class="page" id="searchInterface">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="collapsed">
+      <div class="sidebar-icon-bar">
+        <div class="sidebar-item" id="sidebar-toggle">
+          <div class="icon">
+            <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
+          </div>
+        </div>
+
+        <div class="sidebar-nav">
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/plus.svg" alt="New">
+            </div>
+          </div>
+
+          <div class="sidebar-item active">
+            <div class="icon">
+              <img src="assets/search-icon.svg" alt="Home">
+            </div>
+            <span class="sidebar-label">&#12507;&#12540;&#12512;</span>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/star.svg" alt="Saved">
+            </div>
+            <span class="sidebar-label">&#20445;&#23384;</span>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/discover.svg" alt="Discover">
+            </div>
+            <span class="sidebar-label">&#30330;&#35211;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-content-panel">
+        <div class="panel-header">
+          <span class="panel-title">&#12507;&#12540;&#12512;</span>
+          <img src="assets/pin.svg" alt="Pin">
+        </div>
+
+        <div class="panel-section">
+          <h3 class="subheader">&#12481;&#12515;&#12483;&#12488;</h3>
+          <ul class="chat-list">
+            <li>&#28023;&#22806;&#26053;&#34892;&#12362;&#12377;&#12377;&#12417;</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    
+        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
+      
+          <img src="Rectangle205.svg" >
+
+        <div class="results-panel" id="resultsPanel" aria-live="polite">
+          <header class="results-header">
+            <p class="results-tag">&#26908;&#32034;&#32080;&#26524;</p>
+            <h1 id="results-title">&#12362;&#12377;&#12377;&#12417;&#12398;&#26053;&#12503;&#12521;&#12531;&#12434;&#12372;&#32057;&#20171;</h1>
+          </header>
+
+          <div class="results-grid" id="resultsGrid"></div>
+
+          <div class="results-empty hidden" id="resultsEmpty">
+            <p>&#38306;&#36899;&#12377;&#12427;&#12503;&#12521;&#12531;&#12364;&#35211;&#12388;&#12363;&#12426;&#12414;&#12379;&#12435;&#12391;&#12375;&#12383;&#12290;&#21029;&#12398;&#12461;&#12540;&#12527;&#12540;&#12489;&#12391;&#12362;&#35430;&#12375;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+          </div>
+
+          <a class="results-back-link" href="index.html">&#12488;&#12483;&#12503;&#12395;&#25147;&#12427;</a>
+        </div>
+      </main>
+    </main>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.querySelector('.search-bar input');
+      const searchQueryLabel = document.getElementById('search-query');
+      const resultsGrid = document.getElementById('resultsGrid');
+      const resultsEmpty = document.getElementById('resultsEmpty');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const pageContent = document.getElementById('page-content');
+
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('q')?.trim() || '';
+
+      const sampleResults = [
+        {
+          title: '\u4eac\u90fd\u6587\u5316\u63a2\u7d22 3 \u65e5\u9593',
+          description: '\u53e4\u90fd\u4eac\u90fd\u3067\u795e\u793e\u4ecf\u95a3\u5de1\u308a\u3068\u753a\u5bb6\u30ab\u30d5\u30a7\u3092\u582a\u80fd\u3002\u4f1d\u7d71\u5de5\u82b8\u306e\u30ef\u30fc\u30af\u30b7\u30e7\u30c3\u30d7\u3082\u4f53\u9a13\u3067\u304d\u307e\u3059\u3002',
+          tags: ['culture', '\u4eac\u90fd', '\u6b74\u53f2', '\u5bfa\u9662'],
+        },
+        {
+          title: '\u30a2\u30a4\u30b9\u30e9\u30f3\u30c9 \u30aa\u30fc\u30ed\u30e9\u30c4\u30a2\u30fc',
+          description: '\u30ec\u30a4\u30ad\u30e3\u30d3\u30af\u3092\u62e0\u70b9\u306b\u3001\u6c37\u6cb3\u30cf\u30a4\u30ad\u30f3\u30b0\u3068\u5929\u7136\u6e29\u6cc9\u3092\u5de1\u308a\u306a\u304c\u3089\u5e7b\u60f3\u7684\u306a\u30aa\u30fc\u30ed\u30e9\u9451\u8cde\u3002',
+          tags: ['overseas', '\u81ea\u7136', '\u5192\u967a'],
+        },
+        {
+          title: '\u5317\u6d77\u9053 \u7f8e\u745b\u30fb\u5bcc\u826f\u91ce\u30c9\u30e9\u30a4\u30d6',
+          description: '\u56db\u5b63\u6298\u3005\u306e\u98a8\u666f\u304c\u7f8e\u3057\u3044\u4e18\u3092\u5de1\u308b\u30c9\u30e9\u30a4\u30d6\u3002\u5730\u5143\u30b0\u30eb\u30e1\u3068\u6e29\u6cc9\u3067\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5\u3002',
+          tags: ['domestic', '\u81ea\u7136', '\u5317\u6d77\u9053', '\u30c9\u30e9\u30a4\u30d6'],
+        },
+        {
+          title: '\u30cb\u30e5\u30fc\u30b8\u30fc\u30e9\u30f3\u30c9 \u30cf\u30a4\u30ad\u30f3\u30b0\u5468\u904a',
+          description: '\u30d5\u30a3\u30e8\u30eb\u30c9\u30e9\u30f3\u30c9\u56fd\u7acb\u516c\u5712\u3084\u30a2\u30d9\u30eb\u30fb\u30bf\u30ba\u30de\u30f3\u306a\u3069\u3001\u4e16\u754c\u5c48\u6307\u306e\u30c8\u30ec\u30a4\u30eb\u3092\u6b69\u304f\u65c5\u3002',
+          tags: ['hiking', 'overseas', '\u81ea\u7136'],
+        },
+        {
+          title: '\u702c\u6238\u5185\u30a2\u30fc\u30c8\u30a2\u30a4\u30e9\u30f3\u30c9\u5de1\u308a',
+          description: '\u76f4\u5cf6\u30fb\u8c4a\u5cf6\u30fb\u72ac\u5cf6\u3067\u73fe\u4ee3\u30a2\u30fc\u30c8\u3068\u5cf6\u306e\u66ae\u3089\u3057\u306b\u89e6\u308c\u308b\u3001\u3086\u3063\u305f\u308a\u30d5\u30a7\u30ea\u30fc\u65c5\u3002',
+          tags: ['culture', 'domestic', '\u30a2\u30fc\u30c8'],
+        }
+      ];
+
+      function normalize(text) {
+        return text.toLowerCase();
+      }
+
+      function filterResults(keyword) {
+        if (!keyword) {
+          return sampleResults.slice(0, 3);
+        }
+
+        const normalized = normalize(keyword);
+        return sampleResults.filter((item) => {
+          const titleMatch = normalize(item.title).includes(normalized);
+          const descriptionMatch = normalize(item.description).includes(normalized);
+          const tagMatch = item.tags.some((tag) => normalize(tag).includes(normalized));
+          return titleMatch || descriptionMatch || tagMatch;
+        });
+      }
+
+      function renderResults(list) {
+        resultsGrid.innerHTML = '';
+
+        if (!list.length) {
+          resultsEmpty.classList.remove('hidden');
+          return;
+        }
+
+        resultsEmpty.classList.add('hidden');
+
+        list.forEach((item) => {
+          const card = document.createElement('article');
+          card.className = 'result-card';
+          card.innerHTML = `
+            <h2>${item.title}</h2>
+            <p>${item.description}</p>
+            <div class="tag-list">
+              ${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          `;
+          resultsGrid.appendChild(card);
+        });
+      }
+
+      if (searchQueryLabel) {
+        searchQueryLabel.textContent = query || '\u304a\u3059\u3059\u3081';
+      }
+
+      if (searchInput) {
+        if (query) {
+          searchInput.value = query;
+        }
+
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter') {
+            return;
+          }
+
+          event.preventDefault();
+          const value = searchInput.value.trim();
+          if (!value) {
+            return;
+          }
+
+          const destination = new URL(window.location.href);
+          destination.searchParams.set('q', value);
+          window.location.href = destination.toString();
+        });
+      }
+
+      if (sidebar && sidebarToggle && pageContent) {
+        sidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('collapsed');
+          pageContent.classList.toggle('sidebar-collapsed');
+        });
+      }
+
+      renderResults(filterResults(query));
+    });
+  </script>
+</body>
+</html>
