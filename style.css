@@ -310,46 +310,23 @@ html, body {
     pointer-events: none;
 }
 
-.sidebar-item .icon img {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    transition: transform 0.2s ease;
-    align-items: center;
+.sidebar-item.search-item {
     position: relative;
-    left: 34px;
-    top: 30px;
-    z-index: 10;
-    cursor: pointer;
+    top: 20px; /* ホーム往下移 */
 }
 
-.sidebar-item .icon img[alt="New"] {
-    top: 70px;
+.sidebar-item.saved-item {
+    position: relative;
+    top: 40px; /* 保存再往下移一点 */
 }
 
-.sidebar-item .icon img[alt="Home"] {
-    top: 100px;
+.sidebar-item.discover-item {
+    position: relative;
+    top: 60px; /* 発見最下面 */
 }
 
-.sidebar-item .icon img[alt="Saved"] {
-    top: 104px;
-}
 
-.sidebar-item .icon img[alt="Discover"] {
-    top: 108px;
-}
-
-.label1 {
-    top: 200px;
-}
-
-.label2 {
-    top: 190px;
-}
-
-.label3 {
-    top: 250px;
-}
+.
 
 /* ========================================
    13. PANEL STYLES
@@ -408,7 +385,6 @@ html, body {
     top: 40px;
     right: 47px;
     display: flex;
-    align-items: center;
     gap: 15px;
     z-index: 50;
 }
@@ -489,7 +465,7 @@ html, body {
     font-size: 30px;
     font-weight: 100;
     line-height: 1.2;
-    color: white;
+    color:black;
     position: relative;
     left: 4px;
     letter-spacing: 4px;
