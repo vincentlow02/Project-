@@ -313,6 +313,8 @@ html, body {
 }
 
 .page-content-buttons {
+    position: relative;
+    top: 70px;
     z-index: 3;
     display: flex;
     justify-content: center;
@@ -615,7 +617,7 @@ html, body {
     position: absolute;
     top: 45%;
     left: 39%;
-    transform: translate(-50%, -50%) scale(1.3);
+    transform: translate(-50%, -50%);
     width: 450px;
     height: 60px;
     background-image: url('assets/search-field.svg');
@@ -626,6 +628,7 @@ html, body {
     align-items: center;
     padding: 0 20px;
     box-sizing: border-box;
+    transform: scale(1.3);
     z-index: 5;
 }
 
