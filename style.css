@@ -99,8 +99,8 @@ html, body {
    ======================================== */
 .page-brand {
     position: absolute;
-    top: 30px;
-    left: 30px;
+    top: 60px;
+    left: 50px;
     z-index: 3;
     display: flex;
     align-items: center;
@@ -116,12 +116,16 @@ html, body {
     padding: 0;
     cursor: pointer;
     color: white;
-    opacity: 0.5;
+    opacity: 0.7;
     transition: opacity 0.3s ease;
+    position: relative;
+    top: 4px;
+    left: 1240px;
+    transform: scale(1.3);
 }
 
 .audio-icon:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.7);
+    outline: 2px 2px solid #0078D7;
     outline-offset: 4px;
 }
 
@@ -276,7 +280,7 @@ html, body {
 #page-content-logo {
     position: absolute;
     top: 40%;
-    left: 50%;
+    left: 52%;
     transform: translate(-50%, -50%);
     width: 200px;
     height: auto;
@@ -292,7 +296,6 @@ html, body {
     align-items: initial;
     background-color: white;
     color: #333;
-   
 }
 
 #searchInterface:not(.hidden) {
@@ -301,12 +304,68 @@ html, body {
 
 #page-content {
     flex-grow: 1;
-    padding: 40px;
+    padding: 47px;
     height: 100vh;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
     transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.page-content-buttons {
+    position: relative;
+    top: 70px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    transform: scale(0.7);
+}
+
+.page-content-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page-content-button:nth-child(1) {
+    top: 94px;
+    left: 370px;
+}
+
+.page-content-button:nth-child(2) {
+    top: 94px;
+    left: 290px;
+}
+
+.page-content-button:nth-child(3) {
+    top: 94px;
+    left: -27px;
+}
+
+.page-content-button:nth-child(4) {
+    top: 94px;
+    left: -127px;
+}
+
+.page-content-button:nth-child(5) {
+    top: 94px;
+    left: -180px;
+}
+
+.page-content-button img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    transition: filter 0.2s ease;
+}
+
+.page-content-button:hover img {
+    filter: brightness(0.75);
 }
 
 /* ========================================
@@ -358,7 +417,7 @@ html, body {
 .sidebar-label {
     display: block;
     font-size: 0.75rem;
-    color: #333;
+    color: #332;
     letter-spacing: 0.08em;
     text-align: center;
 }
@@ -555,10 +614,10 @@ html, body {
    17. SEARCH BAR (Not Currently Visible)
    ======================================== */
 .search-bar {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    top: 45%;
+    left: 39%;
+    transform: translate(-50%, -50%);
     width: 450px;
     height: 60px;
     background-image: url('assets/search-field.svg');
@@ -569,7 +628,8 @@ html, body {
     align-items: center;
     padding: 0 20px;
     box-sizing: border-box;
-    z-index:5; /
+    transform: scale(1.3);
+    z-index: 5;
 }
 
 .search-bar input {
@@ -692,6 +752,8 @@ html, body {
 
 .profile-card {
     position: relative;
+    left: 50px;
+    top: 27px;
     z-index: 202;
     display: block;
     width: clamp(720px, 88vmin, 1680px);
@@ -702,4 +764,29 @@ html, body {
     object-fit: contain;
     filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.35));
     transition: width 0.3s ease, max-width 0.3s ease;
+    transform: scale(1.5);
+}
+
+/* ========================================
+   21. INLINE STYLE REPLACEMENTS
+   ======================================== */
+.page3-logo {
+    width: 80%;
+    max-width: 1750px;
+}
+
+.enter-section {
+    position: absolute;
+    bottom: -180px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.background-video-pagecontent--dimmed {
+    opacity: 0.6;
+}
+
+.icon-rotate-180 {
+    transform: rotate(180deg);
 }
