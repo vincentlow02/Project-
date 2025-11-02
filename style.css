@@ -323,25 +323,6 @@ html, body {
     pointer-events: none;
 }
 
-<<<<<<< HEAD
-.sidebar-item.search-item {
-    position: relative;
-    top: 20px; /* ホーム往下移 */
-}
-
-.sidebar-item.saved-item {
-    position: relative;
-    top: 40px; /* 保存再往下移一点 */
-}
-
-.sidebar-item.discover-item {
-    position: relative;
-    top: 60px; /* 発見最下面 */
-}
-
-
-.
-=======
 .sidebar-icon-bar {
     display: flex;
     flex-direction: column;
@@ -400,7 +381,6 @@ html, body {
 .sidebar-item.active .sidebar-label {
     font-weight: 600;
 }
->>>>>>> f305f781b96c3e2e11ee4228835f90296ba3bd2b
 
 /* ========================================
    13. PANEL STYLES
