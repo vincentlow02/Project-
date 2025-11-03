@@ -4,6 +4,172 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ================================
+       Hokkaido Logo Overlay
+       ================================ */
+    .hokkaido-logo-container {
+      position: relative; /* 让内部 absolute 定位参考这个容器 */
+      display: inline-block;
+    }
+
+    /* 让 logo 叠在 Rectangle205.svg 上方 */
+    .hokkaido-logo {
+      position: absolute;
+      top: 80px; /* 调整 logo 距离矩形顶部的距离 */
+      left: 540px; /* 调整 logo 距离矩形左侧的距离 */
+      width: 220px; /* 可根据需求调整 logo 大小 */
+      z-index: 10; /* 确保 logo 显示在 Rectangle205.svg 上层 */
+      transition: transform 0.3s ease;
+    }
+
+    /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+    .hokkaido-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .ques-icon {
+      position: absolute;
+      top: 600px; /* 控制ques在Rectangle上的纵向位置 */
+      left: 470px; /* 控制ques的横向位置 */
+      width: 360px; /* 调整大小 */
+      z-index: 11; /* 比 logo 略高，确保显示在上层 */
+      transition: transform 0.3s ease;
+    }
+
+    .ques-icon:hover {
+      transform: scale(1.05);
+    }
+
+    .hokkaido-video-wrapper {
+      position: absolute;
+      top: 135px;
+      left: 260px;
+      width: min(800px, 90vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      z-index: 12;
+    }
+
+    .hokkaido-video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1095 / 692;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hokkaido-video-frame .hokkaido-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    .hokkaido-video-frame .hokkaido-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hokkaido-video-controls {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      color: #f5f5f5;
+    }
+
+    .hokkaido-play-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: #ff4d4f;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .hokkaido-play-button:hover {
+      background: #ff6668;
+      transform: translateY(-1px);
+    }
+
+    .hokkaido-play-button:active {
+      transform: translateY(0);
+    }
+
+    .hokkaido-play-button:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.8);
+      outline-offset: 3px;
+    }
+
+    .hokkaido-play-button .icon {
+      width: 12px;
+      height: 16px;
+      display: block;
+    }
+
+    .hokkaido-play-button .icon-pause {
+      display: none;
+    }
+
+    .hokkaido-play-button[data-state="playing"] .icon-play {
+      display: none;
+    }
+
+    .hokkaido-play-button[data-state="playing"] .icon-pause {
+      display: block;
+    }
+
+    .hokkaido-current-time,
+    .hokkaido-duration {
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .hokkaido-progress-track {
+      position: relative;
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .hokkaido-progress-track:active .hokkaido-progress-fill {
+      transition-duration: 0s;
+    }
+
+    .hokkaido-progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: #ff4d4f;
+      border-radius: inherit;
+      transition: width 0.1s linear;
+    }
+  </style>
   <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
 </head>
 
@@ -66,70 +232,43 @@
 
 
     
-        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
-             <div class="hokkaido-logo-container">
-  <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-   <img src="ques.svg" alt="Question Icon" class="ques-icon">
-   <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
-</div>
+        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle" style="position: relative; left: 2.4px;">
+        <div class="hokkaido-logo-container">
+          <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+          <img src="ques.svg" alt="Question Icon" class="ques-icon">
+          <div class="hokkaido-video-wrapper">
+            <div class="hokkaido-video-frame">
+              <video id="hokkaidoVideo" class="hokkaido-video" src="hokkaidojp.mp4" loop preload="metadata" playsinline></video>
+              <img src="hkdvideo.svg" alt="Hokkaido Video Frame" class="hokkaido-frame">
+            </div>
+            <div class="hokkaido-video-controls">
+              <button type="button" class="hokkaido-play-button" aria-label="播放影片" aria-pressed="false" data-state="paused">
+                <svg class="icon icon-play" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
+                  <path d="M0 0L12 7L0 14Z" fill="currentColor"></path>
+                </svg>
+                <svg class="icon icon-pause" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
+                  <rect width="4" height="14" fill="currentColor"></rect>
+                  <rect x="8" width="4" height="14" fill="currentColor"></rect>
+                </svg>
+              </button>
+              <span class="hokkaido-current-time" aria-live="off">00:00</span>
+              <div class="hokkaido-progress-track" role="progressbar" aria-label="播放進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="hokkaido-progress-fill"></div>
+              </div>
+              <span class="hokkaido-duration">00:00</span>
+            </div>
+          </div>
+        </div>
 
 
 
-          <img src="Rectangle205.svg" >
+          <img src="Rectangle205.svg">
    
         
 
 
-  <style>
-/* ================================
-   Hokkaido Logo Overlay
-   ================================ */
-.hokkaido-logo-container {
-  position: relative; /* 让内部 absolute 定位参考这个容器 */
-  display: inline-block;
-}
+  
 
-/* 让 logo 叠在 Rectangle205.svg 上方 */
-.hokkaido-logo {
-  position: absolute;
-  top:80px;   /* 调整 logo 距离矩形顶部的距离 */
-  left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
-  width: 220px; /* 可根据需求调整 logo 大小 */
-  z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
-  transition: transform 0.3s ease;
-}
-
-/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
-.hokkaido-logo:hover {
-  transform: scale(1.05);
-}
-
-  .ques-icon {
-      position: absolute;
-      top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
-      left: 470px;  /* 控制ques的横向位置 */
-      width: 360px;  /* 调整大小 */
-      z-index: 11;  /* 比 logo 略高，确保显示在上层 */
-      transition: transform 0.3s ease;
-    }
-
-    .ques-icon:hover {
-      transform: scale(1.05);
-    }
-
-    /* 新加入的视频图标 */
-.hokkaido-video {
-  position: absolute;
-  top: 135px;   /* 调整到矩形上适合的位置 */
-  left: 260px;
-  width: 800px;
-  z-index: 12;  /* 确保在最上层显示 */
-  transition: transform 0.3s ease;
-}
-  </style>
-</head>
-<body>
-</style>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -140,6 +279,12 @@
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const sidebar = document.getElementById('sidebar');
       const pageContent = document.getElementById('page-content');
+      const hokkaidoVideo = document.getElementById('hokkaidoVideo');
+      const playButton = document.querySelector('.hokkaido-play-button');
+      const currentTimeDisplay = document.querySelector('.hokkaido-current-time');
+      const durationDisplay = document.querySelector('.hokkaido-duration');
+      const progressTrack = document.querySelector('.hokkaido-progress-track');
+      const progressFill = document.querySelector('.hokkaido-progress-fill');
 
       const params = new URLSearchParams(window.location.search);
       const query = params.get('q')?.trim() || '';
@@ -245,6 +390,88 @@
           sidebar.classList.toggle('collapsed');
           pageContent.classList.toggle('sidebar-collapsed');
         });
+      }
+
+      function formatTime(totalSeconds) {
+        if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+          return '00:00';
+        }
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+
+      if (
+        hokkaidoVideo &&
+        playButton &&
+        currentTimeDisplay &&
+        durationDisplay &&
+        progressTrack &&
+        progressFill
+      ) {
+        const togglePlayback = () => {
+          if (hokkaidoVideo.paused) {
+            hokkaidoVideo.play();
+          } else {
+            hokkaidoVideo.pause();
+          }
+        };
+
+        const updateButtonState = () => {
+          const isPlaying = !hokkaidoVideo.paused;
+          playButton.dataset.state = isPlaying ? 'playing' : 'paused';
+          playButton.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+          playButton.setAttribute('aria-label', isPlaying ? '暫停影片' : '播放影片');
+        };
+
+        const updateProgress = () => {
+          const duration = hokkaidoVideo.duration || 0;
+          const current = hokkaidoVideo.currentTime || 0;
+          currentTimeDisplay.textContent = formatTime(current);
+          const percent = duration ? (current / duration) * 100 : 0;
+          progressFill.style.width = `${Math.min(Math.max(percent, 0), 100)}%`;
+          progressTrack.setAttribute('aria-valuenow', String(Math.min(Math.max(Math.round(percent), 0), 100)));
+          progressTrack.setAttribute('aria-valuetext', `${formatTime(current)} / ${formatTime(duration)}`);
+        };
+
+        playButton.addEventListener('click', () => {
+          togglePlayback();
+        });
+
+        hokkaidoVideo.addEventListener('click', () => {
+          togglePlayback();
+        });
+
+        hokkaidoVideo.addEventListener('loadedmetadata', () => {
+          durationDisplay.textContent = formatTime(hokkaidoVideo.duration);
+          updateProgress();
+        });
+
+        hokkaidoVideo.addEventListener('timeupdate', () => {
+          updateProgress();
+        });
+
+        hokkaidoVideo.addEventListener('play', updateButtonState);
+        hokkaidoVideo.addEventListener('pause', updateButtonState);
+
+        progressTrack.addEventListener('click', (event) => {
+          if (!Number.isFinite(hokkaidoVideo.duration) || hokkaidoVideo.duration <= 0) {
+            return;
+          }
+
+          const rect = progressTrack.getBoundingClientRect();
+          const clickPosition = Math.min(Math.max(event.clientX - rect.left, 0), rect.width);
+          const ratio = rect.width ? clickPosition / rect.width : 0;
+          hokkaidoVideo.currentTime = ratio * hokkaidoVideo.duration;
+        });
+
+        if (hokkaidoVideo.readyState >= 1 && Number.isFinite(hokkaidoVideo.duration)) {
+          durationDisplay.textContent = formatTime(hokkaidoVideo.duration);
+        }
+
+        updateButtonState();
+        updateProgress();
       }
 
       renderResults(filterResults(query));
