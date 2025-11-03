@@ -139,17 +139,20 @@
   position: absolute;
   top: 135px;   /* 调整到矩形上适合的位置 */
   left: 260px;
-  width: 800px; /* 根据框架实际宽度调整 */
-  aspect-ratio: 16 / 9; /* 保持视频比例，可根据框架调整 */
+  width: min(1260px, 80vw); /* 依据 SVG 尺寸的最大宽度，同时保持响应式 */
+  aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
   z-index: 12;
 }
 
 /* Wrapper keeps the iframe sized to the container */
 .vimeo-wrapper {
   position: absolute;
-  inset: 0;
+  top: 10px;    /* 对齐 SVG 内部矩形的起始高度 */
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
   overflow: hidden;
-  border-radius: 12px; /* 若框架有圆角，可调整或删除 */
+  border-radius: 17px; /* 匹配 SVG 的圆角 */
   z-index: 1;
 }
 
@@ -165,10 +168,10 @@
 /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
 .vimeo-toggle-hitbox {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 80px; /* 预留控制面板空间，可根据需要调整 */
+  top: 10px;
+  left: 3px;
+  right: 3px;
+  bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
   cursor: pointer;
   z-index: 2;
   background: transparent;
