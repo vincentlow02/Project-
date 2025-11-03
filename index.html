@@ -216,6 +216,34 @@
         </div>
       </main>
     </main>
+  <section id="save-page" class="page hidden">
+    
+    <div class="save-page-content">
+      
+      <div class="save-header">
+        <!-- <div id="save-back-btn" class="save-back-arrow">
+          <img src="assets/arrow-left.svg" alt="Back">
+        </div> -->
+        <h1>お気に入り</h1> </div>
+
+      <div class="save-grid">
+        
+       <div class="save-card">
+          
+          <video class="card-image" autoplay muted loop playsinline>
+            <source src="hokkaidojp.mp4" type="video/mp4">
+
+            Your browser does not support the video tag.
+          </video>
+          
+          <div class="card-info">
+            <h3>札幌・小樽 冬の旅行ガイド</h3> <p>10月16日 17:01</p>
+            <button type="button" class="card-open-btn">Open</button>
+          </div>
+        </div>
+
+        </div>
+    </div>
   </section>
 
   <!-- Profile Page -->
@@ -232,6 +260,9 @@
 
     <img src="profilecard.svg" alt="Profile Card" class="profile-card">
   </section>
+  
+
+
   <!-- JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -378,32 +409,61 @@
       updateClock();
       setInterval(updateClock, 1000);
 
-      // ========================================
-      // Star Icon (Show Save Page)
-      // ========================================
-      const starIcon = document.querySelector('.sidebar-item img[alt="Saved"]');
-      const saveBackBtn = document.getElementById('save-back-btn');
-      let isBlack = false;
+// ========================================
+      // Star Icon (Show Save Page)
+      // ========================================
 
-      if (starIcon) {
-        starIcon.addEventListener('click', () => {
-          starIcon.src = isBlack ? 'assets/star.svg' : 'assets/starblack.svg';
-          isBlack = !isBlack;
-          if (savePage) savePage.classList.remove('hidden');
-          if (mainContent) mainContent.classList.add('hidden');
-          if (searchInterface) searchInterface.classList.add('hidden');
-        });
-      }
+      // --- Get the DOM elements we need ---
+      // const savePage = document.getElementById('save-page'); // You already have this
+      // const pageContent = document.getElementById('page-content'); // You already have this
+      const saveBackBtn = document.getElementById('save-back-btn');
 
-      if (saveBackBtn) {
-        saveBackBtn.addEventListener('click', () => {
-          if (savePage) savePage.classList.add('hidden');
-          if (mainContent) mainContent.classList.remove('hidden');
-          if (searchInterface) searchInterface.classList.remove('hidden');
-          if (starIcon) starIcon.src = 'assets/star.svg';
-          isBlack = false;
-        });
-      }
+      // Get the *buttons* themselves, not just the images inside them
+      // The '?.' is optional chaining, a safe way to get the parent
+      const homeButton = document.querySelector('.sidebar-item img[alt="Home"]')?.closest('.sidebar-item');
+      const saveButton = document.querySelector('.sidebar-item img[alt="Saved"]')?.closest('.sidebar-item');
+
+      // Get the star image just to toggle its color
+      const starIconImg = document.querySelector('.sidebar-item img[alt="Saved"]');
+      let isBlack = false; // Your original toggle variable
+
+
+      // --- Click event for the "Saved" button ---
+      // Check if all elements exist before adding listeners
+      if (saveButton && homeButton && savePage && pageContent && starIconImg) {
+        
+        // **Listen on the whole button, not just the icon**
+        saveButton.addEventListener('click', () => {
+          // 1. Show the save page and hide the main content
+          savePage.classList.remove('hidden');
+          pageContent.classList.add('hidden');
+          
+          // 2. Swap the 'active' class from Home to Saved
+          homeButton.classList.remove('active');
+          saveButton.classList.add('active');
+          
+          // 3. Toggle icon color (your logic)
+          starIconImg.src = 'assets/starblack.svg';
+          isBlack = true;
+        });
+      }
+
+      // --- Click event for the "Back" button on the save page ---
+      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg) {
+        saveBackBtn.addEventListener('click', () => {
+          // 1. Hide the save page and show the main content
+          savePage.classList.add('hidden');
+          pageContent.classList.remove('hidden');
+          
+          // 2. Swap the 'active' class back to Home
+          saveButton.classList.remove('active');
+          homeButton.classList.add('active');
+          
+          // 3. Reset icon color (your logic)
+          starIconImg.src = 'assets/star.svg';
+          isBlack = false;
+        });
+      }
 
      // ========================================
 // Geolocation Display (Stable Version)

@@ -972,3 +972,153 @@ body.search-results-page .widget-container {
         gap: 24px;
     }
 }
+/* ========================================
+   23. SAVE PAGE
+   ======================================== */
+#save-page {
+    /* 改为白色背景 */
+    background-color: #EFEFEF;
+    color: #000000; /* 文字改为黑色 */
+    
+    /* 覆盖掉旧的视频背景样式 */
+    position: relative; /* 解除 absolute */
+    z-index: 1;
+    display: none; /* JS 会在 'hidden' 被移除时改为 flex */
+    
+    /* 允许滚动 */
+    overflow-y: auto;
+    
+    /* 匹配页面内容区域的设置 */
+    /* 注意: 请确保这与你在 style.css 中为 #page-content 设置的值一致 */
+    width: 100%;
+    height: 100vh; /* 或 100% */
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* 当 JS 移除 .hidden 类时 */
+#save-page:not(.hidden) {
+    display: block;
+}
+
+/* 这个页面不需要视频，隐藏它 */
+#save-page .background-video-pagecontent {
+    display: none;
+}
+
+.save-page-content {
+    width: 100%;
+    max-width: 1200px; /* 你可以调整这个最大宽度 */
+    margin: 0 auto;
+}
+
+.save-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.save-header h1 {
+    font-size: 2.2rem; /* "お気に入り" 标题 */
+    color: #000;
+    margin: 0;
+}
+
+/* 返回按钮的样式 */
+#save-back-btn.save-back-arrow {
+    background: #f0f0f0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-right: 20px;
+    
+    /* 重置之前残留的内联样式 */
+    font-size: 1rem;
+    gap: 0;
+    margin-bottom: 0;
+}
+
+#save-back-btn.save-back-arrow img {
+    width: 24px;
+    height: 24px;
+    transform: none; /* 解除 rotate(180deg) */
+}
+
+#save-back-btn.save-back-arrow span {
+    display: none; /* 隐藏 "ホームに戻る" (返回主页) 文字 */
+}
+
+/* 卡片网格 */
+.save-grid {
+    display: grid;
+    /* 响应式网格布局 */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* 卡片样式 */
+.save-card {
+    background: #ffffff;
+    border-radius: 16px;
+    /* 阴影调淡一点 */
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    overflow: hidden; /* 用于裁剪图片圆角 */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-out;
+}
+
+.save-card:hover {
+    transform: translateY(-5px);
+}
+
+.save-card .card-image {
+    width: 100%;
+    height: 180px; /* 固定图片高度 */
+    object-fit: cover; /* 裁剪并填充 */
+    background-color: #eee; /* 图片加载时的占位背景 */
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.save-card .card-info {
+    padding: 16px;
+    color: #333;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.save-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 4px 0;
+}
+
+.save-card p {
+    font-size: 0.85rem;
+    color: #777;
+    margin: 0 0 16px 0;
+    flex-grow: 1; /* 把按钮推到底部 */
+}
+
+.save-card .card-open-btn {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    align-self: flex-start; /* 按钮不要被拉伸 */
+    transition: background 0.2s;
+}
+
+.save-card .card-open-btn:hover {
+    background: #e0e0e0;
+}
