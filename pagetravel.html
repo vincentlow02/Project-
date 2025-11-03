@@ -66,29 +66,70 @@
 
 
     
-      <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle" style="position: relative; left: 2.4px;">
-      <div class="travel-video-section">
-        <img src="Rectangle205.svg" alt="Travel card background" class="travel-video-section__card">
-        <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="travel-video-section__logo">
-        <div class="travel-video-module">
-          <div class="travel-video-frame" id="hokkaidoVideoFrame" role="button" aria-label="Toggle Hokkaido video playback" tabindex="0">
-            <video id="hokkaidoVideo" class="travel-video" loop playsinline preload="metadata">
-              <source src="hokkaidojp.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-            <img src="ques.svg" alt="" aria-hidden="true" class="travel-video-frame__overlay">
-          </div>
-          <div class="travel-video-ui" aria-label="Playback progress">
-            <span class="travel-video-time travel-video-time--current" aria-label="Current playback time">00:00</span>
-            <div class="travel-video-progress">
-              <div class="travel-video-progress__track">
-                <div class="travel-video-progress__bar"></div>
-              </div>
-            </div>
-            <span class="travel-video-time travel-video-time--total" aria-label="Total duration">00:00</span>
-          </div>
-        </div>
-      </div>
+        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
+             <div class="hokkaido-logo-container">
+  <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+   <img src="ques.svg" alt="Question Icon" class="ques-icon">
+   <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
+</div>
+
+
+
+          <img src="Rectangle205.svg" >
+   
+        
+
+
+  <style>
+/* ================================
+   Hokkaido Logo Overlay
+   ================================ */
+.hokkaido-logo-container {
+  position: relative; /* 让内部 absolute 定位参考这个容器 */
+  display: inline-block;
+}
+
+/* 让 logo 叠在 Rectangle205.svg 上方 */
+.hokkaido-logo {
+  position: absolute;
+  top:80px;   /* 调整 logo 距离矩形顶部的距离 */
+  left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
+  width: 220px; /* 可根据需求调整 logo 大小 */
+  z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
+  transition: transform 0.3s ease;
+}
+
+/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+.hokkaido-logo:hover {
+  transform: scale(1.05);
+}
+
+  .ques-icon {
+      position: absolute;
+      top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
+      left: 470px;  /* 控制ques的横向位置 */
+      width: 360px;  /* 调整大小 */
+      z-index: 11;  /* 比 logo 略高，确保显示在上层 */
+      transition: transform 0.3s ease;
+    }
+
+    .ques-icon:hover {
+      transform: scale(1.05);
+    }
+
+    /* 新加入的视频图标 */
+.hokkaido-video {
+  position: absolute;
+  top: 135px;   /* 调整到矩形上适合的位置 */
+  left: 260px;
+  width: 800px;
+  z-index: 12;  /* 确保在最上层显示 */
+  transition: transform 0.3s ease;
+}
+  </style>
+</head>
+<body>
+</style>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -99,91 +140,6 @@
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const sidebar = document.getElementById('sidebar');
       const pageContent = document.getElementById('page-content');
-      const hokkaidoVideo = document.getElementById('hokkaidoVideo');
-      const hokkaidoVideoFrame = document.getElementById('hokkaidoVideoFrame');
-      const currentTimeEl = document.querySelector('.travel-video-time--current');
-      const totalTimeEl = document.querySelector('.travel-video-time--total');
-      const progressTrack = document.querySelector('.travel-video-progress__track');
-      const progressBar = document.querySelector('.travel-video-progress__bar');
-
-      if (hokkaidoVideo && hokkaidoVideoFrame && currentTimeEl && totalTimeEl && progressTrack && progressBar) {
-        const formatTime = (seconds) => {
-          if (!Number.isFinite(seconds) || seconds < 0) {
-            return '00:00';
-          }
-          const totalSeconds = Math.floor(seconds);
-          const minutes = Math.floor(totalSeconds / 60);
-          const remainder = totalSeconds % 60;
-          const paddedMinutes = String(minutes).padStart(2, '0');
-          const paddedSeconds = String(remainder).padStart(2, '0');
-          return `${paddedMinutes}:${paddedSeconds}`;
-        };
-
-        const updateCurrentTime = () => {
-          currentTimeEl.textContent = formatTime(hokkaidoVideo.currentTime);
-        };
-
-        const updateProgressBar = () => {
-          const progress = hokkaidoVideo.duration
-            ? (hokkaidoVideo.currentTime / hokkaidoVideo.duration) * 100
-            : 0;
-        
-          progressBar.style.width = `${progress}%`;
-        };
-
-        const syncPlaybackUI = () => {
-          updateCurrentTime();
-          updateProgressBar();
-        };
-
-        const updateTotalTime = () => {
-          totalTimeEl.textContent = formatTime(hokkaidoVideo.duration);
-        };
-
-        const togglePlayback = () => {
-          if (hokkaidoVideo.paused || hokkaidoVideo.ended) {
-            hokkaidoVideo.play().catch(() => {
-              /* autoplay may be blocked; ignore */
-            });
-          } else {
-            hokkaidoVideo.pause();
-          }
-        };
-
-        const seekFromEvent = (event) => {
-          if (!hokkaidoVideo.duration) {
-            return;
-          }
-          const rect = progressTrack.getBoundingClientRect();
-          const offsetX = event.clientX - rect.left;
-          const ratio = Math.min(Math.max(offsetX / rect.width, 0), 1);
-          hokkaidoVideo.currentTime = ratio * hokkaidoVideo.duration;
-        };
-
-        hokkaidoVideo.addEventListener('loadedmetadata', () => {
-          updateTotalTime();
-          syncPlaybackUI();
-        });
-
-        hokkaidoVideo.addEventListener('timeupdate', syncPlaybackUI);
-        hokkaidoVideo.addEventListener('play', syncPlaybackUI);
-        hokkaidoVideo.addEventListener('pause', syncPlaybackUI);
-
-        hokkaidoVideoFrame.addEventListener('click', togglePlayback);
-        progressTrack.addEventListener('click', seekFromEvent);
-
-        hokkaidoVideoFrame.addEventListener('keydown', (event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
-            event.preventDefault();
-            togglePlayback();
-          }
-        });
-
-        if (hokkaidoVideo.readyState >= 1) {
-          updateTotalTime();
-          syncPlaybackUI();
-        }
-      }
 
       const params = new URLSearchParams(window.location.search);
       const query = params.get('q')?.trim() || '';
