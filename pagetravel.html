@@ -137,32 +137,34 @@
 /* Vimeo player container positioned where the frame should sit */
 .hokkaido-video-container {
   position: absolute;
-  top: 135px;   /* 调整到矩形上适合的位置 */
+  top: 145px;   /* 调整到矩形上适合的位置 */
   left: 260px;
-  width: min(1260px, 80vw); /* 依据 SVG 尺寸的最大宽度，同时保持响应式 */
+  width: min(820px, 60vw);
   aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
-  z-index: 12;
+  border-radius:1203px;
 }
 
 /* Wrapper keeps the iframe sized to the container */
 .vimeo-wrapper {
   position: absolute;
-  top: 10px;    /* 对齐 SVG 内部矩形的起始高度 */
-  right: 3px;
+  top: 14px;    /* 对齐 SVG 内部矩形的起始高度 */
+  right: 10px;
   bottom: 3px;
-  left: 3px;
+  left: 0px;
   overflow: hidden;
-  border-radius: 17px; /* 匹配 SVG 的圆角 */
+  border-radius: 44px; /* 匹配 SVG 的圆角 */
   z-index: 1;
+   transform: scale(1.034); 
 }
 
 .vimeo-iframe {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 101%;
+  height: 99%;
   border: 0;
   object-fit: cover; /* 填满容器且保持比例 */
+  border-radius: 20px;
 }
 
 /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
