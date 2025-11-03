@@ -972,44 +972,33 @@ body.search-results-page .widget-container {
         gap: 24px;
     }
 }
-<<<<<<< HEAD
 /* ========================================
    23. SAVE PAGE
    ======================================== */
 #save-page {
-    /* 改为白色背景 */
     background-color: #EFEFEF;
-    color: #000000; /* 文字改为黑色 */
-    
-    /* 覆盖掉旧的视频背景样式 */
-    position: relative; /* 解除 absolute */
+    color: #000000;
+    position: relative;
     z-index: 1;
-    display: none; /* JS 会在 'hidden' 被移除时改为 flex */
-    
-    /* 允许滚动 */
+    display: none;
     overflow-y: auto;
-    
-    /* 匹配页面内容区域的设置 */
-    /* 注意: 请确保这与你在 style.css 中为 #page-content 设置的值一致 */
     width: 100%;
-    height: 100vh; /* 或 100% */
+    height: 100vh;
     padding: 40px 20px;
     box-sizing: border-box;
 }
 
-/* 当 JS 移除 .hidden 类时 */
 #save-page:not(.hidden) {
     display: block;
 }
 
-/* 这个页面不需要视频，隐藏它 */
 #save-page .background-video-pagecontent {
     display: none;
 }
 
 .save-page-content {
     width: 100%;
-    max-width: 1200px; /* 你可以调整这个最大宽度 */
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -1020,12 +1009,11 @@ body.search-results-page .widget-container {
 }
 
 .save-header h1 {
-    font-size: 2.2rem; /* "お気に入り" 标题 */
+    font-size: 2.2rem;
     color: #000;
     margin: 0;
 }
 
-/* 返回按钮的样式 */
 #save-back-btn.save-back-arrow {
     background: #f0f0f0;
     border-radius: 50%;
@@ -1036,8 +1024,6 @@ body.search-results-page .widget-container {
     justify-content: center;
     cursor: pointer;
     margin-right: 20px;
-    
-    /* 重置之前残留的内联样式 */
     font-size: 1rem;
     gap: 0;
     margin-bottom: 0;
@@ -1046,28 +1032,24 @@ body.search-results-page .widget-container {
 #save-back-btn.save-back-arrow img {
     width: 24px;
     height: 24px;
-    transform: none; /* 解除 rotate(180deg) */
+    transform: none;
 }
 
 #save-back-btn.save-back-arrow span {
-    display: none; /* 隐藏 "ホームに戻る" (返回主页) 文字 */
+    display: none;
 }
 
-/* 卡片网格 */
 .save-grid {
     display: grid;
-    /* 响应式网格布局 */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
 }
 
-/* 卡片样式 */
 .save-card {
     background: #ffffff;
     border-radius: 16px;
-    /* 阴影调淡一点 */
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    overflow: hidden; /* 用于裁剪图片圆角 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s ease-out;
@@ -1079,9 +1061,9 @@ body.search-results-page .widget-container {
 
 .save-card .card-image {
     width: 100%;
-    height: 180px; /* 固定图片高度 */
-    object-fit: cover; /* 裁剪并填充 */
-    background-color: #eee; /* 图片加载时的占位背景 */
+    height: 180px;
+    object-fit: cover;
+    background-color: #eee;
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -1104,7 +1086,7 @@ body.search-results-page .widget-container {
     font-size: 0.85rem;
     color: #777;
     margin: 0 0 16px 0;
-    flex-grow: 1; /* 把按钮推到底部 */
+    flex-grow: 1;
 }
 
 .save-card .card-open-btn {
@@ -1116,12 +1098,156 @@ body.search-results-page .widget-container {
     font-weight: 500;
     color: #333;
     cursor: pointer;
-    align-self: flex-start; /* 按钮不要被拉伸 */
+    align-self: flex-start;
     transition: background 0.2s;
 }
 
 .save-card .card-open-btn:hover {
     background: #e0e0e0;
 }
-=======
->>>>>>> 0724f4d7564e123e66fa9ba6919b97541134296d
+
+/* ========================================
+   24. TRAVEL VIDEO MODULE
+   ======================================== */
+.travel-video-section {
+    position: relative;
+    width: min(92vw, 960px);
+    margin: 80px auto;
+}
+
+.travel-video-section__card {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.travel-video-section__logo {
+    position: absolute;
+    top: clamp(48px, 8vw, 140px);
+    left: clamp(48px, 12vw, 220px);
+    width: clamp(160px, 20vw, 240px);
+    z-index: 2;
+}
+
+.travel-video-module {
+    position: absolute;
+    bottom: clamp(72px, 12vw, 220px);
+    right: clamp(48px, 12vw, 220px);
+    width: clamp(260px, 40vw, 520px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    z-index: 3;
+}
+
+.travel-video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 464 / 221;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+}
+
+.travel-video-frame:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.6);
+    border-radius: 1000px;
+}
+
+.travel-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    -webkit-mask-image: url('ques.svg');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-position: center;
+    mask-image: url('ques.svg');
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    mask-position: center;
+}
+
+.travel-video-frame__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.28));
+}
+
+.travel-video-ui {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    font-size: 0.9rem;
+    color: #1f1f1f;
+}
+
+.travel-video-progress {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.travel-video-progress__track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(31, 31, 31, 0.18);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.travel-video-progress__bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: #ff4d4f;
+    border-radius: inherit;
+    transition: width 0.1s linear;
+}
+
+.travel-video-time {
+    min-width: 52px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+}
+
+@media (max-width: 900px) {
+    .travel-video-section {
+        width: min(94vw, 560px);
+        margin: 48px auto;
+        padding: 0 16px;
+    }
+
+    .travel-video-section__logo {
+        position: static;
+        transform: none;
+        margin: 0 auto 24px;
+        display: block;
+    }
+
+    .travel-video-module {
+        position: static;
+        width: 100%;
+        gap: 16px;
+    }
+
+    .travel-video-ui {
+        color: #1f1f1f;
+    }
+}
