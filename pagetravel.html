@@ -65,29 +65,71 @@
     </div>
 
 
-
     
         <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
-      
+             <div class="hokkaido-logo-container">
+  <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+   <img src="ques.svg" alt="Question Icon" class="ques-icon">
+   <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
+</div>
+
+
+
           <img src="Rectangle205.svg" >
+   
+        
 
-        <div class="results-panel" id="resultsPanel" aria-live="polite">
-          <header class="results-header">
-            <p class="results-tag">&#26908;&#32034;&#32080;&#26524;</p>
-            <h1 id="results-title">&#12362;&#12377;&#12377;&#12417;&#12398;&#26053;&#12503;&#12521;&#12531;&#12434;&#12372;&#32057;&#20171;</h1>
-          </header>
 
-          <div class="results-grid" id="resultsGrid"></div>
+  <style>
+/* ================================
+   Hokkaido Logo Overlay
+   ================================ */
+.hokkaido-logo-container {
+  position: relative; /* 让内部 absolute 定位参考这个容器 */
+  display: inline-block;
+}
 
-          <div class="results-empty hidden" id="resultsEmpty">
-            <p>&#38306;&#36899;&#12377;&#12427;&#12503;&#12521;&#12531;&#12364;&#35211;&#12388;&#12363;&#12426;&#12414;&#12379;&#12435;&#12391;&#12375;&#12383;&#12290;&#21029;&#12398;&#12461;&#12540;&#12527;&#12540;&#12489;&#12391;&#12362;&#35430;&#12375;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
-          </div>
+/* 让 logo 叠在 Rectangle205.svg 上方 */
+.hokkaido-logo {
+  position: absolute;
+  top:80px;   /* 调整 logo 距离矩形顶部的距离 */
+  left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
+  width: 220px; /* 可根据需求调整 logo 大小 */
+  z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
+  transition: transform 0.3s ease;
+}
 
-          <a class="results-back-link" href="index.html">&#12488;&#12483;&#12503;&#12395;&#25147;&#12427;</a>
-        </div>
-      </main>
-    </main>
-  </section>
+/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+.hokkaido-logo:hover {
+  transform: scale(1.05);
+}
+
+  .ques-icon {
+      position: absolute;
+      top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
+      left: 470px;  /* 控制ques的横向位置 */
+      width: 360px;  /* 调整大小 */
+      z-index: 11;  /* 比 logo 略高，确保显示在上层 */
+      transition: transform 0.3s ease;
+    }
+
+    .ques-icon:hover {
+      transform: scale(1.05);
+    }
+
+    /* 新加入的视频图标 */
+.hokkaido-video {
+  position: absolute;
+  top: 135px;   /* 调整到矩形上适合的位置 */
+  left: 260px;
+  width: 800px;
+  z-index: 12;  /* 确保在最上层显示 */
+  transition: transform 0.3s ease;
+}
+  </style>
+</head>
+<body>
+</style>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
