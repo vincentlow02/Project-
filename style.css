@@ -972,6 +972,7 @@ body.search-results-page .widget-container {
         gap: 24px;
     }
 }
+<<<<<<< HEAD
 /* ========================================
    23. SAVE PAGE
    ======================================== */
@@ -1122,3 +1123,5 @@ body.search-results-page .widget-container {
 .save-card .card-open-btn:hover {
     background: #e0e0e0;
 }
+=======
+>>>>>>> 0724f4d7564e123e66fa9ba6919b97541134296d
