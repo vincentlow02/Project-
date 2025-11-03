@@ -4,97 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <style>
-    /* ================================
-       Hokkaido Logo Overlay
-       ================================ */
-    .hokkaido-logo-container {
-      position: relative; /* 让内部 absolute 定位参考这个容器 */
-      display: inline-block;
-    }
-
-    /* 让 logo 叠在 Rectangle205.svg 上方 */
-    .hokkaido-logo {
-      position: absolute;
-      top: 80px; /* 调整 logo 距离矩形顶部的距离 */
-      left: 540px; /* 调整 logo 距离矩形左侧的距离 */
-      width: 220px; /* 可根据需求调整 logo 大小 */
-      z-index: 10; /* 确保 logo 显示在 Rectangle205.svg 上层 */
-      transition: transform 0.3s ease;
-    }
-
-    /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
-    .hokkaido-logo:hover {
-      transform: scale(1.05);
-    }
-
-    /* ================================
-       Vimeo Player Layout inside ques.svg
-       ================================ */
-    .ques-video-container {
-      position: absolute;
-      top: 600px; /* 调整视频与 ques.svg 的纵向位置 */
-      left: 470px; /* 调整视频与 ques.svg 的横向位置 */
-      width: 464px; /* 根据 ques.svg 的原始宽度，后续可按需微调 */
-      aspect-ratio: 464 / 221; /* 维持 ques.svg 框架比例 */
-      z-index: 11;
-    }
-
-    .ques-video-container .vimeo-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      border-radius: 26px; /* 与 ques.svg 的圆角一致，可根据视觉需求调整 */
-    }
-
-    .vimeo-iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      object-fit: cover; /* 保持视频比例自适应并铺满 ques.svg 内侧 */
-      background: #000;
-      z-index: 1;
-    }
-
-    .vimeo-click-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      background: transparent;
-      border: 0;
-      padding: 0;
-      cursor: pointer;
-      clip-path: inset(0 0 20% 0); /* 默认预留底部 20% 让出 Vimeo 控制条，需要时可调整 */
-    }
-
-    .vimeo-click-overlay:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.6);
-      outline-offset: 4px;
-    }
-
-    .ques-frame {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .hokkaido-frame {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      z-index: 4;
-    }
-  </style>
   <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
 </head>
 
@@ -157,50 +66,70 @@
 
 
     
-        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle" style="position: relative; left: 2.4px;">
-        <div class="hokkaido-logo-container">
-          <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-          <!-- Vimeo 播放器嵌入在 ques.svg 框架内，可通过调整 top/left/width 重新定位 -->
-          <div class="ques-video-container">
-            <div class="vimeo-wrapper">
-              <!-- Vimeo 官方 iframe，参数保持循环播放、默认静音关闭 -->
-              <iframe
-                id="hokkaidoVimeoPlayer"
-                class="vimeo-iframe"
-                src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&title=0&byline=0&portrait=0&controls=1"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowfullscreen
-                title="Hokkaido Travel Highlights"
-              ></iframe>
-              <!-- 覆盖层用于点击切换播放/暂停，可调整 clip-path 预留控制条高度 -->
-              <button
-                type="button"
-                class="vimeo-click-overlay"
-                aria-label="播放影片"
-                aria-pressed="false"
-                data-state="paused"
-                title="点击视频切换播放 / 暂停"
-                tabindex="0"
-              ></button>
-              <!-- ques.svg 作为可视框架，保持在视频上方但不阻挡交互 -->
-              <img src="ques.svg" alt="Video frame decoration" class="ques-frame">
-              <!-- hkdvideo.svg 保持在最上层，视频位于其下方 -->
-              <img src="hkdvideo.svg" alt="Hokkaido video overlay" class="hokkaido-frame">
-            </div>
-          </div>
-        </div>
+        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
+             <div class="hokkaido-logo-container">
+  <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+   <img src="ques.svg" alt="Question Icon" class="ques-icon">
+   <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
+</div>
 
 
 
-          <img src="Rectangle205.svg">
+          <img src="Rectangle205.svg" >
    
         
 
 
-  
+  <style>
+/* ================================
+   Hokkaido Logo Overlay
+   ================================ */
+.hokkaido-logo-container {
+  position: relative; /* 让内部 absolute 定位参考这个容器 */
+  display: inline-block;
+}
 
+/* 让 logo 叠在 Rectangle205.svg 上方 */
+.hokkaido-logo {
+  position: absolute;
+  top:80px;   /* 调整 logo 距离矩形顶部的距离 */
+  left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
+  width: 220px; /* 可根据需求调整 logo 大小 */
+  z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
+  transition: transform 0.3s ease;
+}
 
-  <script src="https://player.vimeo.com/api/player.js"></script>
+/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+.hokkaido-logo:hover {
+  transform: scale(1.05);
+}
+
+  .ques-icon {
+      position: absolute;
+      top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
+      left: 470px;  /* 控制ques的横向位置 */
+      width: 360px;  /* 调整大小 */
+      z-index: 11;  /* 比 logo 略高，确保显示在上层 */
+      transition: transform 0.3s ease;
+    }
+
+    .ques-icon:hover {
+      transform: scale(1.05);
+    }
+
+    /* 新加入的视频图标 */
+.hokkaido-video {
+  position: absolute;
+  top: 135px;   /* 调整到矩形上适合的位置 */
+  left: 260px;
+  width: 800px;
+  z-index: 12;  /* 确保在最上层显示 */
+  transition: transform 0.3s ease;
+}
+  </style>
+</head>
+<body>
+</style>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -211,8 +140,6 @@
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const sidebar = document.getElementById('sidebar');
       const pageContent = document.getElementById('page-content');
-      const vimeoIframe = document.getElementById('hokkaidoVimeoPlayer');
-      const vimeoClickOverlay = document.querySelector('.vimeo-click-overlay');
 
       const params = new URLSearchParams(window.location.search);
       const query = params.get('q')?.trim() || '';
@@ -318,78 +245,6 @@
           sidebar.classList.toggle('collapsed');
           pageContent.classList.toggle('sidebar-collapsed');
         });
-      }
-
-      // Vimeo 播放器初始化：绑定 API 与点击切换逻辑
-      const initializeVimeoPlayer = () => {
-        if (!vimeoIframe || typeof Vimeo === 'undefined' || !Vimeo?.Player) {
-          console.warn('Vimeo Player API 尚未加载，稍后可再次尝试初始化。');
-          return;
-        }
-
-        const player = new Vimeo.Player(vimeoIframe, {
-          loop: true,
-        });
-
-        const updateOverlayState = (isPlaying) => {
-          if (!vimeoClickOverlay) {
-            return;
-          }
-
-          vimeoClickOverlay.dataset.state = isPlaying ? 'playing' : 'paused';
-          vimeoClickOverlay.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-          vimeoClickOverlay.setAttribute('aria-label', isPlaying ? '暫停影片' : '播放影片');
-        };
-
-        player.on('play', () => {
-          updateOverlayState(true);
-        });
-
-        player.on('pause', () => {
-          updateOverlayState(false);
-        });
-
-        player.ready().then(() => {
-          player.setLoop(true);
-          updateOverlayState(false);
-        });
-
-        if (vimeoClickOverlay) {
-          const togglePlayback = async () => {
-            try {
-              const isPaused = await player.getPaused();
-              if (isPaused) {
-                await player.setMuted(false);
-                await player.setVolume(1);
-                await player.play();
-              } else {
-                await player.pause();
-              }
-            } catch (error) {
-              console.error('切換 Vimeo 播放狀態時發生錯誤', error);
-            }
-          };
-
-          vimeoClickOverlay.addEventListener('click', (event) => {
-            event.preventDefault();
-            togglePlayback();
-          });
-
-          vimeoClickOverlay.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              togglePlayback();
-            }
-          });
-        }
-      };
-
-      if (vimeoIframe) {
-        if (typeof Vimeo !== 'undefined' && Vimeo?.Player) {
-          initializeVimeoPlayer();
-        } else {
-          window.addEventListener('load', initializeVimeoPlayer, { once: true });
-        }
       }
 
       renderResults(filterResults(query));
