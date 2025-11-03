@@ -70,7 +70,24 @@
              <div class="hokkaido-logo-container">
   <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
    <img src="ques.svg" alt="Question Icon" class="ques-icon">
-   <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
+   <div class="hokkaido-video-container">
+    <!-- Vimeo iframe sits beneath the decorative frame -->
+    <div class="vimeo-wrapper">
+      <iframe
+        class="vimeo-iframe"
+        src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+        title="Hokkaido Experience"
+      ></iframe>
+    </div>
+
+    <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
+    <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+
+    <!-- Decorative SVG frame stays visible on top -->
+    <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+  </div>
 </div>
 
 
@@ -117,13 +134,54 @@
       transform: scale(1.05);
     }
 
-    /* 新加入的视频图标 */
-.hokkaido-video {
+/* Vimeo player container positioned where the frame should sit */
+.hokkaido-video-container {
   position: absolute;
   top: 135px;   /* 调整到矩形上适合的位置 */
   left: 260px;
-  width: 800px;
-  z-index: 12;  /* 确保在最上层显示 */
+  width: 800px; /* 根据框架实际宽度调整 */
+  aspect-ratio: 16 / 9; /* 保持视频比例，可根据框架调整 */
+  z-index: 12;
+}
+
+/* Wrapper keeps the iframe sized to the container */
+.vimeo-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 12px; /* 若框架有圆角，可调整或删除 */
+  z-index: 1;
+}
+
+.vimeo-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover; /* 填满容器且保持比例 */
+}
+
+/* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
+.vimeo-toggle-hitbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 80px; /* 预留控制面板空间，可根据需要调整 */
+  cursor: pointer;
+  z-index: 2;
+  background: transparent;
+}
+
+/* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
+.hokkaido-video-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
   transition: transform 0.3s ease;
 }
   </style>
@@ -131,8 +189,27 @@
 <body>
 </style>
 
+  <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const iframe = document.querySelector('.vimeo-iframe');
+      if (iframe) {
+        const player = new Vimeo.Player(iframe);
+        const toggleZone = document.querySelector('.vimeo-toggle-hitbox');
+
+        if (toggleZone) {
+          toggleZone.addEventListener('click', () => {
+            player.getPaused().then((paused) => {
+              if (paused) {
+                player.play();
+              } else {
+                player.pause();
+              }
+            });
+          });
+        }
+      }
+
       const searchInput = document.querySelector('.search-bar input');
       const searchQueryLabel = document.getElementById('search-query');
       const resultsGrid = document.getElementById('resultsGrid');
