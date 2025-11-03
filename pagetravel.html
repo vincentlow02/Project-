@@ -71,6 +71,12 @@
   <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
    <img src="ques.svg" alt="Question Icon" class="ques-icon">
    <img src="hkdvideo.svg" alt="VideoIcon" class="hokkaido-video">
+   <div class="hokkaido-video-player-wrapper">
+     <video id="hokkaidoVideo" class="hokkaido-video-player" loop>
+       <source src="hokkaidojp.mp4" type="video/mp4">
+       Your browser does not support the video tag.
+     </video>
+   </div>
 </div>
 
 
@@ -126,6 +132,20 @@
   z-index: 12;  /* 确保在最上层显示 */
   transition: transform 0.3s ease;
 }
+
+.hokkaido-video-player-wrapper {
+  position: absolute;
+  top: 135px;
+  left: 260px;
+  width: 800px;
+  z-index: 11;
+}
+
+.hokkaido-video-player {
+  width: 100%;
+  height: auto;
+  display: block;
+}
   </style>
 </head>
 <body>
@@ -140,6 +160,42 @@
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const sidebar = document.getElementById('sidebar');
       const pageContent = document.getElementById('page-content');
+      const hokkaidoVideo = document.getElementById('hokkaidoVideo');
+      const hokkaidoVideoOverlay = document.querySelector('.hokkaido-video');
+
+      if (hokkaidoVideo) {
+        let hasStarted = false;
+        const videoContainer = hokkaidoVideo.closest('.hokkaido-logo-container');
+
+        const handleVideoPlay = () => {
+          if (hasStarted) {
+            return;
+          }
+
+          const playPromise = hokkaidoVideo.play();
+          if (playPromise instanceof Promise) {
+            playPromise.then(() => {
+              hasStarted = true;
+              if (hokkaidoVideoOverlay) {
+                hokkaidoVideoOverlay.style.display = 'none';
+              }
+            }).catch(() => {
+              /* 播放失败时保持暂停状态 */
+            });
+          } else {
+            hasStarted = true;
+            if (hokkaidoVideoOverlay) {
+              hokkaidoVideoOverlay.style.display = 'none';
+            }
+          }
+        };
+
+        if (videoContainer) {
+          videoContainer.addEventListener('click', handleVideoPlay, { once: false });
+        } else {
+          hokkaidoVideo.addEventListener('click', handleVideoPlay, { once: false });
+        }
+      }
 
       const params = new URLSearchParams(window.location.search);
       const query = params.get('q')?.trim() || '';
