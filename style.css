@@ -288,19 +288,6 @@ html, body {
     z-index: 20;
 }
 
-/* ========================================
-   11. SEARCH INTERFACE
-   ======================================== */
-#searchInterface {
-    justify-content: initial;
-    align-items: initial;
-    background-color: white;
-    color: #333;
-}
-
-#searchInterface:not(.hidden) {
-    display: flex;
-}
 
 #page-content {
     flex-grow: 1;
@@ -367,43 +354,115 @@ html, body {
 .page-content-button:hover img {
     filter: brightness(0.75);
 }
+/* ========================================
+   11. SEARCH INTERFACE
+   ======================================== */
+#searchInterface {
+    justify-content: initial;
+    align-items: initial;
+    background-color: black;
+    color: #333;
+}
+
 
 /* ========================================
-   12. SIDEBAR STYLES
-   ======================================== */
+   12. SIDEBAR STYLES (侧边栏样式) - [已修复]
+   ======================================== */
+
+/* * 关键修复 #1:
+ * 将 #sidebar 自身设为 flex 容器，
+ * 这样它的子元素 (icon-bar 和 content-panel) 就会水平并排。
+ */
+#sidebar {
+    display: flex;         /* <-- 这是最重要的修复！ */
+    flex-shrink: 0;      /* 防止侧边栏在窗口缩小时被压扁 */
+    height: 100vh;         /* 占满全屏高度 */
+    position: relative;
+    z-index: 100;
+    background-color: #ffffff; /* 确保侧边栏有背景色 */
+}
+
+/* * 关键修复 #2:
+ * 给你的 "sidebar-icon-bar" (HTML里的) 一个固定的宽度。
+ * 注意: 你的HTML里，.sidebar-nav 是在 .sidebar-icon-bar 里面的。
+ */
+.sidebar-icon-bar {
+    width: 100px; /* 给图标栏一个固定宽度，例如 100px */
+    flex-shrink: 0; /* 防止此图标栏被压缩 */
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* 让 toggle 按钮和 nav 垂直排列 */
+    align-items: center; /* 水平居中所有图标 */
+    padding-top: 20px; /* 顶部留点空间 */
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0; /* 在图标栏右侧加个边框 */
+    background-color: #fcfcfc; /* 可以给个微妙的背景色 */
+}
+
+
+/* 侧边栏展开时的内容面板 */
 #sidebar .sidebar-content-panel {
+    width: 300px; /* ★ 给一个展开时的固定宽度, e.g., 300px */
     padding: 20px;
     box-sizing: border-box;
-    border-right: 1px solid #e0e0e0;
-    transition: width 0.01s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.01s ease, padding 0.01s ease;
-    overflow: hidden;
+    /* 边框从这里移到 .sidebar-icon-bar 上了 */
+    /* border-right: 1px solid #e0e0e0; */ 
+    
+    /* * 推荐: 把 0.01s 改成 0.3s，动画更平滑
+     */
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.3s ease, 
+                padding 0.3s ease;
+    
+    overflow-x: hidden; /* 隐藏水平溢出 */
+    overflow-y: auto;   /* 允许内容垂直滚动 */
     white-space: nowrap;
+    opacity: 1; /* 展开时完全不透明 */
 }
 
+/* 当侧边栏有 .collapsed (折叠) 类时的内容面板 */
 #sidebar.collapsed .sidebar-content-panel {
-    width: 0;
+    width: 0; /* ★ 宽度变为 0 */
     padding: 20px 0;
     pointer-events: none;
+    opacity: 0; /* ★ 折叠时变为透明 */
+    border-right: none; /* 确保折叠时没有边框 */
 }
 
+/* 侧边栏的导航区域 (图标的父容器) */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
     margin-top: 36px;
+    width: 100%; /* 占满图标栏的宽度 */
 }
 
+/* * 关键修复 #3:
+ * 移除了不稳定的 "left: 30px"
+ * 现在它会自动在 sidebar-icon-bar 中居中
+ */
 .sidebar-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: 24px;
-    left: 30px;
+    /* top: 24px; */  /* 你可以保留或移除这个 */
+    /* left: 30px; */ /* ★ 移除这个! 它导致了布局问题 */
     gap: 8px;
-    z-index: 100;
+    width: 100%; /* 占满父容器宽度，帮助居中 */
+    /* z-index: 100; (在这里通常不是必须的) */
 }
+
+/* 同样修复一下你的切换按钮 */
+#sidebar-toggle {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
 
 .sidebar-item .icon img {
     width: 44px;
@@ -420,6 +479,10 @@ html, body {
     color: #332;
     letter-spacing: 0.08em;
     text-align: center;
+    /* 优化：防止标签在折叠动画中换行 */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ========================================
