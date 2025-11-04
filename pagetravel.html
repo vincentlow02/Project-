@@ -8,19 +8,15 @@
 
   <style>
   /* ================================
-     Hokkaido & Finland Video Modules
+     Hokkaido Logo Overlay
      ================================ */
-  .hokkaido-logo-container,
-  .finland-logo-container {
+  .hokkaido-logo-container {
     position: relative; /* 让内部 absolute 定位参考这个容器 */
-    display: block;
-    width: 100%;
-    height: 100%;
+    display: inline-block;
   }
 
   /* 让 logo 叠在 Rectangle205.svg 上方 */
-  .hokkaido-logo,
-  .finland-logo {
+  .hokkaido-logo {
     position: absolute;
     top: 17px;   /* 调整 logo 距离矩形顶部的距离 */
     left: -160px;  /* 调整 logo 距离矩形左侧的距离 */
@@ -30,8 +26,7 @@
   }
 
   /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
-  .hokkaido-logo:hover,
-  .finland-logo:hover {
+  .hokkaido-logo:hover {
     transform: scale(1.05);
   }
 
@@ -49,8 +44,7 @@
   }
 
   /* Vimeo player container positioned where the frame should sit */
-  .hokkaido-video-container,
-  .finland-video-container {
+  .hokkaido-video-container {
     position: absolute;
     top: 69px;   /* 调整到矩形上适合的位置 */
     left: -480px;
@@ -104,6 +98,94 @@
     pointer-events: none;
     transition: transform 0.3s ease;
   }
+
+  * ================================
+       Finland 视频模块
+       ================================ */
+    .finland-logo-container {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .finland-logo {
+      position: absolute;
+      top: 80px;
+      left: 1400px;
+      width: 130px;
+      z-index: 10;
+      transition: transform 0.3s ease;
+    }
+
+    .finland-logo:hover {
+      transform: scale(1);
+    }
+
+    .finland-logo-container .ques-icon {
+      position: absolute;
+      top: 512px;
+      left: 2240px;
+      width: 360px;
+      z-index: 11;
+      transition: transform 0.3s ease;
+    }
+
+    .finland-logo-container .ques-icon:hover {
+      transform: scale(1.05);
+    }
+
+    .finland-video-container {
+      position: absolute;
+      top: 134px;
+      left: 1270px;
+      width: min(860px, 60vw);
+      aspect-ratio: 1260 / 710;
+      border-radius: 1203px;
+    }
+
+    .finland-video-container .vimeo-wrapper {
+      position: absolute;
+      top: 14px;
+      right: 10px;
+      bottom: 3px;
+      left: 0;
+      overflow: hidden;
+      border-radius: 44px;
+      z-index: 1;
+      transform: scale(1.034);
+    }
+
+    .finland-video-container .vimeo-iframe {
+      position: absolute;
+      inset: 0;
+      width: 101%;
+      height: 99%;
+      border: 0;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .finland-video-container .vimeo-toggle-hitbox {
+      position: absolute;
+      top: 10px;
+      left: 3px;
+      right: 3px;
+      bottom: calc(3px + 80px);
+      cursor: pointer;
+      z-index: 2;
+      background: transparent;
+    }
+
+    .finland-video-container .hokkaido-video-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+      transition: transform 0.3s ease;
+    }
   </style>
 </head>
 
@@ -167,35 +249,35 @@
     </div>
 
 
-      <main id="page-content">
-        <div class="video-modules-track">
-          <div class="video-module hokkaido-module">
-            <img src="Rectangle205.svg" alt="Hokkaido Background" class="video-module-bg">
-            <div class="hokkaido-logo-container">
-              <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-              <img src="ques.svg" alt="Question Icon" class="ques-icon">
-              <div class="hokkaido-video-container" data-video-container>
-                <!-- Vimeo iframe sits beneath the decorative frame -->
-                <div class="vimeo-wrapper">
-                  <iframe
-                    class="vimeo-iframe"
-                    src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
-                    title="Hokkaido Experience"
-                  ></iframe>
-                </div>
-
-                <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
-                <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
-
-                <!-- Decorative SVG frame stays visible on top -->
-                <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-              </div>
-            </div>
+    <main id="page-content">
+      
+      <img src="Rectangle205.svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+      <div class="hokkaido-logo-container">
+        <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+        <img src="ques.svg" alt="Question Icon" class="ques-icon">
+        <div class="hokkaido-video-container">
+          <!-- Vimeo iframe sits beneath the decorative frame -->
+          <div class="vimeo-wrapper">
+            <iframe
+              class="vimeo-iframe"
+              src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              title="Hokkaido Experience"
+            ></iframe>
           </div>
 
-          <div class="video-module finland-module">
+          <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
+          <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+
+          <!-- Decorative SVG frame stays visible on top -->
+          <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+        </div>
+      </div>
+    </main>
+  </section>
+
+   <div class="video-module finland-module">
             <img src="Rectangle205.svg" alt="Finland Background" class="video-module-bg">
             <div class="finland-logo-container">
               <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
@@ -222,14 +304,10 @@
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('[data-video-container]').forEach((container) => {
-        const iframe = container.querySelector('.vimeo-iframe');
-        if (!iframe) {
-          return;
-        }
-
+      const iframe = document.querySelector('.vimeo-iframe');
+      if (iframe) {
         const player = new Vimeo.Player(iframe);
-        const toggleZone = container.querySelector('.vimeo-toggle-hitbox');
+        const toggleZone = document.querySelector('.vimeo-toggle-hitbox');
 
         if (toggleZone) {
           toggleZone.addEventListener('click', () => {
@@ -242,7 +320,7 @@
             });
           });
         }
-      });
+      }
 
       const searchInput = document.querySelector('.search-bar input');
       const searchQueryLabel = document.getElementById('search-query');
