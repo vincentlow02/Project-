@@ -7,205 +7,28 @@
   <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
 
   <style>
-  /* ================================
-     Hokkaido Logo Overlay
-     ================================ */
-  .hokkaido-logo-container {
-    position: relative; /* 让内部 absolute 定位参考这个容器 */
-    display: inline-block;
-  }
-
-  /* 让 logo 叠在 Rectangle205.svg 上方 */
-  .hokkaido-logo {
-    position: absolute;
-    top: 17px;   /* 调整 logo 距离矩形顶部的距离 */
-    left: -160px;  /* 调整 logo 距离矩形左侧的距离 */
-    width: 220px; /* 可根据需求调整 logo 大小 */
-    z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
-    transition: transform 0.3s ease;
-  }
-
-  /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
-  .hokkaido-logo:hover {
-    transform: scale(1.05);
-  }
-
-  .ques-icon {
-    position: absolute;
-    top: 512px;   /* 控制ques在Rectangle上的纵向位置 */
-    left: -540px;  /* 控制ques的横向位置 */
-    width: 360px;  /* 调整大小 */
-    z-index: 11;  /* 比 logo 略高，确保显示在上层 */
-    transition: transform 0.3s ease;
-  }
-
-  .ques-icon:hover {
-    transform: scale(1.05);
-  }
-
-  /* Vimeo player container positioned where the frame should sit */
-  .hokkaido-video-container {
-    position: absolute;
-    top: 69px;   /* 调整到矩形上适合的位置 */
-    left: -780px;
-    width: min(860px, 60vw);
-    aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
-    border-radius: 1203px;
-  }
-
-  /* Wrapper keeps the iframe sized to the container */
-  .vimeo-wrapper {
-    position: absolute;
-    top: 14px;    /* 对齐 SVG 内部矩形的起始高度 */
-    right: 10px;
-    bottom: 3px;
-    left: 0px;
-    overflow: hidden;
-    border-radius: 44px; /* 匹配 SVG 的圆角 */
-    z-index: 1;
-    transform: scale(1.034);
-  }
-
-  .vimeo-iframe {
-    position: absolute;
-    inset: 0;
-    width: 101%;
-    height: 99%;
-    border: 0;
-    object-fit: cover; /* 填满容器且保持比例 */
-    border-radius: 20px;
-  }
-
-  /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
-  .vimeo-toggle-hitbox {
-    position: absolute;
-    top: 10px;
-    left: 3px;
-    right: 3px;
-    bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
-    cursor: pointer;
-    z-index: 2;
-    background: transparent;
-  }
-
-  /* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
-  .hokkaido-video-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    pointer-events: none;
-    transition: transform 0.3s ease;
-  }
-
-  * ================================
-       Finland 视频模块
-       ================================ */
-    .finland-logo-container {
-      position: relative;
-      display: block;
-      width: 100%;
-      height: 100%;
+    .destination-module--hokkaido .destination-module__logo {
+      width: clamp(220px, 20%, 340px);
     }
 
-    .finland-logo {
-      position: absolute;
-      top: -680px;
-      left: 1400px;
-      width: 130px;
-      z-index: 10;
-      transition: transform 0.3s ease;
+    .destination-module--hokkaido .destination-module__ques {
+      width: clamp(260px, 22%, 380px);
     }
 
-    .finland-logo:hover {
-      transform: scale(1);
+    .destination-module--finland .destination-module__video {
+      top: clamp(120px, 20%, 260px);
     }
 
-    .finland-logo-container .ques-icon {
-      position: absolute;
-      top: -200px;
-      left: 1540px;
-      width: 360px;
-      z-index: 11;
-      transition: transform 0.3s ease;
+    .destination-module--finland .destination-module__ques {
+      bottom: clamp(96px, 15%, 240px);
     }
-
-    .finland-logo-container .ques-icon:hover {
-      transform: scale(1.05);
-    }
-
-    .finland-video-container {
-      position: absolute;
-      top: -629px;
-      left: 1270px;
-      width: min(860px, 60vw);
-      aspect-ratio: 1260 / 710;
-      border-radius: 1203px;
-    }
-
-    .finland-video-container .vimeo-wrapper {
-      position: absolute;
-      top: 14px;
-      right: 10px;
-      bottom: 3px;
-      left: 0;
-      overflow: hidden;
-      border-radius: 44px;
-      z-index: 1;
-      transform: scale(1.034);
-    }
-
-    .finland-video-container .vimeo-iframe {
-      position: absolute;
-      inset: 0;
-      width: 101%;
-      height: 99%;
-      border: 0;
-      object-fit: cover;
-      border-radius: 20px;
-    }
-
-    .finland-video-container .vimeo-toggle-hitbox {
-      position: absolute;
-      top: 10px;
-      left: 3px;
-      right: 3px;
-      bottom: calc(3px + 80px);
-      cursor: pointer;
-      z-index: 2;
-      background: transparent;
-    }
-
-    .finland-video-container .hokkaido-video-frame {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-      pointer-events: none;
-      transition: transform 0.3s ease;
-    }
-    
-
-html, body {
-  width: 140vw;  /* 页面宽度是视窗宽度的两倍，可根据需要调 */
-  height: 100vh; /* 高度与视窗一致 */
-  overflow-y: hidden;
-  overflow-x: scroll;  /* 手动滚动（非auto） */
-  scroll-behavior: smooth;
-}
-
-
   </style>
 </head>
 
 <body class="search-results-page">
   <section class="page" id="searchInterface">
 
-    <!-- Sidebar -->
     <div id="sidebar" class="collapsed">
-      <!-- Sidebar Icon Bar -->
       <div class="sidebar-icon-bar">
         <div class="sidebar-item" id="sidebar-toggle">
           <div class="icon">
@@ -243,7 +66,6 @@ html, body {
         </div>
       </div>
 
-      <!-- Sidebar Content Panel -->
       <div class="sidebar-content-panel">
         <div class="panel-header">
           <span class="panel-title">ホーム</span>
@@ -259,205 +81,90 @@ html, body {
       </div>
     </div>
 
-
     <main id="page-content">
-      
-      <img src="Rectangle205.svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
-      <div class="hokkaido-logo-container">
-        <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-        <img src="ques.svg" alt="Question Icon" class="ques-icon">
-        <div class="hokkaido-video-container">
-          <!-- Vimeo iframe sits beneath the decorative frame -->
-          <div class="vimeo-wrapper">
-            <iframe
-              class="vimeo-iframe"
-              src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-              title="Hokkaido Experience"
-            ></iframe>
-          </div>
+      <div class="video-modules-track">
 
-          <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
-          <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
-
-          <!-- Decorative SVG frame stays visible on top -->
-          <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-        </div>
-      </div>
-    </main>
-  </section>
-
-   <div class="video-module finland-module">
-            <img src="Rectangle205.svg" alt="Finland Background" class="video-module-bg">
-            <div class="finland-logo-container">
-              <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
-              <img src="ques.svg" alt="Question Icon" class="ques-icon">
-              <div class="finland-video-container" data-video-container>
-                <div class="vimeo-wrapper">
-                  <iframe
-                    class="vimeo-iframe"
-                    src="https://player.vimeo.com/video/1133091141?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
-                    title="Finland Experience"
-                  ></iframe>
-                </div>
-                <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
-                <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+        <section class="video-module destination-module destination-module--hokkaido">
+          <div class="destination-module__canvas">
+            <img src="Rectangle205.svg" alt="Hokkaido Background" class="destination-module__background">
+            <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="destination-module__logo">
+            <img src="ques.svg" alt="Hokkaido Overlay" class="destination-module__ques">
+            <div class="destination-module__video" data-video-container>
+              <div class="vimeo-wrapper">
+                <iframe
+                  class="vimeo-iframe"
+                  src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                  title="Hokkaido Experience"
+                ></iframe>
               </div>
+              <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+              <img src="hkdvideo.svg" alt="Video Frame" class="destination-module__frame">
             </div>
           </div>
-        </div>
-      </main>
+        </section>
+
+        <section class="video-module destination-module destination-module--finland">
+          <div class="destination-module__canvas">
+            <img src="Rectangle205.svg" alt="Finland Background" class="destination-module__background">
+            <img src="Finlandlogo.svg" alt="Finland Logo" class="destination-module__logo">
+            <img src="ques.svg" alt="Finland Overlay" class="destination-module__ques">
+            <div class="destination-module__video" data-video-container>
+              <div class="vimeo-wrapper">
+                <iframe
+                  class="vimeo-iframe"
+                  src="https://player.vimeo.com/video/1133091141?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                  title="Finland Experience"
+                ></iframe>
+              </div>
+              <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+              <img src="hkdvideo.svg" alt="Video Frame" class="destination-module__frame">
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
   </section>
 
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const iframe = document.querySelector('.vimeo-iframe');
-      if (iframe) {
-        const player = new Vimeo.Player(iframe);
-        const toggleZone = document.querySelector('.vimeo-toggle-hitbox');
-
-        if (toggleZone) {
-          toggleZone.addEventListener('click', () => {
-            player.getPaused().then((paused) => {
-              if (paused) {
-                player.play();
-              } else {
-                player.pause();
-              }
-            });
-          });
-        }
-      }
-
-      const searchInput = document.querySelector('.search-bar input');
-      const searchQueryLabel = document.getElementById('search-query');
-      const resultsGrid = document.getElementById('resultsGrid');
-      const resultsEmpty = document.getElementById('resultsEmpty');
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const sidebar = document.getElementById('sidebar');
       const pageContent = document.getElementById('page-content');
 
-      const params = new URLSearchParams(window.location.search);
-      const query = params.get('q')?.trim() || '';
-
-      const sampleResults = [
-        {
-          title: '\u4eac\u90fd\u6587\u5316\u63a2\u7d22 3 \u65e5\u9593',
-          description: '\u53e4\u90fd\u4eac\u90fd\u3067\u795e\u793e\u4ecf\u95a3\u5de1\u308a\u3068\u753a\u5bb6\u30ab\u30d5\u30a7\u3092\u582a\u80fd\u3002\u4f1d\u7d71\u5de5\u82b8\u306e\u30ef\u30fc\u30af\u30b7\u30e7\u30c3\u30d7\u3082\u4f53\u9a13\u3067\u304d\u307e\u3059\u3002',
-          tags: ['culture', '\u4eac\u90fd', '\u6b74\u53f2', '\u5bfa\u9662'],
-        },
-        {
-          title: '\u30a2\u30a4\u30b9\u30e9\u30f3\u30c9 \u30aa\u30fc\u30ed\u30e9\u30c4\u30a2\u30fc',
-          description: '\u30ec\u30a4\u30ad\u30e3\u30d3\u30af\u3092\u62e0\u70b9\u306b\u3001\u6c37\u6cb3\u30cf\u30a4\u30ad\u30f3\u30b0\u3068\u5929\u7136\u6e29\u6cc9\u3092\u5de1\u308a\u306a\u304c\u3089\u5e7b\u60f3\u7684\u306a\u30aa\u30fc\u30ed\u30e9\u9451\u8cde\u3002',
-          tags: ['overseas', '\u81ea\u7136', '\u5192\u967a'],
-        },
-        {
-          title: '\u5317\u6d77\u9053 \u7f8e\u745b\u30fb\u5bcc\u826f\u91ce\u30c9\u30e9\u30a4\u30d6',
-          description: '\u56db\u5b63\u6298\u3005\u306e\u98a8\u666f\u304c\u7f8e\u3057\u3044\u4e18\u3092\u5de1\u308b\u30c9\u30e9\u30a4\u30d6\u3002\u5730\u5143\u30b0\u30eb\u30e1\u3068\u6e29\u6cc9\u3067\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5\u3002',
-          tags: ['domestic', '\u81ea\u7136', '\u5317\u6d77\u9053', '\u30c9\u30e9\u30a4\u30d6'],
-        },
-        {
-          title: '\u30cb\u30e5\u30fc\u30b8\u30fc\u30e9\u30f3\u30c9 \u30cf\u30a4\u30ad\u30f3\u30b0\u5468\u904a',
-          description: '\u30d5\u30a3\u30e8\u30eb\u30c9\u30e9\u30f3\u30c9\u56fd\u7acb\u516c\u5712\u3084\u30a2\u30d9\u30eb\u30fb\u30bf\u30ba\u30de\u30f3\u306a\u3069\u3001\u4e16\u754c\u5c48\u6307\u306e\u30c8\u30ec\u30a4\u30eb\u3092\u6b69\u304f\u65c5\u3002',
-          tags: ['hiking', 'overseas', '\u81ea\u7136'],
-        },
-        {
-          title: '\u702c\u6238\u5185\u30a2\u30fc\u30c8\u30a2\u30a4\u30e9\u30f3\u30c9\u5de1\u308a',
-          description: '\u76f4\u5cf6\u30fb\u8c4a\u5cf6\u30fb\u72ac\u5cf6\u3067\u73fe\u4ee3\u30a2\u30fc\u30c8\u3068\u5cf6\u306e\u66ae\u3089\u3057\u306b\u89e6\u308c\u308b\u3001\u3086\u3063\u305f\u308a\u30d5\u30a7\u30ea\u30fc\u65c5\u3002',
-          tags: ['culture', 'domestic', '\u30a2\u30fc\u30c8'],
-        }
-      ];
-
-      function normalize(text) {
-        return text.toLowerCase();
-      }
-
-      function filterResults(keyword) {
-        if (!keyword) {
-          return sampleResults.slice(0, 3);
-        }
-
-        const normalized = normalize(keyword);
-        return sampleResults.filter((item) => {
-          const titleMatch = normalize(item.title).includes(normalized);
-          const descriptionMatch = normalize(item.description).includes(normalized);
-          const tagMatch = item.tags.some((tag) => normalize(tag).includes(normalized));
-          return titleMatch || descriptionMatch || tagMatch;
-        });
-      }
-
-      function renderResults(list) {
-        if (!resultsGrid || !resultsEmpty) {
-          return;
-        }
-
-        resultsGrid.innerHTML = '';
-
-        if (!list.length) {
-          resultsEmpty.classList.remove('hidden');
-          return;
-        }
-
-        resultsEmpty.classList.add('hidden');
-
-        list.forEach((item) => {
-          const card = document.createElement('article');
-          card.className = 'result-card';
-          card.innerHTML = `
-            <h2>${item.title}</h2>
-            <p>${item.description}</p>
-            <div class="tag-list">
-              ${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
-            </div>
-          `;
-          resultsGrid.appendChild(card);
-        });
-      }
-
-      if (searchQueryLabel) {
-        searchQueryLabel.textContent = query || '\u304a\u3059\u3059\u3081';
-      }
-
-      if (searchInput) {
-        if (query) {
-          searchInput.value = query;
-        }
-
-        searchInput.addEventListener('keydown', (event) => {
-          if (event.key !== 'Enter') {
-            return;
-          }
-
-          event.preventDefault();
-          const value = searchInput.value.trim();
-          if (!value) {
-            return;
-          }
-
-          const destination = new URL(window.location.href);
-          destination.searchParams.set('q', value);
-          window.location.href = destination.toString();
-        });
-      }
-
-      if (sidebar && sidebarToggle && pageContent) {
+      if (sidebarToggle && sidebar && pageContent) {
         sidebarToggle.addEventListener('click', () => {
           sidebar.classList.toggle('collapsed');
           pageContent.classList.toggle('sidebar-collapsed');
         });
       }
 
-      renderResults(filterResults(query));
+      document.querySelectorAll('.destination-module__video').forEach((module) => {
+        const iframe = module.querySelector('.vimeo-iframe');
+        const toggleZone = module.querySelector('.vimeo-toggle-hitbox');
+
+        if (!iframe || !toggleZone) {
+          return;
+        }
+
+        const player = new Vimeo.Player(iframe);
+
+        toggleZone.addEventListener('click', () => {
+          player.getPaused().then((paused) => {
+            if (paused) {
+              player.play();
+            } else {
+              player.pause();
+            }
+          });
+        });
+      });
     });
-
-    document.documentElement.scrollLeft = 200; // 滚动500px
-// 或
-window.scrollTo({ left: 500, behavior: 'smooth' }); // 平滑滚动
-
   </script>
 </body>
 </html>

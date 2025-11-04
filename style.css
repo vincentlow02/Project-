@@ -300,13 +300,16 @@ html, body {
 }
 
 body.search-results-page #page-content {
+    flex: 1 1 auto;
+    height: 100vh;
+    padding: 0;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
 }
 
 body.search-results-page #page-content::-webkit-scrollbar {
-    height: 8px;
+    height: 10px;
 }
 
 body.search-results-page #page-content::-webkit-scrollbar-track {
@@ -314,26 +317,30 @@ body.search-results-page #page-content::-webkit-scrollbar-track {
 }
 
 body.search-results-page #page-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.35);
     border-radius: 999px;
 }
 
 body.search-results-page .video-modules-track {
     position: relative;
     display: flex;
-    gap: clamp(40px, 6vw, 96px);
+    gap: 0;
     min-height: 100%;
     width: max-content;
-    padding-bottom: 24px;
-    align-items: center;
+    padding: 0;
+    align-items: stretch;
 }
 
 body.search-results-page .video-module {
     position: relative;
     flex: 0 0 100%;
     height: 100%;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 5vw, 72px);
 }
 
 body.search-results-page .video-module-bg {
@@ -344,6 +351,109 @@ body.search-results-page .video-module-bg {
     object-fit: cover;
     z-index: 0;
     pointer-events: none;
+}
+
+.destination-module {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.destination-module__canvas {
+    position: relative;
+    width: min(1800px, 100%);
+    height: 100%;
+    margin: 0 auto;
+}
+
+.destination-module__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.destination-module__logo {
+    position: absolute;
+    top: clamp(48px, 9%, 128px);
+    left: clamp(72px, 10%, 220px);
+    width: clamp(160px, 18%, 320px);
+    z-index: 2;
+}
+
+.destination-module__ques {
+    position: absolute;
+    bottom: clamp(80px, 14%, 220px);
+    left: clamp(60px, 8%, 200px);
+    width: clamp(150px, 20%, 360px);
+    z-index: 2;
+}
+
+.destination-module__video {
+    position: absolute;
+    top: clamp(110px, 18%, 240px);
+    right: clamp(80px, 12%, 220px);
+    width: clamp(240px, 52%, 880px);
+    aspect-ratio: 1260 / 710;
+    z-index: 1;
+}
+
+.destination-module__video .vimeo-wrapper {
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    bottom: 3px;
+    left: 0;
+    overflow: hidden;
+    border-radius: 44px;
+    z-index: 1;
+}
+
+.destination-module__video .vimeo-iframe {
+    position: absolute;
+    inset: 0;
+    width: 101%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.destination-module__video .vimeo-toggle-hitbox {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    right: 3px;
+    bottom: calc(3px + 80px);
+    cursor: pointer;
+    z-index: 2;
+    background: transparent;
+}
+
+.destination-module__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.destination-module--finland .destination-module__logo {
+    left: auto;
+    right: clamp(72px, 10%, 220px);
+    width: clamp(160px, 16%, 280px);
+}
+
+.destination-module--finland .destination-module__ques {
+    left: auto;
+    right: clamp(60px, 8%, 200px);
+}
+
+.destination-module--finland .destination-module__video {
+    right: clamp(80px, 12%, 220px);
 }
 
 .page-content-buttons {
@@ -905,8 +1015,16 @@ body.search-results-page .video-module-bg {
    22. SEARCH RESULTS PAGE
    ======================================== */
 body.search-results-page {
-    overflow-y: auto;
+    overflow: hidden;
     background-color: #111;
+}
+
+body.search-results-page #searchInterface {
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
 }
 
 body.search-results-page #page-content-logo,
