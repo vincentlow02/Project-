@@ -7,187 +7,198 @@
   <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
 
   <style>
-    :root {
-      --showcase-padding-inline: clamp(24px, 5vw, 72px);
-      --showcase-padding-block: clamp(32px, 8vh, 88px);
-      --showcase-gap: clamp(28px, 4vw, 64px);
-    }
 
-    /* 页面采用百分比与弹性布局，确保在不同尺寸设备上保持既有视觉比例 */
-    html,
-    body {
+    
+  .ques-icon {
+    position: absolute;
+    top: 512px;   /* 控制ques在Rectangle上的纵向位置 */
+    left: -670px;  /* 控制ques的横向位置 */
+    width: 360px;  /* 调整大小 */
+    z-index: 11;  /* 比 logo 略高，确保显示在上层 */
+    transition: transform 0.3s ease;
+  }
+
+  .ques-icon:hover {
+    transform: scale(1.05);
+  }
+  /* ================================
+     Hokkaido Logo Overlay
+     ================================ */
+  .hokkaido-logo-container {
+    position: relative; /* 让内部 absolute 定位参考这个容器 */
+    display: inline-block;
+  }
+
+  /* 让 logo 叠在 Rectangle205.svg 上方 */
+  .hokkaido-logo {
+    position: absolute;
+    top: 17px;   /* 调整 logo 距离矩形顶部的距离 */
+    left: -590px;  /* 调整 logo 距离矩形左侧的距离 */
+    width: 220px; /* 可根据需求调整 logo 大小 */
+    z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
+    transition: transform 0.3s ease;
+  }
+
+  /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+  .hokkaido-logo:hover {
+    transform: scale(1.05);
+  }
+
+  /* Vimeo player container positioned where the frame should sit */
+  .hokkaido-video-container {
+    position: absolute;
+    top: 69px;   /* 调整到矩形上适合的位置 */
+    left: -900px;
+    width: min(860px, 60vw);
+    aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
+    border-radius: 1203px;
+  }
+
+  /* Wrapper keeps the iframe sized to the container */
+  .vimeo-wrapper {
+    position: absolute;
+    top: 14px;    /* 对齐 SVG 内部矩形的起始高度 */
+    right: 10px;
+    bottom: 3px;
+    left: 0px;
+    overflow: hidden;
+    border-radius: 44px; /* 匹配 SVG 的圆角 */
+    z-index: 1;
+    transform: scale(1.034);
+  }
+
+  .vimeo-iframe {
+    position: absolute;
+    inset: 0;
+    width: 101%;
+    height: 99%;
+    border: 0;
+    object-fit: cover; /* 填满容器且保持比例 */
+    border-radius: 20px;
+  }
+
+  /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
+  .vimeo-toggle-hitbox {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    right: 3px;
+    bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
+    cursor: pointer;
+    z-index: 2;
+    background: transparent;
+  }
+
+  /* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
+  .hokkaido-video-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+  }
+
+  * ================================
+       Finland 视频模块
+       ================================ */
+    .finland-logo-container {
+      position: relative;
+      display: block;
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-behavior: smooth;
     }
 
-    body.search-results-page {
-      background-color: #111;
-    }
-
-    /* 主内容区使用 flex 居中，保证背景与模块在桌面与移动端都能一致对齐 */
-    #page-content {
-      position: relative;
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: var(--showcase-padding-block) var(--showcase-padding-inline);
-      box-sizing: border-box;
-    }
-
-    /* 外层容器控制背景与内容层叠关系，背景自适应填充 */
-    .travel-showcase {
-      position: relative;
-      width: 100%;
-      max-width: 1440px;
-      min-height: min(92vh, 960px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .travel-showcase__background {
+    .finland-logo {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    /* 模块容器采用自适应网格，宽屏时并排，窄屏时自动换行 */
-    .travel-showcase__modules {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(clamp(320px, 42vw, 620px), 1fr));
-      gap: var(--showcase-gap);
-      align-items: start;
-      justify-items: center;
-      width: 100%;
-      padding: clamp(24px, 5vw, 56px);
-    }
-
-    /* 单个模块使用 grid 堆叠元素，保持 logo、视频框架与装饰图的顺序 */
-    .travel-module {
-      display: grid;
-      justify-items: center;
-      gap: clamp(16px, 3vw, 28px);
-      text-align: center;
-    }
-
-    .travel-module img {
-      max-width: 100%;
-      height: auto;
+      top: -50px;
+      left: 1340px;
+      width: 130px;
+      z-index: 10;
       transition: transform 0.3s ease;
     }
 
-    .hokkaido-logo,
-    .finland-logo {
-      width: clamp(160px, 20vw, 240px);
-    }
-
-    .hokkaido-logo:hover,
     .finland-logo:hover {
       transform: scale(1.05);
     }
 
-    /* Vimeo 播放器容器保持原始宽高比，使用百分比与 clamp 控制尺寸 */
-    .hokkaido-video-container,
-    .finland-video-container {
-      position: relative;
-      width: 100%;
-      max-width: clamp(320px, 55vw, 860px);
-      aspect-ratio: 1260 / 710;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
+    .finland-logo-container .ques-icon {
+      position: absolute;
+      top: 444px;
+      left: 1240px;
+      width: 360px;
+      z-index: 11;
+      transition: transform 0.3s ease;
     }
 
-    /* iframe 容器使用相对定位 + clamp 边距，兼顾桌面与移动的视觉比例 */
-    .vimeo-wrapper {
+    .finland-logo-container  {
+      transform: scale(1.05);
+    }
+
+    .finland-video-container {
       position: absolute;
-      top: clamp(8px, 1.1vw, 14px);
-      right: clamp(6px, 1vw, 10px);
-      bottom: clamp(4px, 0.9vw, 12px);
+      top: 1px;
+      left: 990px;
+      width: min(830px, 60vw);
+      aspect-ratio: 1260 / 710;
+      border-radius: 1203px;
+    }
+
+    .finland-video-container .vimeo-wrapper {
+      position: absolute;
+      top: 14px;
+      right: 10px;
+      bottom: 3px;
       left: 0;
       overflow: hidden;
-      border-radius: clamp(20px, 3vw, 44px);
+      border-radius: 44px;
       z-index: 1;
+      transform: scale(1.03);
     }
 
-    .vimeo-iframe {
+    .finland-video-container .vimeo-iframe {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      width: 101%;
+      height: 99%;
       border: 0;
       object-fit: cover;
-      border-radius: inherit;
+      border-radius: 20px;
+       pointer-events: none; 
     }
 
-    /* 点击区域以百分比留出底部控制条空间，随尺寸缩放 */
-    .vimeo-toggle-hitbox {
+    .finland-video-container .vimeo-toggle-hitbox {
       position: absolute;
-      top: clamp(10px, 1.4vw, 16px);
-      left: clamp(6px, 1vw, 12px);
-      right: clamp(6px, 1vw, 12px);
-      bottom: clamp(72px, 11vh, 120px);
+      top: 10px;
+      left: 3px;
+      right: 3px;
+      bottom: calc(3px + 80px);
       cursor: pointer;
       z-index: 2;
       background: transparent;
     }
 
-    .hokkaido-video-frame {
+    .finland-video-container .hokkaido-video-frame {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       z-index: 3;
       pointer-events: none;
+      transition: transform 0.3s ease;
     }
+    
 
-    /* 装饰图标改为跟随模块尺寸缩放，保持与原设计的相对位置 */
-    .ques-icon {
-      width: clamp(220px, 30vw, 360px);
-      justify-self: start;
-    }
+html, body {
+  width: 154vw;  /* 页面宽度是视窗宽度的两倍，可根据需要调 */
+  height: 101vh; /* 高度与视窗一致 */
+  overflow-y: hidden;
+  overflow-x: auto;  /* 手动滚动（非auto） */
+  scroll-behavior: smooth;
+}
 
-    .ques-icon:hover {
-      transform: scale(1.05);
-    }
 
-    /* Finland 模块去除额外缩放，保持与 Hokkaido 一致比例 */
-    .travel-module--finland .finland-logo {
-      width: clamp(140px, 18vw, 210px);
-    }
-
-    .travel-module--finland .vimeo-iframe {
-      pointer-events: none;
-    }
-
-    @media (max-width: 1024px) {
-      .travel-showcase {
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 640px) {
-      #page-content {
-        padding: clamp(24px, 7vw, 48px);
-      }
-
-      .travel-showcase__modules {
-        padding: clamp(16px, 6vw, 32px);
-      }
-
-      .vimeo-toggle-hitbox {
-        bottom: clamp(96px, 16vh, 140px);
-      }
-    }
   </style>
 </head>
 
@@ -251,40 +262,32 @@
     </div>
 
 
-      <main id="page-content">
-        <section class="travel-showcase">
-          <!-- 背景图使用绝对定位覆盖父容器，尺寸按比例缩放保持原视觉效果 -->
-          <img src="Rectangle205.svg" alt="" class="travel-showcase__background" aria-hidden="true">
+    <main id="page-content">
+      
+      <img src="Rectangle205.svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+      <div class="hokkaido-logo-container">
+        <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+<img src="ques.svg" alt="Question Icon" class="ques-icon">
+        <div class="hokkaido-video-container">
+          <!-- Vimeo iframe sits beneath the decorative frame -->
+          <div class="vimeo-wrapper">
+            <iframe
+              class="vimeo-iframe"
+              src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              title="Hokkaido Experience"
+            ></iframe>
+          </div>
 
-          <div class="travel-showcase__modules">
-            <!-- Hokkaido 模块：Grid 布局确保 Logo、视频与装饰图在不同屏幕下保持顺序 -->
-            <article class="travel-module travel-module--hokkaido">
-              <!-- Logo 根据视口宽度自动缩放，视觉比例与原设计一致 -->
-              <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+          <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
+          <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
 
-              <!-- 视频容器使用固定宽高比，iframe 与装饰框分层叠加 -->
-              <div class="hokkaido-video-container">
-                <div class="vimeo-wrapper">
-                  <iframe
-                    class="vimeo-iframe"
-                    src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
-                    title="Hokkaido Experience"
-                  ></iframe>
-                </div>
-                <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
-                <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-              </div>
-
-              <!-- 装饰图标随容器宽度等比缩放，保持与视频间距 -->
-              <img src="ques.svg" alt="Question Icon" class="ques-icon">
-            </article>
-
-            <!-- Finland 模块：与左侧保持一致的响应式结构 -->
-            <article class="travel-module travel-module--finland">
+          <!-- Decorative SVG frame stays visible on top -->
+          <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+      
+            <div class="finland-logo-container">
               <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
-
               <div class="finland-video-container" data-video-container>
                 <div class="vimeo-wrapper">
                   <iframe
@@ -298,9 +301,9 @@
                 <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
                 <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
               </div>
-            </article>
+            </div>
           </div>
-        </section>
+        </div>
       </main>
   </section>
 
@@ -446,15 +449,22 @@
       renderResults(filterResults(query));
     });
 
-    window.addEventListener('scroll', () => {
-      const scrollX = window.scrollX || document.documentElement.scrollLeft;
+  window.addEventListener('scroll', () => {
+  const scrollX = window.scrollX || document.documentElement.scrollLeft;
 
-      // Sidebar 保持与水平方向滚动同步，兼容较宽视口
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar) {
-        sidebar.style.left = `${scrollX}px`;
-      }
-    });
+  // Sidebar 同步
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    sidebar.style.left = `${scrollX}px`;
+  }
+
+  // Ques.svg 同步
+  const quesIcon = document.querySelector('.ques-icon');
+  if (quesIcon) {
+    const baseLeft = -670; // 你原本的 CSS 定位值
+    quesIcon.style.left = `${scrollX + baseLeft}px`;
+  }
+});
 
 // 🎬 点击芬兰模块任意位置可播放/暂停
 window.addEventListener('load', () => {
