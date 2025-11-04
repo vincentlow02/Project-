@@ -299,6 +299,53 @@ html, body {
     transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+body.search-results-page #page-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+}
+
+body.search-results-page #page-content::-webkit-scrollbar {
+    height: 8px;
+}
+
+body.search-results-page #page-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body.search-results-page #page-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 999px;
+}
+
+body.search-results-page .video-modules-track {
+    position: relative;
+    display: flex;
+    gap: clamp(40px, 6vw, 96px);
+    min-height: 100%;
+    width: max-content;
+    padding-bottom: 24px;
+    align-items: center;
+}
+
+body.search-results-page .video-module {
+    position: relative;
+    flex: 0 0 100%;
+    height: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+}
+
+body.search-results-page .video-module-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
 .page-content-buttons {
     position: relative;
     top: 70px;
