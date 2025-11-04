@@ -12,7 +12,7 @@ html, body {
     height: 100%;
     overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #111;
+    background-color:white;
     color: #ffffff;
 }
 
@@ -360,7 +360,7 @@ html, body {
 #searchInterface {
     justify-content: initial;
     align-items: initial;
-    background-color: black;
+    background-color: white;
     color: #333;
 }
 
@@ -402,7 +402,7 @@ html, body {
 
 /* 侧边栏展开时的内容面板 */
 #sidebar .sidebar-content-panel {
-    width: 300px; /* ★ 给一个展开时的固定宽度, e.g., 300px */
+    width: 240px; /* ★ 给一个展开时的固定宽度, e.g., 300px */
     padding: 20px;
     box-sizing: border-box;
     /* 边框从这里移到 .sidebar-icon-bar 上了 */
