@@ -18,8 +18,8 @@
   /* 让 logo 叠在 Rectangle205.svg 上方 */
   .hokkaido-logo {
     position: absolute;
-    top: 80px;   /* 调整 logo 距离矩形顶部的距离 */
-    left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
+    top: 17px;   /* 调整 logo 距离矩形顶部的距离 */
+    left: -160px;  /* 调整 logo 距离矩形左侧的距离 */
     width: 220px; /* 可根据需求调整 logo 大小 */
     z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
     transition: transform 0.3s ease;
@@ -32,8 +32,8 @@
 
   .ques-icon {
     position: absolute;
-    top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
-    left: 470px;  /* 控制ques的横向位置 */
+    top: 512px;   /* 控制ques在Rectangle上的纵向位置 */
+    left: -240px;  /* 控制ques的横向位置 */
     width: 360px;  /* 调整大小 */
     z-index: 11;  /* 比 logo 略高，确保显示在上层 */
     transition: transform 0.3s ease;
@@ -46,9 +46,9 @@
   /* Vimeo player container positioned where the frame should sit */
   .hokkaido-video-container {
     position: absolute;
-    top: 145px;   /* 调整到矩形上适合的位置 */
-    left: 260px;
-    width: min(820px, 60vw);
+    top: 69px;   /* 调整到矩形上适合的位置 */
+    left: -480px;
+    width: min(860px, 60vw);
     aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
     border-radius: 1203px;
   }
@@ -160,9 +160,10 @@
       </div>
     </div>
 
-    <main id="page-content">
-      <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle" style="position: relative; left: 2.4px;">
 
+    <main id="page-content">
+      
+      <img src="Rectangle205.svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
       <div class="hokkaido-logo-container">
         <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
         <img src="ques.svg" alt="Question Icon" class="ques-icon">
@@ -185,8 +186,6 @@
           <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
         </div>
       </div>
-
-      <img src="Rectangle205.svg">
     </main>
   </section>
 
