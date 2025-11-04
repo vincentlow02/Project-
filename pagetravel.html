@@ -5,196 +5,190 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <title>&#26908;&#32034;&#32080;&#26524; | Weave Travel</title>
+
+  <style>
+  /* ================================
+     Hokkaido Logo Overlay
+     ================================ */
+  .hokkaido-logo-container {
+    position: relative; /* 让内部 absolute 定位参考这个容器 */
+    display: inline-block;
+  }
+
+  /* 让 logo 叠在 Rectangle205.svg 上方 */
+  .hokkaido-logo {
+    position: absolute;
+    top: 80px;   /* 调整 logo 距离矩形顶部的距离 */
+    left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
+    width: 220px; /* 可根据需求调整 logo 大小 */
+    z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
+    transition: transform 0.3s ease;
+  }
+
+  /* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+  .hokkaido-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .ques-icon {
+    position: absolute;
+    top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
+    left: 470px;  /* 控制ques的横向位置 */
+    width: 360px;  /* 调整大小 */
+    z-index: 11;  /* 比 logo 略高，确保显示在上层 */
+    transition: transform 0.3s ease;
+  }
+
+  .ques-icon:hover {
+    transform: scale(1.05);
+  }
+
+  /* Vimeo player container positioned where the frame should sit */
+  .hokkaido-video-container {
+    position: absolute;
+    top: 145px;   /* 调整到矩形上适合的位置 */
+    left: 260px;
+    width: min(820px, 60vw);
+    aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
+    border-radius: 1203px;
+  }
+
+  /* Wrapper keeps the iframe sized to the container */
+  .vimeo-wrapper {
+    position: absolute;
+    top: 14px;    /* 对齐 SVG 内部矩形的起始高度 */
+    right: 10px;
+    bottom: 3px;
+    left: 0px;
+    overflow: hidden;
+    border-radius: 44px; /* 匹配 SVG 的圆角 */
+    z-index: 1;
+    transform: scale(1.034);
+  }
+
+  .vimeo-iframe {
+    position: absolute;
+    inset: 0;
+    width: 101%;
+    height: 99%;
+    border: 0;
+    object-fit: cover; /* 填满容器且保持比例 */
+    border-radius: 20px;
+  }
+
+  /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
+  .vimeo-toggle-hitbox {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    right: 3px;
+    bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
+    cursor: pointer;
+    z-index: 2;
+    background: transparent;
+  }
+
+  /* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
+  .hokkaido-video-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+  }
+  </style>
 </head>
 
 <body class="search-results-page">
   <section class="page" id="searchInterface">
 
     <!-- Sidebar -->
-      <div id="sidebar" class="collapsed">
-        <!-- Sidebar Icon Bar -->
-        <div class="sidebar-icon-bar">
-          <div class="sidebar-item" id="sidebar-toggle">
-            <div class="icon">
-              <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
-            </div>
-          </div>
-
-          <div class="sidebar-nav">
-            <div class="sidebar-item">
-              <div class="icon">
-                <img src="assets/plus.svg" alt="New">
-              </div>
-            </div>
-
-            <div class="sidebar-item active">
-              <div class="icon">
-                <img src="assets/search-icon.svg" alt="Home">
-              </div>
-              <span class="sidebar-label">ホーム</span>
-            </div>
-
-            <div class="sidebar-item">
-              <div class="icon">
-                <img src="assets/star.svg" alt="Saved">
-              </div>
-              <span class="sidebar-label">保存</span>
-            </div>
-
-            <div class="sidebar-item">
-              <div class="icon">
-                <img src="assets/discover.svg" alt="Discover">
-              </div>
-              <span class="sidebar-label">発見</span>
-            </div>
+    <div id="sidebar" class="collapsed">
+      <!-- Sidebar Icon Bar -->
+      <div class="sidebar-icon-bar">
+        <div class="sidebar-item" id="sidebar-toggle">
+          <div class="icon">
+            <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
           </div>
         </div>
 
-        <!-- Sidebar Content Panel -->
-        <div class="sidebar-content-panel">
-          <div class="panel-header">
-            <span class="panel-title">ホーム</span>
-            <img src="assets/pin.svg" alt="Pin">
+        <div class="sidebar-nav">
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/plus.svg" alt="New">
+            </div>
           </div>
 
-          <div class="panel-section">
-            <h3 class="subheader">チャット</h3>
-            <ul class="chat-list">
-              <li>海外旅行おすすめ</li>
-            </ul>
+          <div class="sidebar-item active">
+            <div class="icon">
+              <img src="assets/search-icon.svg" alt="Home">
+            </div>
+            <span class="sidebar-label">ホーム</span>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/star.svg" alt="Saved">
+            </div>
+            <span class="sidebar-label">保存</span>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="icon">
+              <img src="assets/discover.svg" alt="Discover">
+            </div>
+            <span class="sidebar-label">発見</span>
           </div>
         </div>
       </div>
 
+      <!-- Sidebar Content Panel -->
+      <div class="sidebar-content-panel">
+        <div class="panel-header">
+          <span class="panel-title">ホーム</span>
+          <img src="assets/pin.svg" alt="Pin">
+        </div>
 
-    
-        <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle"style="position: relative; left: 2.4px;">
-             <div class="hokkaido-logo-container">
-  <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-   <img src="ques.svg" alt="Question Icon" class="ques-icon">
-   <div class="hokkaido-video-container">
-    <!-- Vimeo iframe sits beneath the decorative frame -->
-    <div class="vimeo-wrapper">
-      <iframe
-        class="vimeo-iframe"
-        src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen
-        title="Hokkaido Experience"
-      ></iframe>
+        <div class="panel-section">
+          <h3 class="subheader">チャット</h3>
+          <ul class="chat-list">
+            <li>海外旅行おすすめ</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
-    <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+    <main id="page-content">
+      <img src="Rectangle 22.svg" alt="Rectangle Overlay" class="overlay-rectangle" style="position: relative; left: 2.4px;">
 
-    <!-- Decorative SVG frame stays visible on top -->
-    <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-  </div>
-</div>
+      <div class="hokkaido-logo-container">
+        <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
+        <img src="ques.svg" alt="Question Icon" class="ques-icon">
+        <div class="hokkaido-video-container">
+          <!-- Vimeo iframe sits beneath the decorative frame -->
+          <div class="vimeo-wrapper">
+            <iframe
+              class="vimeo-iframe"
+              src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              title="Hokkaido Experience"
+            ></iframe>
+          </div>
 
+          <!-- Click overlay keeps native controls accessible (adjust bottom gap as needed) -->
+          <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
 
+          <!-- Decorative SVG frame stays visible on top -->
+          <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+        </div>
+      </div>
 
-          <img src="Rectangle205.svg" >
-   
-        
-
-
-  <style>
-/* ================================
-   Hokkaido Logo Overlay
-   ================================ */
-.hokkaido-logo-container {
-  position: relative; /* 让内部 absolute 定位参考这个容器 */
-  display: inline-block;
-}
-
-/* 让 logo 叠在 Rectangle205.svg 上方 */
-.hokkaido-logo {
-  position: absolute;
-  top:80px;   /* 调整 logo 距离矩形顶部的距离 */
-  left: 540px;  /* 调整 logo 距离矩形左侧的距离 */
-  width: 220px; /* 可根据需求调整 logo 大小 */
-  z-index: 10;  /* 确保 logo 显示在 Rectangle205.svg 上层 */
-  transition: transform 0.3s ease;
-}
-
-/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
-.hokkaido-logo:hover {
-  transform: scale(1.05);
-}
-
-  .ques-icon {
-      position: absolute;
-      top: 600px;   /* 控制ques在Rectangle上的纵向位置 */
-      left: 470px;  /* 控制ques的横向位置 */
-      width: 360px;  /* 调整大小 */
-      z-index: 11;  /* 比 logo 略高，确保显示在上层 */
-      transition: transform 0.3s ease;
-    }
-
-    .ques-icon:hover {
-      transform: scale(1.05);
-    }
-
-/* Vimeo player container positioned where the frame should sit */
-.hokkaido-video-container {
-  position: absolute;
-  top: 145px;   /* 调整到矩形上适合的位置 */
-  left: 260px;
-  width: min(820px, 60vw);
-  aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
-  border-radius:1203px;
-}
-
-/* Wrapper keeps the iframe sized to the container */
-.vimeo-wrapper {
-  position: absolute;
-  top: 14px;    /* 对齐 SVG 内部矩形的起始高度 */
-  right: 10px;
-  bottom: 3px;
-  left: 0px;
-  overflow: hidden;
-  border-radius: 44px; /* 匹配 SVG 的圆角 */
-  z-index: 1;
-   transform: scale(1.034); 
-}
-
-.vimeo-iframe {
-  position: absolute;
-  inset: 0;
-  width: 101%;
-  height: 99%;
-  border: 0;
-  object-fit: cover; /* 填满容器且保持比例 */
-  border-radius: 20px;
-}
-
-/* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
-.vimeo-toggle-hitbox {
-  position: absolute;
-  top: 10px;
-  left: 3px;
-  right: 3px;
-  bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
-  cursor: pointer;
-  z-index: 2;
-  background: transparent;
-}
-
-/* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
-.hokkaido-video-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  pointer-events: none;
-  transition: transform 0.3s ease;
-}
-  </style>
-</head>
-<body>
-</style>
+      <img src="Rectangle205.svg">
+    </main>
+  </section>
 
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
@@ -275,6 +269,10 @@
       }
 
       function renderResults(list) {
+        if (!resultsGrid || !resultsEmpty) {
+          return;
+        }
+
         resultsGrid.innerHTML = '';
 
         if (!list.length) {
@@ -333,8 +331,6 @@
 
       renderResults(filterResults(query));
     });
-
-    
   </script>
 </body>
 </html>
