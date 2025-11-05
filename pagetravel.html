@@ -141,8 +141,7 @@
     font-weight: 700;
     color: black;
     letter-spacing: 0.06em;
-    line-height: 1.25;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    line-height: 1.25;s
   }
 
   .subtitle-description {
@@ -151,7 +150,6 @@
     color:black;
     line-height: 1.7;
     letter-spacing: 0.03em;
-    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
     max-width: 540px;
     text-align: left;
   }
@@ -190,7 +188,6 @@
        ================================ */
     .finland-logo-container {
       position: relative;
-      display: block;
       width: 100%;
       height: 100%;
     }
@@ -236,14 +233,6 @@
         height: 100%;
       }
 
-      .finland-video-container .subtitle-container {
-        position: absolute;
-        top: 60px;
-        left: 40px;
-        z-index: 30;
-        pointer-events: none;
-        width: min(560px, calc(100% - 160px));
-      }
 
     .finland-video-container .vimeo-wrapper {
       position: absolute;
@@ -386,7 +375,7 @@ html, body {
           <!-- Decorative SVG frame stays visible on top -->
           <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
               <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
-            <div class="subtitle-container" id="hokkaido-subtitles"></div>
+            <div id="hokkaido-subtitles" class="subtitle-container"></div>
 </div>
 
       
@@ -572,6 +561,196 @@ html, body {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const iframe = document.querySelector('.hokkaido-video-container .vimeo-iframe');
+  const subtitleContainer = document.getElementById('hokkaido-subtitles');
+
+  if (!iframe || !subtitleContainer) return;
+
+  const player = new Vimeo.Player(iframe);
+
+  const subtitleConfigs = [
+    {
+      title: '北海道冬の魅力：札幌＆小樽',
+      description: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。',
+      titleSpeed: 28,
+      descSpeed: 34,
+    },
+    {
+      title: '船見坂',
+      description: '映画『Love Letter』のロケ地。坂の上から港と街並みを一望できる。',
+      titleSpeed: 28,
+      descSpeed: 40,
+    },
+
+     {
+    title: 'すすきの交差点',
+    description: '札幌最大の繁華街すすきの。NIKKAのネオンが輝き、飲食店やショップが並ぶにぎやかな夜の街。',
+    titleSpeed: 28,
+    descSpeed: 30,
+  },
+
+    {
+    title: '藻岩山の夜景',
+    description: '藻岩山は「日本新三大夜景」の一つ。ロープウェイで登ると、札幌の街が宝石のように輝く絶景を望めます。',
+    titleSpeed: 30,
+    descSpeed: 41,
+  },
+
+    {
+    title: '白い恋人ソフトクリーム',
+    description:'北海道を代表するお土産。',
+    titleSpeed: 28,
+    descSpeed:24,
+  },
+
+  
+    {
+    title: 'うな重',
+    description:'うな重は全国で親しまれる日本料理の一つ。',
+    titleSpeed: 42,
+    descSpeed:70,
+  },
+
+     {
+    title: 'ジンギスカン',
+    description:'北海道名物のジンギスカン。ラム肉と野菜を特製鍋で焼き、タレと相性抜群の一品。',
+    titleSpeed: 40,
+    descSpeed:50,
+  },
+
+  
+     {
+    title: '元祖さっぽろラーメン横丁',
+    description:'札幌は味噌ラーメン発祥の地。ラーメン横丁には昭和の雰囲気の老舗が並び、熱々の一杯が楽しめます。',
+    titleSpeed: 30,
+    descSpeed:30,
+  },
+
+     {
+    title: '大通公園＆さっぽろテレビ塔',
+    description:'札幌中心の大通公園は市民の憩いの場。冬はホワイトイルミネーションや雪まつりで街が彩られます。',
+    titleSpeed: 37,
+    descSpeed:30,
+  },
+
+
+  ];
+
+  
+
+
+
+  const typingTimers = [];
+  let typingSessionId = 0;
+  let hasStarted = false;
+
+  function clearTimers() {
+    while (typingTimers.length) {
+      clearTimeout(typingTimers.pop());
+    }
+  }
+
+  function typeLine(config, sessionId) {
+    return new Promise((resolve) => {
+      const { text, speed, textEl, lineEl } = config;
+      let index = 0;
+
+      lineEl.classList.remove('is-complete');
+      lineEl.classList.add('is-typing');
+      textEl.textContent = '';
+
+      const step = () => {
+        if (sessionId !== typingSessionId) {
+          lineEl.classList.remove('is-typing');
+          resolve();
+          return;
+        }
+
+        if (index < text.length) {
+          textEl.textContent += text[index];
+          index++;
+          typingTimers.push(setTimeout(step, speed));
+        } else {
+          lineEl.classList.remove('is-typing');
+          lineEl.classList.add('is-complete');
+          resolve();
+        }
+      };
+
+      step();
+    });
+  }
+
+  async function playSubtitles() {
+    const sessionId = ++typingSessionId;
+    clearTimers();
+
+    for (const group of subtitleConfigs) {
+      if (sessionId !== typingSessionId) break;
+
+      // 清空 container，为当前组创建行
+      subtitleContainer.innerHTML = '';
+
+      // title 行
+      const titleLine = document.createElement('div');
+      titleLine.className = 'subtitle-line subtitle-title';
+      const titleText = document.createElement('span');
+      titleText.className = 'subtitle-text';
+      const titleCursor = document.createElement('span');
+      titleCursor.className = 'subtitle-cursor';
+      titleCursor.textContent = '|';
+      titleLine.append(titleText, titleCursor);
+
+      // description 行
+      const descLine = document.createElement('div');
+      descLine.className = 'subtitle-line subtitle-description';
+      const descText = document.createElement('span');
+      descText.className = 'subtitle-text';
+      const descCursor = document.createElement('span');
+      descCursor.className = 'subtitle-cursor';
+      descCursor.textContent = '|';
+      descLine.append(descText, descCursor);
+
+      // 添加到 container
+      subtitleContainer.appendChild(titleLine);
+      subtitleContainer.appendChild(descLine);
+
+      // 打字
+      await typeLine({ text: group.title, speed: group.titleSpeed, textEl: titleText, lineEl: titleLine }, sessionId);
+      await typeLine({ text: group.description, speed: group.descSpeed, textEl: descText, lineEl: descLine }, sessionId);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        
+
+      // 打完立即消失，为下一组准备
+      subtitleContainer.innerHTML = '';
+    }
+  }
+
+  function resetSubtitles() {
+    typingSessionId++;
+    clearTimers();
+    subtitleContainer.innerHTML = '';
+    hasStarted = false;
+  }
+
+  // Vimeo 播放事件
+  player.on('play', () => {
+    if (!hasStarted) {
+      hasStarted = true;
+      playSubtitles();
+    }
+  });
+
+  player.on('ended', resetSubtitles);
+  player.on('seeked', ({ seconds }) => {
+    if (seconds <= 0.1) resetSubtitles();
+  });
+});
+
+
+
 // 🎬 点击芬兰模块任意位置可播放/暂停
 window.addEventListener('load', () => {
   const finlandContainer = document.querySelector('.finland-video-container');
@@ -593,129 +772,6 @@ window.addEventListener('load', () => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const iframe = document.querySelector('.hokkaido-video-container .vimeo-iframe');
-  const subtitleContainer = document.getElementById('hokkaido-subtitles');
-
-  if (!iframe || !subtitleContainer) return;
-
-  const player = new Vimeo.Player(iframe);
-
-  const subtitleConfigs = [
-    {
-      text: '北海道冬の魅力：札幌＆小樽',
-      speed: 25,
-      className: 'subtitle-title',
-    },
-    {
-      text: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。',
-      speed: ,
-      className: 'subtitle-description',
-    },
-  ];
-
-  const typingTimers = [];
-  let hasStarted = false;
-  let typingSessionId = 0;
-
-  subtitleConfigs.forEach((config) => {
-    const lineEl = document.createElement('div');
-    lineEl.className = `subtitle-line ${config.className}`;
-
-    const textEl = document.createElement('span');
-    textEl.className = 'subtitle-text';
-
-    const cursorEl = document.createElement('span');
-    cursorEl.className = 'subtitle-cursor';
-    cursorEl.textContent = '|';
-
-    lineEl.append(textEl, cursorEl);
-    subtitleContainer.appendChild(lineEl);
-
-    Object.assign(config, { lineEl, textEl, cursorEl });
-  });
-
-  function clearTimers() {
-    while (typingTimers.length) {
-      clearTimeout(typingTimers.pop());
-    }
-  }
-
-  function resetSubtitles() {
-    typingSessionId += 1;
-    clearTimers();
-    subtitleConfigs.forEach((config) => {
-      config.textEl.textContent = '';
-      config.lineEl.classList.remove('is-typing', 'is-complete');
-    });
-    hasStarted = false;
-  }
-
-  function typeLine(config, sessionId) {
-    return new Promise((resolve) => {
-      const { text, speed, textEl, lineEl } = config;
-      let index = 0;
-
-      lineEl.classList.remove('is-complete');
-      lineEl.classList.add('is-typing');
-      textEl.textContent = '';
-
-      const step = () => {
-        if (sessionId !== typingSessionId) {
-          lineEl.classList.remove('is-typing');
-          resolve();
-          return;
-        }
-
-        if (index < text.length) {
-          textEl.textContent += text[index];
-          index += 1;
-          const timeoutId = setTimeout(step, speed);
-          typingTimers.push(timeoutId);
-        } else {
-          lineEl.classList.remove('is-typing');
-          lineEl.classList.add('is-complete');
-          resolve();
-        }
-      };
-
-      step();
-    });
-  }
-
-  async function playSubtitles() {
-    const sessionId = ++typingSessionId;
-    clearTimers();
-
-    subtitleConfigs.forEach((config) => {
-      config.textEl.textContent = '';
-      config.lineEl.classList.remove('is-typing', 'is-complete');
-    });
-
-    for (const config of subtitleConfigs) {
-      await typeLine(config, sessionId);
-      if (sessionId !== typingSessionId) {
-        break;
-      }
-    }
-  }
-
-  player.on('play', () => {
-    if (hasStarted) return;
-    hasStarted = true;
-    playSubtitles();
-  });
-
-  player.on('ended', () => {
-    resetSubtitles();
-  });
-
-  player.on('seeked', ({ seconds }) => {
-    if (seconds <= 0.1) {
-      resetSubtitles();
-    }
-  });
-});
 
 
   </script>
