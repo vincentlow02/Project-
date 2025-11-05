@@ -1964,77 +1964,141 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  function exitCustomFullscreen() {
+    function exitCustomFullscreen() {
 
-    if (!activeContext) {
+      if (!activeContext) {
 
-      return;
+        return;
 
-    }
-
-
-
-    const { container, placeholder } = activeContext;
-
-
-
-    overlay.setAttribute('aria-hidden', 'true');
-
-    bodyEl.classList.remove('is-custom-fullscreen');
-
-    htmlEl.classList.remove('is-custom-fullscreen');
-
-
-
-    sidebarContent.innerHTML = '';
-
-
-
-    if (placeholder && placeholder.parentNode) {
-
-      placeholder.parentNode.insertBefore(container, placeholder);
-
-      placeholder.remove();
-
-    }
-
-
-
-    activeContext = null;
-
-  }
-
-
-
- function enterCustomFullscreen(context) {
-    if (!context) {
-      return;
-    }
-
-    // 如果已经有活动的上下文,先退出
-    if (activeContext && activeContext !== context) {
-      exitCustomFullscreen();
-    }
-
-    const { container, placeholder, sidebarData } = context;
-
-    // 如果容器已经在 videoViewport 中,不需要重新移动
-    if (container.parentNode !== videoViewport) {
-      if (container.parentNode) {
-        container.parentNode.insertBefore(placeholder, container);
       }
-      videoViewport.appendChild(container);
+
+
+
+      const context = activeContext;
+
+      const { container } = context;
+
+      let { placeholder } = context;
+
+
+
+      overlay.setAttribute('aria-hidden', 'true');
+
+      bodyEl.classList.remove('is-custom-fullscreen');
+
+      htmlEl.classList.remove('is-custom-fullscreen');
+
+
+
+      sidebarContent.innerHTML = '';
+
+
+
+      if (placeholder && placeholder.parentNode) {
+
+        placeholder.parentNode.insertBefore(container, placeholder);
+
+        placeholder.remove();
+
+      } else if (context.originalParent) {
+
+        context.originalParent.insertBefore(container, context.originalNextSibling || null);
+
+        if (placeholder && typeof placeholder.remove === 'function') {
+
+          placeholder.remove();
+
+        }
+
+      }
+
+
+
+      if (!placeholder || !placeholder.isConnected) {
+
+        placeholder = document.createComment('custom-fullscreen-placeholder');
+
+        context.placeholder = placeholder;
+
+      }
+
+
+
+      context.originalParent = container.parentNode;
+
+      context.originalNextSibling = container.nextSibling;
+
+
+
+      activeContext = null;
+
     }
 
-    // 总是重新填充侧边栏内容
-    populateSidebar(sidebarData);
 
-    overlay.setAttribute('aria-hidden', 'false');
-    bodyEl.classList.add('is-custom-fullscreen');
-    htmlEl.classList.add('is-custom-fullscreen');
 
-    activeContext = context;
-  }
+    function enterCustomFullscreen(context) {
+
+      if (!context) {
+
+        return;
+
+      }
+
+
+
+      if (activeContext && activeContext !== context) {
+
+        exitCustomFullscreen();
+
+      }
+
+
+
+      const { container } = context;
+
+      let { placeholder } = context;
+
+
+
+      if (!placeholder || (typeof Node !== 'undefined' && placeholder.nodeType !== Node.COMMENT_NODE)) {
+
+        placeholder = document.createComment('custom-fullscreen-placeholder');
+
+        context.placeholder = placeholder;
+
+      }
+
+
+
+      if (container.parentNode !== videoViewport) {
+
+        if (container.parentNode) {
+
+          container.parentNode.insertBefore(placeholder, container);
+
+        }
+
+        videoViewport.appendChild(container);
+
+      }
+
+
+
+      populateSidebar(context.getSidebarData ? context.getSidebarData() : null);
+
+
+
+      overlay.setAttribute('aria-hidden', 'false');
+
+      bodyEl.classList.add('is-custom-fullscreen');
+
+      htmlEl.classList.add('is-custom-fullscreen');
+
+
+
+      activeContext = context;
+
+    }
 
 
 
@@ -2090,35 +2154,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    const sidebarData = {
+      const context = {
 
-      title: container.getAttribute('data-sidebar-title') || '',
+        container,
 
-      subtitle: container.getAttribute('data-sidebar-subtitle') || '',
+        placeholder: document.createComment('custom-fullscreen-placeholder'),
 
-      description: container.getAttribute('data-sidebar-description') || '',
+        originalParent: container.parentNode,
 
-      list: (container.getAttribute('data-sidebar-list') || '')
+        originalNextSibling: container.nextSibling,
 
-        .split('|')
+        getSidebarData() {
 
-        .map((item) => item.trim())
+          const listAttr = container.getAttribute('data-sidebar-list') || '';
 
-        .filter(Boolean),
+          return {
 
-    };
+            title: container.getAttribute('data-sidebar-title') || '',
 
+            subtitle: container.getAttribute('data-sidebar-subtitle') || '',
 
+            description: container.getAttribute('data-sidebar-description') || '',
 
-    const context = {
+            list: listAttr
 
-      container,
+              .split('|')
 
-      placeholder: document.createComment('custom-fullscreen-placeholder'),
+              .map((item) => item.trim())
 
-      sidebarData,
+              .filter(Boolean),
 
-    };
+          };
+
+        },
+
+      };
 
 
 
@@ -2126,33 +2196,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    player.on('fullscreenchange', (data) => {
+      player.on('fullscreenchange', (data) => {
 
-      if (data && data.fullscreen) {
+        if (data && data.fullscreen) {
 
-        if (typeof player.exitFullscreen === 'function') {
+          const openOverlay = () => {
 
-          player
+            enterCustomFullscreen(context);
 
-            .exitFullscreen()
+          };
 
-            .catch(() => {})
 
-            .then(() => {
 
-              enterCustomFullscreen(context);
+          if (typeof player.exitFullscreen === 'function') {
 
-            });
+            player
 
-        } else {
+              .exitFullscreen()
 
-          enterCustomFullscreen(context);
+              .catch(() => {})
+
+              .then(openOverlay);
+
+          } else {
+
+            openOverlay();
+
+          }
+
+          return;
 
         }
 
-      }
 
-    });
+
+        if (data && data.fullscreen === false && activeContext === context) {
+
+          exitCustomFullscreen();
+
+        }
+
+      });
 
 
 
