@@ -1012,30 +1012,39 @@
         sidebarData,
       };
 
-    const player = new Vimeo.Player(iframe);
+      const player = new Vimeo.Player(iframe);
 
-    player.on('fullscreenchange', (data) => {
-      if (data && data.fullscreen) {
+      player.on('fullscreenchange', (data) => {
+        const isEntering = typeof data === 'boolean' ? data : !!(data && data.fullscreen);
+
+        if (!isEntering) return;
+
+        const openOverlay = () => enterCustomFullscreen(context);
+
         if (typeof player.exitFullscreen === 'function') {
-          player
-            .exitFullscreen()
-            .catch(() => {})
-            .then(() => {
-              enterCustomFullscreen(context);
-            });
+          try {
+            const result = player.exitFullscreen();
+
+            if (result && typeof result.then === 'function') {
+              result.catch(() => {}).then(openOverlay);
+            } else {
+              openOverlay();
+            }
+          } catch (error) {
+            openOverlay();
+          }
         } else {
-          enterCustomFullscreen(context);
+          openOverlay();
         }
-      }
-    });
+      });
 
-    container.addEventListener('custom-fullscreen:open', () => {
-      enterCustomFullscreen(context);
-    });
+      container.addEventListener('custom-fullscreen:open', () => {
+        enterCustomFullscreen(context);
+      });
 
-    container.addEventListener('custom-fullscreen:close', () => {
-      exitCustomFullscreen();
-    });
+      container.addEventListener('custom-fullscreen:close', () => {
+        exitCustomFullscreen();
+      });
   });
 });
 </script>
