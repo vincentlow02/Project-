@@ -100,6 +100,35 @@
     transition: transform 0.3s ease;
   }
 
+  
+    .rectangle-comment {
+  position: absolute;
+  top: 50px; /* 距离视频顶部 */
+  left: 20px; /* 距离视频左侧 */
+  width: 610px; /* 可根据需求调整大小 */
+  height: auto;
+  z-index: 20; /* 必须比 iframe 和 frame 高 */
+  pointer-events: none; /* 保证点击事件透传到视频 */
+}
+
+
+.comment-text {
+  position: absolute;
+  top: 60px;   /* 距离 Rectanglecomment.svg 顶部 */
+  left: -267px;
+  width: calc(100% - 60px);
+  color:black;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+  z-index: 25;
+  pointer-events: none;
+  white-space: pre-wrap;
+  max-width: 70vw;
+}
+
   * ================================
        Finland 视频模块
        ================================ */
@@ -285,6 +314,10 @@ html, body {
 
           <!-- Decorative SVG frame stays visible on top -->
           <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+            <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
+          <div class="comment-text" id="hokkaido-comment"></div>
+</div>
+
       
             <div class="finland-logo-container">
               <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
@@ -301,7 +334,6 @@ html, body {
                 <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
                 <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
               </div>
-            </div>
           </div>
         </div>
       </main>
@@ -485,6 +517,74 @@ window.addEventListener('load', () => {
       });
     });
   }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const iframe = document.querySelector('.hokkaido-video-container .vimeo-iframe');
+  const commentContainer = document.getElementById('hokkaido-comment');
+
+  if (!iframe || !commentContainer) return;
+
+  const player = new Vimeo.Player(iframe);
+
+  const comments = [
+    "北海道冬の魅力：札幌＆小樽",
+    "小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。"
+  ];
+
+  let lineIndex = 0; // 当前显示第几行
+  let charIndex = 0;
+  let typingInterval;
+
+  // 创建每一行文字元素
+  function createLineElement() {
+    const line = document.createElement('div');
+    line.classList.add('subtitle-line');
+    commentContainer.appendChild(line);
+    return line;
+  }
+
+  // 打字机效果
+  function startTyping(lineEl, text, delay = 80, nextCallback) {
+    lineEl.textContent = '';
+    charIndex = 0;
+    lineEl.classList.add('active');
+    clearInterval(typingInterval);
+
+    typingInterval = setInterval(() => {
+      if (charIndex < text.length) {
+        lineEl.textContent += text[charIndex];
+        charIndex++;
+      } else {
+        clearInterval(typingInterval);
+        lineEl.style.borderRight = 'none';
+        if (nextCallback) setTimeout(nextCallback, 1000);
+      }
+    }, delay);
+  }
+
+  // 控制两行依次显示
+  function showNextLine() {
+    if (lineIndex >= comments.length) return;
+    const text = comments[lineIndex];
+    const newLine = createLineElement();
+    startTyping(newLine, text, 85, () => {
+      lineIndex++;
+      if (lineIndex < comments.length) showNextLine();
+    });
+  }
+
+  // 视频播放时启动字幕
+  player.on('play', () => {
+    if (lineIndex === 0) showNextLine();
+  });
+
+  // 视频结束后重置
+  player.on('ended', () => {
+    clearInterval(typingInterval);
+    commentContainer.innerHTML = '';
+    lineIndex = 0;
+  });
 });
 
 
