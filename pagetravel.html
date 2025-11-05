@@ -960,32 +960,50 @@
       sidebarContent.innerHTML = '';
 
       if (placeholder && placeholder.parentNode) {
-        placeholder.parentNode.insertBefore(container, placeholder);
-        placeholder.remove();
-      }
+  placeholder.parentNode.insertBefore(container, placeholder);
+    placeholder.remove();
+  // ❌ 不要删除 placeholder，否则下次进入时找不到
+  // placeholder.remove();
+} else if (activeContext.originalParent) {
+  activeContext.originalParent.appendChild(container);
+}
+
+
       activeContext = null;
     }
 
     function enterCustomFullscreen(context) {
-      if (!context) return;
+  if (!context) return;
 
-      if (activeContext && activeContext !== context) exitCustomFullscreen();
+  if (activeContext && activeContext !== context) exitCustomFullscreen();
 
-      const { container, placeholder, sidebarData } = context;
+  // ✅ 一定要先记录原父节点（否则 insertBefore 会失败）
+  if (!context.originalParent) {
+    context.originalParent = context.container.parentNode;
+  }
 
-      if (container.parentNode !== videoViewport) {
-        if (container.parentNode) container.parentNode.insertBefore(placeholder, container);
-        videoViewport.appendChild(container);
-      }
+  // ✅ placeholder 不存在时才创建
+  if (!context.placeholder || !context.placeholder.parentNode) {
+    context.placeholder = document.createComment('custom-fullscreen-placeholder');
+    context.originalParent.insertBefore(context.placeholder, context.container);
+  }
 
-      populateSidebar(sidebarData);
+  const { container, sidebarData } = context;
 
-      overlay.setAttribute('aria-hidden', 'false');
-      bodyEl.classList.add('is-custom-fullscreen');
-      htmlEl.classList.add('is-custom-fullscreen');
+  // ✅ 移入全屏层
+  videoViewport.appendChild(container);
 
-      activeContext = context;
-    }
+  // ✅ 填充侧栏
+  populateSidebar(sidebarData);
+
+  // ✅ 显示全屏 UI
+  overlay.setAttribute('aria-hidden', 'false');
+  bodyEl.classList.add('is-custom-fullscreen');
+  htmlEl.classList.add('is-custom-fullscreen');
+
+  activeContext = context;
+}
+
 
     closeButton?.addEventListener('click', exitCustomFullscreen);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
@@ -1008,7 +1026,8 @@
 
       const context = {
         container,
-        placeholder: document.createComment('custom-fullscreen-placeholder'),
+         originalParent: container.parentNode, // ✅ 一开始记录原父节点
+  placeholder: null, // ✅ 每次进入时会重新生成
         sidebarData,
       };
 
