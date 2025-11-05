@@ -112,24 +112,79 @@
 }
 
 
-.comment-text {
-  position: absolute;
-  top: 60px;   /* 距离 Rectanglecomment.svg 顶部 */
-  left: -267px;
-  width: calc(100% - 60px);
-  color:black;
-  font-size: 13px;
-  line-height: 1.5;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-weight: bold;
-  letter-spacing: 1px;
-  z-index: 25;
-  pointer-events: none;
-  white-space: pre-wrap;
-  max-width: 70vw;
-}
+  .subtitle-container {
+    position: absolute;
+    bottom: 140px;
+    left: 110px;
+    width: min(560px, calc(100% - 160px));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    z-index: 30;
+    pointer-events: none;
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+  }
 
-  * ================================
+  .subtitle-line {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: pre-wrap;
+  }
+
+  .subtitle-text {
+    display: inline;
+  }
+
+  .subtitle-title {
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  .subtitle-description {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400;
+    color: #d8dbe3;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    max-width: 540px;
+  }
+
+  .subtitle-description .subtitle-text {
+    display: inline;
+  }
+
+  .subtitle-cursor {
+    margin-left: 0.2em;
+    width: 0.4em;
+    animation: subtitle-cursor-blink 1.05s steps(1, start) infinite;
+    opacity: 0;
+  }
+
+  .subtitle-line.is-typing .subtitle-cursor {
+    opacity: 1;
+  }
+
+  .subtitle-line.is-complete .subtitle-cursor {
+    opacity: 0;
+    animation: none;
+  }
+
+  @keyframes subtitle-cursor-blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+    /* ================================
        Finland 视频模块
        ================================ */
     .finland-logo-container {
@@ -314,8 +369,8 @@ html, body {
 
           <!-- Decorative SVG frame stays visible on top -->
           <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-            <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
-          <div class="comment-text" id="hokkaido-comment"></div>
+              <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
+            <div class="subtitle-container" id="hokkaido-subtitles"></div>
 </div>
 
       
@@ -521,69 +576,125 @@ window.addEventListener('load', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const iframe = document.querySelector('.hokkaido-video-container .vimeo-iframe');
-  const commentContainer = document.getElementById('hokkaido-comment');
+  const subtitleContainer = document.getElementById('hokkaido-subtitles');
 
-  if (!iframe || !commentContainer) return;
+  if (!iframe || !subtitleContainer) return;
 
   const player = new Vimeo.Player(iframe);
 
-  const comments = [
-    "北海道冬の魅力：札幌＆小樽",
-    "小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。"
+  const subtitleConfigs = [
+    {
+      text: '北海道冬の魅力：札幌＆小樽',
+      speed: 60,
+      className: 'subtitle-title',
+    },
+    {
+      text: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。',
+      speed: 90,
+      className: 'subtitle-description',
+    },
   ];
 
-  let lineIndex = 0; // 当前显示第几行
-  let charIndex = 0;
-  let typingInterval;
+  const typingTimers = [];
+  let hasStarted = false;
+  let typingSessionId = 0;
 
-  // 创建每一行文字元素
-  function createLineElement() {
-    const line = document.createElement('div');
-    line.classList.add('subtitle-line');
-    commentContainer.appendChild(line);
-    return line;
+  subtitleConfigs.forEach((config) => {
+    const lineEl = document.createElement('div');
+    lineEl.className = `subtitle-line ${config.className}`;
+
+    const textEl = document.createElement('span');
+    textEl.className = 'subtitle-text';
+
+    const cursorEl = document.createElement('span');
+    cursorEl.className = 'subtitle-cursor';
+    cursorEl.textContent = '|';
+
+    lineEl.append(textEl, cursorEl);
+    subtitleContainer.appendChild(lineEl);
+
+    Object.assign(config, { lineEl, textEl, cursorEl });
+  });
+
+  function clearTimers() {
+    while (typingTimers.length) {
+      clearTimeout(typingTimers.pop());
+    }
   }
 
-  // 打字机效果
-  function startTyping(lineEl, text, delay = 80, nextCallback) {
-    lineEl.textContent = '';
-    charIndex = 0;
-    lineEl.classList.add('active');
-    clearInterval(typingInterval);
-
-    typingInterval = setInterval(() => {
-      if (charIndex < text.length) {
-        lineEl.textContent += text[charIndex];
-        charIndex++;
-      } else {
-        clearInterval(typingInterval);
-        lineEl.style.borderRight = 'none';
-        if (nextCallback) setTimeout(nextCallback, 1000);
-      }
-    }, delay);
+  function resetSubtitles() {
+    typingSessionId += 1;
+    clearTimers();
+    subtitleConfigs.forEach((config) => {
+      config.textEl.textContent = '';
+      config.lineEl.classList.remove('is-typing', 'is-complete');
+    });
+    hasStarted = false;
   }
 
-  // 控制两行依次显示
-  function showNextLine() {
-    if (lineIndex >= comments.length) return;
-    const text = comments[lineIndex];
-    const newLine = createLineElement();
-    startTyping(newLine, text, 85, () => {
-      lineIndex++;
-      if (lineIndex < comments.length) showNextLine();
+  function typeLine(config, sessionId) {
+    return new Promise((resolve) => {
+      const { text, speed, textEl, lineEl } = config;
+      let index = 0;
+
+      lineEl.classList.remove('is-complete');
+      lineEl.classList.add('is-typing');
+      textEl.textContent = '';
+
+      const step = () => {
+        if (sessionId !== typingSessionId) {
+          lineEl.classList.remove('is-typing');
+          resolve();
+          return;
+        }
+
+        if (index < text.length) {
+          textEl.textContent += text[index];
+          index += 1;
+          const timeoutId = setTimeout(step, speed);
+          typingTimers.push(timeoutId);
+        } else {
+          lineEl.classList.remove('is-typing');
+          lineEl.classList.add('is-complete');
+          resolve();
+        }
+      };
+
+      step();
     });
   }
 
-  // 视频播放时启动字幕
+  async function playSubtitles() {
+    const sessionId = ++typingSessionId;
+    clearTimers();
+
+    subtitleConfigs.forEach((config) => {
+      config.textEl.textContent = '';
+      config.lineEl.classList.remove('is-typing', 'is-complete');
+    });
+
+    for (const config of subtitleConfigs) {
+      await typeLine(config, sessionId);
+      if (sessionId !== typingSessionId) {
+        break;
+      }
+    }
+  }
+
   player.on('play', () => {
-    if (lineIndex === 0) showNextLine();
+    if (hasStarted) return;
+    hasStarted = true;
+    playSubtitles();
   });
 
-  // 视频结束后重置
   player.on('ended', () => {
-    clearInterval(typingInterval);
-    commentContainer.innerHTML = '';
-    lineIndex = 0;
+    resetSubtitles();
+  });
+
+  player.on('seeked', ({ seconds }) => {
+    if (seconds <= 0.1) {
+      resetSubtitles();
+    }
   });
 });
 
