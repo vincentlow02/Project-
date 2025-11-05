@@ -221,14 +221,29 @@
       transform: scale(1.05);
     }
 
-    .finland-video-container {
-      position: absolute;
-      top: 67px;
-      left:190px;
-      width: min(830px, 60vw);
-      aspect-ratio: 1260 / 710;
-      border-radius: 1203px;
-    }
+      .finland-video-container {
+        position: absolute;
+        top: 67px;
+        left:190px;
+        width: min(830px, 60vw);
+        aspect-ratio: 1260 / 710;
+        border-radius: 1203px;
+      }
+
+      .finland-video-layers {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .finland-video-container .subtitle-container {
+        position: absolute;
+        top: 60px;
+        left: 40px;
+        z-index: 30;
+        pointer-events: none;
+        width: min(560px, calc(100% - 160px));
+      }
 
     .finland-video-container .vimeo-wrapper {
       position: absolute;
@@ -377,19 +392,22 @@ html, body {
       
             <div class="finland-logo-container">
               <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
-              <div class="finland-video-container" data-video-container>
-                <div class="vimeo-wrapper">
-                  <iframe
-                    class="vimeo-iframe"
-                    src="https://player.vimeo.com/video/1133091141?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
-                    title="Finland Experience"
-                  ></iframe>
+                <div class="finland-video-container" data-video-container>
+                  <div class="finland-video-layers">
+                    <div class="vimeo-wrapper">
+                      <iframe
+                        class="vimeo-iframe"
+                        src="https://player.vimeo.com/video/1133091141?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen
+                        title="Finland Experience"
+                      ></iframe>
+                    </div>
+                    <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
+                    <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
+                    <div class="subtitle-container" id="finland-subtitles"></div>
+                  </div>
                 </div>
-                <div class="vimeo-toggle-hitbox" aria-hidden="true"></div>
-                <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-              </div>
           </div>
         </div>
       </main>
