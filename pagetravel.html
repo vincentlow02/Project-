@@ -114,14 +114,14 @@
 
   .subtitle-container {
     position: absolute;
-    bottom: 140px;
-    left: 110px;
+    top: 60px;
+    left: 40px;
     width: min(560px, calc(100% - 160px));
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
-    z-index: 30;
+    gap: 4px;
+    z-index:  9999;
     pointer-events: none;
     font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
   }
@@ -137,22 +137,23 @@
   }
 
   .subtitle-title {
-    font-size: clamp(26px, 3vw, 36px);
+    font-size: 14px;
     font-weight: 700;
-    color: #ffffff;
+    color: black;
     letter-spacing: 0.06em;
     line-height: 1.25;
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
   }
 
   .subtitle-description {
-    font-size: clamp(15px, 1.4vw, 18px);
+    font-size:10px;
     font-weight: 400;
-    color: #d8dbe3;
+    color:black;
     line-height: 1.7;
     letter-spacing: 0.03em;
     text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
     max-width: 540px;
+    text-align: left;
   }
 
   .subtitle-description .subtitle-text {
@@ -196,8 +197,8 @@
 
     .finland-logo {
       position: absolute;
-      top: -50px;
-      left: 1340px;
+      top: 13px;
+      left: 540px;
       width: 130px;
       z-index: 10;
       transition: transform 0.3s ease;
@@ -210,7 +211,7 @@
     .finland-logo-container .ques-icon {
       position: absolute;
       top: 444px;
-      left: 1240px;
+      left: 140px;
       width: 360px;
       z-index: 11;
       transition: transform 0.3s ease;
@@ -222,8 +223,8 @@
 
     .finland-video-container {
       position: absolute;
-      top: 1px;
-      left: 990px;
+      top: 67px;
+      left:190px;
       width: min(830px, 60vw);
       aspect-ratio: 1260 / 710;
       border-radius: 1203px;
@@ -585,12 +586,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const subtitleConfigs = [
     {
       text: '北海道冬の魅力：札幌＆小樽',
-      speed: 60,
+      speed: 25,
       className: 'subtitle-title',
     },
     {
       text: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。',
-      speed: 90,
+      speed: ,
       className: 'subtitle-description',
     },
   ];
