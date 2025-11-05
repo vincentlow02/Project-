@@ -295,13 +295,13 @@ html.is-custom-fullscreen {
 .custom-fullscreen-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.88);
+  background: #000;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
   z-index: 12000;
 }
 
@@ -312,35 +312,38 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
 
 .custom-fullscreen-wrapper {
   display: flex;
-  width: min(1280px, 100vw);
-  height: min(90vh, 100vh);
-  background: #000;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  justify-content: stretch;
+  background: transparent;
 }
 
 .custom-fullscreen-video-area {
   flex: 1 1 auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  box-sizing: border-box;
+  align-items: stretch;
+  justify-content: stretch;
+  min-width: 0;
+  min-height: 0;
   background: #000;
 }
 
 .custom-fullscreen-video-viewport {
   position: relative;
-  width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
   display: flex;
   align-items: stretch;
-  justify-content: center;
+  justify-content: stretch;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
 }
 
 .custom-fullscreen-sidebar {
-  flex: 0 0 320px;
+  flex: 0 0 300px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -411,7 +414,7 @@ body.is-custom-fullscreen .custom-fullscreen-video-viewport .finland-video-conta
   height: 100%;
   flex: 1 1 auto;
   max-width: none;
-  border-radius: 16px;
+  border-radius: 0;
   background: #000;
   display: flex;
   align-items: stretch;
@@ -423,7 +426,7 @@ body.is-custom-fullscreen .hokkaido-video-container .vimeo-wrapper,
 body.is-custom-fullscreen .finland-video-container .vimeo-wrapper {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  border-radius: 0;
   transform: none;
   z-index: 1;
 }
@@ -432,7 +435,7 @@ body.is-custom-fullscreen .hokkaido-video-container .vimeo-iframe,
 body.is-custom-fullscreen .finland-video-container .vimeo-iframe {
   width: 100%;
   height: 100%;
-  border-radius: inherit;
+  border-radius: 0;
   border: 0;
 }
 
@@ -454,12 +457,15 @@ body.is-custom-fullscreen .finland-video-container .subtitle-container {
 @media (max-width: 1024px) {
   .custom-fullscreen-wrapper {
     flex-direction: column;
-    width: min(100vw, 100%);
-    height: min(100vh, 100%);
+  }
+
+  .custom-fullscreen-video-area {
+    flex: 1 1 auto;
   }
 
   .custom-fullscreen-sidebar {
     width: 100%;
+    max-width: none;
     flex: 0 0 auto;
     border-top: 1px solid #eeeeee;
   }
@@ -534,13 +540,13 @@ body.is-custom-fullscreen .finland-video-container .subtitle-container {
       <img src="Rectangle205.svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
       <div class="hokkaido-logo-container">
         <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
-<img src="ques.svg" alt="Question Icon" class="ques-icon">
+        <img src="ques.svg" alt="Question Icon" class="ques-icon">
         <div class="hokkaido-video-container" data-custom-fullscreen data-sidebar-title="Otaru" data-sidebar-subtitle="北海道の魅力：札幌＆小樽" data-sidebar-description="小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪化粧した街並みがロマンチックな雰囲気を醸し出します。" data-sidebar-list="雪景色で輝く小樽運河|札幌・すすきののナイトライフ|石造り倉庫とカフェ巡り">
           <!-- Vimeo iframe sits beneath the decorative frame -->
           <div class="vimeo-wrapper">
             <iframe
               class="vimeo-iframe"
-              src="https://player.vimeo.com/video/1133040806?loop=1&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
+              src="https://player.vimeo.com/video/1133040806?&autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowfullscreen
               title="Hokkaido Experience"
@@ -552,9 +558,10 @@ body.is-custom-fullscreen .finland-video-container .subtitle-container {
 
           <!-- Decorative SVG frame stays visible on top -->
           <img src="hkdvideo.svg" alt="Video Frame" class="hokkaido-video-frame">
-              <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
-            <div id="hokkaido-subtitles" class="subtitle-container"></div>
-</div>
+          <img src="Rectanglecomment.svg" alt="Comment Rectangle" class="rectangle-comment">
+          <div id="hokkaido-subtitles" class="subtitle-container"></div>
+        </div>
+      </div>
 
       
             <div class="finland-logo-container">
