@@ -287,6 +287,184 @@ html, body {
   scroll-behavior: smooth;
 }
 
+body.is-custom-fullscreen,
+html.is-custom-fullscreen {
+  overflow: hidden;
+}
+
+.custom-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 12000;
+}
+
+body.is-custom-fullscreen .custom-fullscreen-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-fullscreen-wrapper {
+  display: flex;
+  width: min(1280px, 100vw);
+  height: min(90vh, 100vh);
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.custom-fullscreen-video-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #000;
+}
+
+.custom-fullscreen-video-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.custom-fullscreen-sidebar {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #181818;
+  overflow-y: auto;
+}
+
+.custom-fullscreen-close {
+  align-self: flex-end;
+  background: #eeeeee;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.custom-fullscreen-close:hover {
+  background: #dddddd;
+}
+
+.custom-fullscreen-sidebar h2,
+.custom-fullscreen-sidebar h3 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.custom-fullscreen-sidebar h2 {
+  font-size: 20px;
+}
+
+.custom-fullscreen-sidebar h3 {
+  font-size: 16px;
+  color: #555555;
+}
+
+.custom-fullscreen-sidebar p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.custom-fullscreen-sidebar ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.custom-fullscreen-sidebar li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.custom-fullscreen-sidebar li:last-child {
+  margin-bottom: 0;
+}
+
+body.is-custom-fullscreen .custom-fullscreen-video-viewport .hokkaido-video-container,
+body.is-custom-fullscreen .custom-fullscreen-video-viewport .finland-video-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  max-width: none;
+  border-radius: 16px;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-wrapper,
+body.is-custom-fullscreen .finland-video-container .vimeo-wrapper {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: none;
+  z-index: 1;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-iframe,
+body.is-custom-fullscreen .finland-video-container .vimeo-iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: 0;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-iframe,
+body.is-custom-fullscreen .finland-video-container .vimeo-iframe {
+  pointer-events: auto;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-toggle-hitbox,
+body.is-custom-fullscreen .finland-video-container .vimeo-toggle-hitbox,
+body.is-custom-fullscreen .hokkaido-video-container .hokkaido-video-frame,
+body.is-custom-fullscreen .hokkaido-video-container .rectangle-comment,
+body.is-custom-fullscreen .hokkaido-video-container .subtitle-container,
+body.is-custom-fullscreen .finland-video-container .hokkaido-video-frame,
+body.is-custom-fullscreen .finland-video-container .subtitle-container {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .custom-fullscreen-wrapper {
+    flex-direction: column;
+    width: min(100vw, 100%);
+    height: min(100vh, 100%);
+  }
+
+  .custom-fullscreen-sidebar {
+    width: 100%;
+    flex: 0 0 auto;
+    border-top: 1px solid #eeeeee;
+  }
+}
+
 
   </style>
 </head>
@@ -357,7 +535,7 @@ html, body {
       <div class="hokkaido-logo-container">
         <img src="Hokkaidologo.svg" alt="Hokkaido Logo" class="hokkaido-logo">
 <img src="ques.svg" alt="Question Icon" class="ques-icon">
-        <div class="hokkaido-video-container">
+        <div class="hokkaido-video-container" data-custom-fullscreen data-sidebar-title="Otaru" data-sidebar-subtitle="北海道の魅力：札幌＆小樽" data-sidebar-description="小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪化粧した街並みがロマンチックな雰囲気を醸し出します。" data-sidebar-list="雪景色で輝く小樽運河|札幌・すすきののナイトライフ|石造り倉庫とカフェ巡り">
           <!-- Vimeo iframe sits beneath the decorative frame -->
           <div class="vimeo-wrapper">
             <iframe
@@ -381,7 +559,7 @@ html, body {
       
             <div class="finland-logo-container">
               <img src="Finlandlogo.svg" alt="Finland Logo" class="finland-logo">
-                <div class="finland-video-container" data-video-container>
+                  <div class="finland-video-container" data-video-container data-custom-fullscreen data-sidebar-title="Lapland" data-sidebar-subtitle="フィンランドの冬を駆ける旅" data-sidebar-description="オーロラの広がる夜空と雪原を走る列車が、北欧ならではの静けさを届けます。" data-sidebar-list="オーロラ観測のベストシーズン|氷点下のサウナ体験|首都ヘルシンキからのおすすめルート">
                   <div class="finland-video-layers">
                     <div class="vimeo-wrapper">
                       <iframe
@@ -401,6 +579,18 @@ html, body {
         </div>
       </main>
   </section>
+
+    <div id="custom-fullscreen-overlay" class="custom-fullscreen-overlay" aria-hidden="true">
+      <div class="custom-fullscreen-wrapper">
+        <div class="custom-fullscreen-video-area">
+          <div class="custom-fullscreen-video-viewport"></div>
+        </div>
+        <aside class="custom-fullscreen-sidebar">
+          <button type="button" class="custom-fullscreen-close">✖ 关闭</button>
+          <div class="custom-fullscreen-sidebar-content"></div>
+        </aside>
+      </div>
+    </div>
 
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
@@ -852,8 +1042,178 @@ window.addEventListener('load', () => {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('custom-fullscreen-overlay');
+  if (!overlay || typeof Vimeo === 'undefined' || !Vimeo.Player) {
+    return;
+  }
+
+  const htmlEl = document.documentElement;
+  const bodyEl = document.body;
+  const wrapper = overlay.querySelector('.custom-fullscreen-wrapper');
+  const videoViewport = overlay.querySelector('.custom-fullscreen-video-viewport');
+  const sidebarContent = overlay.querySelector('.custom-fullscreen-sidebar-content');
+  const closeButton = overlay.querySelector('.custom-fullscreen-close');
+
+  if (!videoViewport || !sidebarContent) {
+    return;
+  }
+
+  let activeContext = null;
+
+  function populateSidebar(data) {
+    sidebarContent.innerHTML = '';
+    if (!data) {
+      return;
+    }
+
+    if (data.title) {
+      const titleEl = document.createElement('h2');
+      titleEl.textContent = data.title;
+      sidebarContent.appendChild(titleEl);
+    }
+
+    if (data.subtitle) {
+      const subtitleEl = document.createElement('h3');
+      subtitleEl.textContent = data.subtitle;
+      sidebarContent.appendChild(subtitleEl);
+    }
+
+    if (data.description) {
+      const descEl = document.createElement('p');
+      descEl.textContent = data.description;
+      sidebarContent.appendChild(descEl);
+    }
+
+    if (data.list && data.list.length) {
+      const listEl = document.createElement('ul');
+      data.list.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        listEl.appendChild(li);
+      });
+      sidebarContent.appendChild(listEl);
+    }
+  }
+
+  function exitCustomFullscreen() {
+    if (!activeContext) {
+      return;
+    }
+
+    const { container, placeholder } = activeContext;
+
+    overlay.setAttribute('aria-hidden', 'true');
+    bodyEl.classList.remove('is-custom-fullscreen');
+    htmlEl.classList.remove('is-custom-fullscreen');
+
+    sidebarContent.innerHTML = '';
+
+    if (placeholder && placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(container, placeholder);
+      placeholder.remove();
+    }
+
+    activeContext = null;
+  }
+
+  function enterCustomFullscreen(context) {
+    if (!context || activeContext === context) {
+      return;
+    }
+
+    if (activeContext) {
+      exitCustomFullscreen();
+    }
+
+    const { container, placeholder, sidebarData } = context;
+
+    if (container.parentNode) {
+      container.parentNode.insertBefore(placeholder, container);
+    }
+
+    videoViewport.appendChild(container);
+
+    populateSidebar(sidebarData);
+
+    overlay.setAttribute('aria-hidden', 'false');
+    bodyEl.classList.add('is-custom-fullscreen');
+    htmlEl.classList.add('is-custom-fullscreen');
+
+    activeContext = context;
+  }
+
+  closeButton?.addEventListener('click', exitCustomFullscreen);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      exitCustomFullscreen();
+    }
+  });
+
+  wrapper?.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      exitCustomFullscreen();
+    }
+  });
+
+  const containers = document.querySelectorAll('[data-custom-fullscreen]');
+
+  containers.forEach((container) => {
+    const iframe = container.querySelector('iframe');
+    if (!iframe) {
+      return;
+    }
+
+    const sidebarData = {
+      title: container.getAttribute('data-sidebar-title') || '',
+      subtitle: container.getAttribute('data-sidebar-subtitle') || '',
+      description: container.getAttribute('data-sidebar-description') || '',
+      list: (container.getAttribute('data-sidebar-list') || '')
+        .split('|')
+        .map((item) => item.trim())
+        .filter(Boolean),
+    };
+
+    const context = {
+      container,
+      placeholder: document.createComment('custom-fullscreen-placeholder'),
+      sidebarData,
+    };
+
+    const player = new Vimeo.Player(iframe);
+
+    player.on('fullscreenchange', (data) => {
+      if (data && data.fullscreen) {
+        if (typeof player.exitFullscreen === 'function') {
+          player
+            .exitFullscreen()
+            .catch(() => {})
+            .then(() => {
+              enterCustomFullscreen(context);
+            });
+        } else {
+          enterCustomFullscreen(context);
+        }
+      }
+    });
+
+    container.addEventListener('custom-fullscreen:open', () => {
+      enterCustomFullscreen(context);
+    });
+
+    container.addEventListener('custom-fullscreen:close', () => {
+      exitCustomFullscreen();
+    });
+  });
+});
 
 
-  </script>
+
+    </script>
 </body>
 </html>
