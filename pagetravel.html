@@ -582,117 +582,84 @@ document.addEventListener('DOMContentLoaded', () => {
       titleSpeed: 28,
       descSpeed: 40,
     },
-
-     {
-    title: 'すすきの交差点',
-    description: '札幌最大の繁華街すすきの。NIKKAのネオンが輝き、飲食店やショップが並ぶにぎやかな夜の街。',
-    titleSpeed: 28,
-    descSpeed: 30,
-  },
-
     {
-    title: '藻岩山の夜景',
-    description: '藻岩山は「日本新三大夜景」の一つ。ロープウェイで登ると、札幌の街が宝石のように輝く絶景を望めます。',
-    titleSpeed: 30,
-    descSpeed: 41,
-  },
-
+      title: 'すすきの交差点',
+      description: '札幌最大の繁華街すすきの。NIKKAのネオンが輝き、飲食店やショップが並ぶにぎやかな夜の街。',
+      titleSpeed: 28,
+      descSpeed: 30,
+    },
     {
-    title: '白い恋人ソフトクリーム',
-    description:'北海道を代表するお土産。',
-    titleSpeed: 28,
-    descSpeed:24,
-  },
-
-  
+      title: '藻岩山の夜景',
+      description: '藻岩山は「日本新三大夜景」の一つ。ロープウェイで登ると、札幌の街が宝石のように輝く絶景を望めます。',
+      titleSpeed: 30,
+      descSpeed: 41,
+    },
     {
-    title: 'うな重',
-    description:'うな重は全国で親しまれる日本料理の一つ。',
-    titleSpeed: 42,
-    descSpeed:70,
-  },
-
-     {
-    title: 'ジンギスカン',
-    description:'北海道名物のジンギスカン。ラム肉と野菜を特製鍋で焼き、タレと相性抜群の一品。',
-    titleSpeed: 40,
-    descSpeed:50,
-  },
-
-  
-     {
-    title: '元祖さっぽろラーメン横丁',
-    description:'札幌は味噌ラーメン発祥の地。ラーメン横丁には昭和の雰囲気の老舗が並び、熱々の一杯が楽しめます。',
-    titleSpeed: 30,
-    descSpeed:30,
-  },
-
-     {
-    title: '大通公園＆さっぽろテレビ塔',
-    description:'札幌中心の大通公園は市民の憩いの場。冬はホワイトイルミネーションや雪まつりで街が彩られます。',
-    titleSpeed: 37,
-    descSpeed:30,
-  },
-
-
+      title: '白い恋人ソフトクリーム',
+      description: '北海道を代表するお土産。',
+      titleSpeed: 28,
+      descSpeed: 24,
+    },
+    {
+      title: 'うな重',
+      description: 'うな重は全国で親しまれる日本料理の一つ。',
+      titleSpeed: 42,
+      descSpeed: 70,
+    },
+    {
+      title: 'ジンギスカン',
+      description: '北海道名物のジンギスカン。ラム肉と野菜を特製鍋で焼き、タレと相性抜群の一品。',
+      titleSpeed: 40,
+      descSpeed: 50,
+    },
+    {
+      title: '元祖さっぽろラーメン横丁',
+      description: '札幌は味噌ラーメン発祥の地。ラーメン横丁には昭和の雰囲気の老舗が並び、熱々の一杯が楽しめます。',
+      titleSpeed: 30,
+      descSpeed: 30,
+    },
+    {
+      title: '大通公園＆さっぽろテレビ塔',
+      description: '札幌中心の大通公園は市民の憩いの場。冬はホワイトイルミネーションや雪まつりで街が彩られます。',
+      titleSpeed: 37,
+      descSpeed: 30,
+    },
   ];
 
-  
+  const WAIT_AFTER_GROUP = 1000;
 
-
-
-  const typingTimers = [];
-  let typingSessionId = 0;
-  let hasStarted = false;
-
-  function clearTimers() {
-    while (typingTimers.length) {
-      clearTimeout(typingTimers.pop());
+  class SubtitleController {
+    constructor(configs, container) {
+      this.configs = configs;
+      this.container = container;
+      this.started = false;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'idle';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.currentTimeout = null;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+      this.titleLine = null;
+      this.titleText = null;
+      this.descLine = null;
+      this.descText = null;
     }
-  }
 
-  function typeLine(config, sessionId) {
-    return new Promise((resolve) => {
-      const { text, speed, textEl, lineEl } = config;
-      let index = 0;
+    clearCurrentTimeout() {
+      if (this.currentTimeout !== null) {
+        clearTimeout(this.currentTimeout);
+        this.currentTimeout = null;
+      }
+    }
 
-      lineEl.classList.remove('is-complete');
-      lineEl.classList.add('is-typing');
-      textEl.textContent = '';
+    prepareCurrentGroup() {
+      const group = this.configs[this.currentGroup];
+      if (!group) return;
 
-      const step = () => {
-        if (sessionId !== typingSessionId) {
-          lineEl.classList.remove('is-typing');
-          resolve();
-          return;
-        }
+      this.container.innerHTML = '';
 
-        if (index < text.length) {
-          textEl.textContent += text[index];
-          index++;
-          typingTimers.push(setTimeout(step, speed));
-        } else {
-          lineEl.classList.remove('is-typing');
-          lineEl.classList.add('is-complete');
-          resolve();
-        }
-      };
-
-      step();
-    });
-  }
-
-  async function playSubtitles() {
-    const sessionId = ++typingSessionId;
-    clearTimers();
-
-    for (const group of subtitleConfigs) {
-      if (sessionId !== typingSessionId) break;
-
-      // 清空 container，为当前组创建行
-      subtitleContainer.innerHTML = '';
-
-      // title 行
       const titleLine = document.createElement('div');
       titleLine.className = 'subtitle-line subtitle-title';
       const titleText = document.createElement('span');
@@ -702,7 +669,6 @@ document.addEventListener('DOMContentLoaded', () => {
       titleCursor.textContent = '|';
       titleLine.append(titleText, titleCursor);
 
-      // description 行
       const descLine = document.createElement('div');
       descLine.className = 'subtitle-line subtitle-description';
       const descText = document.createElement('span');
@@ -712,40 +678,154 @@ document.addEventListener('DOMContentLoaded', () => {
       descCursor.textContent = '|';
       descLine.append(descText, descCursor);
 
-      // 添加到 container
-      subtitleContainer.appendChild(titleLine);
-      subtitleContainer.appendChild(descLine);
+      this.container.appendChild(titleLine);
+      this.container.appendChild(descLine);
 
-      // 打字
-      await typeLine({ text: group.title, speed: group.titleSpeed, textEl: titleText, lineEl: titleLine }, sessionId);
-      await typeLine({ text: group.description, speed: group.descSpeed, textEl: descText, lineEl: descLine }, sessionId);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      this.titleLine = titleLine;
+      this.titleText = titleText;
+      this.descLine = descLine;
+      this.descText = descText;
 
-        
+      this.titleLine.classList.remove('is-complete');
+      this.descLine.classList.remove('is-complete');
+      this.titleLine.classList.remove('is-typing');
+      this.descLine.classList.remove('is-typing');
 
-      // 打完立即消失，为下一组准备
-      subtitleContainer.innerHTML = '';
+      this.titleText.textContent = '';
+      this.descText.textContent = '';
+    }
+
+    start() {
+      if (!this.configs.length) return;
+
+      this.started = true;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'title';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.prepareCurrentGroup();
+      this.scheduleNextStep();
+    }
+
+    pause() {
+      if (!this.started || this.paused) return;
+      this.paused = true;
+
+      if (this.stage === 'wait' && this.waitStart) {
+        const elapsed = Date.now() - this.waitStart;
+        this.waitRemaining = Math.max(0, this.waitRemaining - elapsed);
+      }
+
+      this.clearCurrentTimeout();
+    }
+
+    resume() {
+      if (!this.started || !this.paused) return;
+      this.paused = false;
+
+      if (this.stage === 'wait') {
+        if (this.waitRemaining <= 0) {
+          this.advanceGroup();
+        } else {
+          this.waitStart = Date.now();
+          this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
+        }
+        return;
+      }
+
+      this.scheduleNextStep();
+    }
+
+    reset() {
+      this.clearCurrentTimeout();
+      this.started = false;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'idle';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+      this.container.innerHTML = '';
+    }
+
+    scheduleNextStep() {
+      if (!this.started || this.paused) return;
+
+      const group = this.configs[this.currentGroup];
+      if (!group) return;
+
+      if (this.stage === 'title') {
+        this.titleLine.classList.add('is-typing');
+        if (this.titleIndex < group.title.length) {
+          this.titleText.textContent += group.title[this.titleIndex];
+          this.titleIndex += 1;
+          this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.titleSpeed);
+        } else {
+          this.titleLine.classList.remove('is-typing');
+          this.titleLine.classList.add('is-complete');
+          this.stage = 'description';
+          this.scheduleNextStep();
+        }
+        return;
+      }
+
+      if (this.stage === 'description') {
+        this.descLine.classList.add('is-typing');
+        if (this.descIndex < group.description.length) {
+          this.descText.textContent += group.description[this.descIndex];
+          this.descIndex += 1;
+          this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.descSpeed);
+        } else {
+          this.descLine.classList.remove('is-typing');
+          this.descLine.classList.add('is-complete');
+          this.stage = 'wait';
+          this.waitRemaining = WAIT_AFTER_GROUP;
+          this.waitStart = Date.now();
+          this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
+        }
+      }
+    }
+
+    advanceGroup() {
+      this.clearCurrentTimeout();
+      if (!this.started || this.paused) return;
+
+      this.currentGroup = (this.currentGroup + 1) % this.configs.length;
+      this.stage = 'title';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+      this.prepareCurrentGroup();
+      this.scheduleNextStep();
     }
   }
 
-  function resetSubtitles() {
-    typingSessionId++;
-    clearTimers();
-    subtitleContainer.innerHTML = '';
-    hasStarted = false;
-  }
+  const subtitleController = new SubtitleController(subtitleConfigs, subtitleContainer);
 
-  // Vimeo 播放事件
   player.on('play', () => {
-    if (!hasStarted) {
-      hasStarted = true;
-      playSubtitles();
+    if (!subtitleController.started) {
+      subtitleController.start();
+    } else {
+      subtitleController.resume();
     }
   });
 
-  player.on('ended', resetSubtitles);
+  player.on('pause', () => {
+    subtitleController.pause();
+  });
+
+  player.on('ended', () => {
+    subtitleController.reset();
+  });
+
   player.on('seeked', ({ seconds }) => {
-    if (seconds <= 0.1) resetSubtitles();
+    if (seconds <= 0.1) {
+      subtitleController.reset();
+    }
   });
 });
 
