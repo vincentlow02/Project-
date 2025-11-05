@@ -960,14 +960,11 @@
       sidebarContent.innerHTML = '';
 
       if (placeholder && placeholder.parentNode) {
-  placeholder.parentNode.insertBefore(container, placeholder);
-    placeholder.remove();
-  // ❌ 不要删除 placeholder，否则下次进入时找不到
-  // placeholder.remove();
-} else if (activeContext.originalParent) {
-  activeContext.originalParent.appendChild(container);
-}
-
+        placeholder.parentNode.insertBefore(container, placeholder);
+        // Keep placeholder to preserve the original mount position
+      } else if (activeContext.originalParent) {
+        activeContext.originalParent.appendChild(container);
+      }
 
       activeContext = null;
     }
