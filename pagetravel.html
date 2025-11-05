@@ -915,6 +915,7 @@
 
     if (!videoViewport || !sidebarContent) return;
 
+    const fullscreenContexts = new WeakMap();
     let activeContext = null;
 
     function populateSidebar(data) {
@@ -950,59 +951,108 @@
       }
     }
 
+    function getSidebarData(container) {
+      return {
+        title: container.getAttribute('data-sidebar-title') || '',
+        subtitle: container.getAttribute('data-sidebar-subtitle') || '',
+        description: container.getAttribute('data-sidebar-description') || '',
+        list: (container.getAttribute('data-sidebar-list') || '')
+          .split('|')
+          .map((item) => item.trim())
+          .filter(Boolean),
+      };
+    }
+
+    function ensureContext(container) {
+      let context = fullscreenContexts.get(container);
+      if (!context) {
+        context = {
+          container,
+          originalParent: container.parentNode,
+          placeholder: null,
+        };
+        fullscreenContexts.set(container, context);
+      } else if (!context.originalParent || !context.originalParent.isConnected) {
+        context.originalParent = container.parentNode;
+      }
+      return context;
+    }
+
+    function ensurePlaceholder(context) {
+      const { container } = context;
+      if (!context.originalParent) {
+        context.originalParent = container.parentNode !== videoViewport ? container.parentNode : context.originalParent;
+      }
+
+      if (!context.originalParent) return;
+
+      if (!context.placeholder) {
+        context.placeholder = document.createComment('custom-fullscreen-placeholder');
+      }
+
+      if (!context.placeholder.parentNode) {
+        if (container.parentNode === context.originalParent) {
+          context.originalParent.insertBefore(context.placeholder, container);
+        } else {
+          context.originalParent.appendChild(context.placeholder);
+        }
+      }
+    }
+
+    function moveContainerIntoViewport(container) {
+      if (container.parentNode !== videoViewport) {
+        while (videoViewport.firstChild) {
+          videoViewport.removeChild(videoViewport.firstChild);
+        }
+        videoViewport.appendChild(container);
+      }
+    }
+
+    function enterCustomFullscreenFor(container) {
+      if (!container) return;
+
+      const context = ensureContext(container);
+
+      if (activeContext && activeContext.container !== container) {
+        exitCustomFullscreen();
+      }
+
+      ensurePlaceholder(context);
+
+      populateSidebar(getSidebarData(container));
+      moveContainerIntoViewport(container);
+
+      overlay.setAttribute('aria-hidden', 'false');
+      bodyEl.classList.add('is-custom-fullscreen');
+      htmlEl.classList.add('is-custom-fullscreen');
+
+      activeContext = context;
+    }
+
     function exitCustomFullscreen() {
       if (!activeContext) return;
 
-      const { container, placeholder } = activeContext;
+      const { container, placeholder, originalParent } = activeContext;
+
       overlay.setAttribute('aria-hidden', 'true');
       bodyEl.classList.remove('is-custom-fullscreen');
       htmlEl.classList.remove('is-custom-fullscreen');
       sidebarContent.innerHTML = '';
 
-      if (placeholder && placeholder.parentNode) {
-        placeholder.parentNode.insertBefore(container, placeholder);
-        // Keep placeholder to preserve the original mount position
-      } else if (activeContext.originalParent) {
-        activeContext.originalParent.appendChild(container);
+      const targetParent = (placeholder && placeholder.parentNode) || originalParent || container.parentNode;
+
+      if (targetParent) {
+        if (placeholder && placeholder.parentNode === targetParent) {
+          targetParent.insertBefore(container, placeholder);
+        } else {
+          targetParent.appendChild(container);
+        }
       }
 
       activeContext = null;
     }
 
-    function enterCustomFullscreen(context) {
-  if (!context) return;
-
-  if (activeContext && activeContext !== context) exitCustomFullscreen();
-
-  // ✅ 一定要先记录原父节点（否则 insertBefore 会失败）
-  if (!context.originalParent) {
-    context.originalParent = context.container.parentNode;
-  }
-
-  // ✅ placeholder 不存在时才创建
-  if (!context.placeholder || !context.placeholder.parentNode) {
-    context.placeholder = document.createComment('custom-fullscreen-placeholder');
-    context.originalParent.insertBefore(context.placeholder, context.container);
-  }
-
-  const { container, sidebarData } = context;
-
-  // ✅ 移入全屏层
-  videoViewport.appendChild(container);
-
-  // ✅ 填充侧栏
-  populateSidebar(sidebarData);
-
-  // ✅ 显示全屏 UI
-  overlay.setAttribute('aria-hidden', 'false');
-  bodyEl.classList.add('is-custom-fullscreen');
-  htmlEl.classList.add('is-custom-fullscreen');
-
-  activeContext = context;
-}
-
-
-    closeButton?.addEventListener('click', exitCustomFullscreen);
+    closeButton?.addEventListener('click', () => exitCustomFullscreen());
     overlay.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
     wrapper?.addEventListener('click', (e) => e.stopPropagation());
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
@@ -1013,46 +1063,35 @@
       const iframe = container.querySelector('iframe');
       if (!iframe) return;
 
-      const sidebarData = {
-        title: container.getAttribute('data-sidebar-title') || '',
-        subtitle: container.getAttribute('data-sidebar-subtitle') || '',
-        description: container.getAttribute('data-sidebar-description') || '',
-        list: (container.getAttribute('data-sidebar-list') || '')
-          .split('|').map((item) => item.trim()).filter(Boolean),
-      };
+      ensureContext(container);
 
-      const context = {
-        container,
-         originalParent: container.parentNode, // ✅ 一开始记录原父节点
-  placeholder: null, // ✅ 每次进入时会重新生成
-        sidebarData,
-      };
+      const player = new Vimeo.Player(iframe);
 
-    const player = new Vimeo.Player(iframe);
+      player.on('fullscreenchange', (data) => {
+        if (data && data.fullscreen) {
+          const openCustomFullscreen = () => enterCustomFullscreenFor(container);
 
-    player.on('fullscreenchange', (data) => {
-      if (data && data.fullscreen) {
-        if (typeof player.exitFullscreen === 'function') {
-          player
-            .exitFullscreen()
-            .catch(() => {})
-            .then(() => {
-              enterCustomFullscreen(context);
-            });
-        } else {
-          enterCustomFullscreen(context);
+          if (typeof player.exitFullscreen === 'function') {
+            player
+              .exitFullscreen()
+              .catch(() => {})
+              .then(openCustomFullscreen);
+          } else {
+            openCustomFullscreen();
+          }
         }
-      }
-    });
+      });
 
-    container.addEventListener('custom-fullscreen:open', () => {
-      enterCustomFullscreen(context);
-    });
+      container.addEventListener('custom-fullscreen:open', () => {
+        enterCustomFullscreenFor(container);
+      });
 
-    container.addEventListener('custom-fullscreen:close', () => {
-      exitCustomFullscreen();
+      container.addEventListener('custom-fullscreen:close', () => {
+        if (activeContext && activeContext.container === container) {
+          exitCustomFullscreen();
+        }
+      });
     });
-  });
 });
 </script>
 
