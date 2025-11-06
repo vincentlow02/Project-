@@ -243,7 +243,7 @@
           
           <div class="card-info">
             <h3>札幌・小樽 冬の旅行ガイド</h3> <p>10月16日 17:01</p>
-            <button type="button" class="card-open-btn">Open</button>
+              <button type="button" class="card-open-btn" data-target="pagetravel.html">Open</button>
           </div>
         </div>
 
@@ -377,6 +377,24 @@
           window.location.href = targetUrl.toString();
         });
       }
+
+      // ========================================
+      // Saved Card Open Buttons
+      // ========================================
+      const cardOpenButtons = document.querySelectorAll('.card-open-btn');
+
+      cardOpenButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const target = button.dataset.target?.trim() || 'pagetravel.html';
+
+          try {
+            const targetUrl = new URL(target, window.location.href);
+            window.location.href = targetUrl.toString();
+          } catch (error) {
+            console.warn('Invalid target URL for card-open-btn:', target, error);
+          }
+        });
+      });
 
       // ========================================
       // Sidebar Toggle
