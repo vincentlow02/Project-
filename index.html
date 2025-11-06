@@ -225,6 +225,31 @@
         </div> -->
         <h1>お気に入り</h1> </div>
 
+      <div class="hkd-player" id="hkdPlayer">
+        <div class="hkd-player__stage" role="button" aria-label="Play or pause Hokkaido video" aria-pressed="false" tabindex="0">
+          <video id="hkdPlayerVideo" class="hkd-player__video" loop preload="metadata" playsinline>
+            <source src="hokkaidojp.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <img src="hkdvideo.svg" alt="Video frame" class="hkd-player__frame">
+        </div>
+
+        <div class="hkd-player__controls" aria-label="Hokkaido travel video controls">
+          <div class="hkd-player__time">
+            <span class="hkd-player__time-current">00:00</span>
+            <span class="hkd-player__time-divider">/</span>
+            <span class="hkd-player__time-duration">00:00</span>
+          </div>
+          <div class="hkd-player__progress" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="hkd-player__progress-track">
+              <div class="hkd-player__progress-buffer"></div>
+              <div class="hkd-player__progress-bar"></div>
+              <div class="hkd-player__progress-handle" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="save-grid">
         
        <div class="save-card">
@@ -580,6 +605,220 @@ showUserLocation();
             profilePage.classList.add('hidden');
           }, 600);
         });
+      }
+
+      // ========================================
+      // Hokkaido Video Player
+      // ========================================
+      const hkdPlayer = document.getElementById('hkdPlayer');
+
+      if (hkdPlayer) {
+        const video = document.getElementById('hkdPlayerVideo');
+        const stage = hkdPlayer.querySelector('.hkd-player__stage');
+        const timeCurrent = hkdPlayer.querySelector('.hkd-player__time-current');
+        const timeDuration = hkdPlayer.querySelector('.hkd-player__time-duration');
+        const progress = hkdPlayer.querySelector('.hkd-player__progress');
+        const progressTrack = hkdPlayer.querySelector('.hkd-player__progress-track');
+        const progressBar = hkdPlayer.querySelector('.hkd-player__progress-bar');
+        const progressHandle = hkdPlayer.querySelector('.hkd-player__progress-handle');
+        const progressBuffer = hkdPlayer.querySelector('.hkd-player__progress-buffer');
+
+        if (video && stage && timeCurrent && timeDuration && progress && progressTrack && progressBar && progressHandle) {
+          const formatTime = (time) => {
+            if (!Number.isFinite(time)) {
+              return '00:00';
+            }
+
+            const totalSeconds = Math.max(time, 0);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+          };
+
+          const updateProgressUI = () => {
+            if (!Number.isFinite(video.duration) || video.duration === 0) {
+              return;
+            }
+
+            const ratio = video.currentTime / video.duration;
+            const percentage = Math.min(Math.max(ratio * 100, 0), 100);
+
+            progressBar.style.width = `${percentage}%`;
+            progressHandle.style.left = `${percentage}%`;
+            progress.setAttribute('aria-valuenow', Math.round(percentage));
+            progress.setAttribute('aria-valuetext', `${formatTime(video.currentTime)} of ${formatTime(video.duration)}`);
+            timeCurrent.textContent = formatTime(video.currentTime);
+          };
+
+          const updateBuffered = () => {
+            if (!progressBuffer || video.buffered.length === 0 || !Number.isFinite(video.duration)) {
+              return;
+            }
+
+            const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+            const ratio = Math.min(bufferedEnd / video.duration, 1);
+            progressBuffer.style.width = `${ratio * 100}%`;
+          };
+
+          const setDuration = () => {
+            timeDuration.textContent = formatTime(video.duration);
+          };
+
+          video.addEventListener('loadedmetadata', () => {
+            setDuration();
+            updateBuffered();
+            updateProgressUI();
+          });
+
+          video.addEventListener('timeupdate', updateProgressUI);
+          video.addEventListener('progress', updateBuffered);
+          video.addEventListener('play', () => {
+            stage.setAttribute('aria-pressed', 'true');
+          });
+
+          video.addEventListener('pause', () => {
+            stage.setAttribute('aria-pressed', 'false');
+          });
+
+          const togglePlayback = async () => {
+            if (video.paused) {
+              try {
+                video.muted = false;
+                video.volume = 1;
+                await video.play();
+              } catch (err) {
+                console.warn('Video play interrupted:', err);
+              }
+            } else {
+              video.pause();
+            }
+          };
+
+          stage.addEventListener('click', (event) => {
+            event.preventDefault();
+            togglePlayback();
+          });
+
+          stage.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              togglePlayback();
+            }
+          });
+
+          const seek = (clientX) => {
+            if (!Number.isFinite(video.duration) || video.duration === 0) {
+              return;
+            }
+
+            const rect = progressTrack.getBoundingClientRect();
+            const relative = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+            const ratio = relative / rect.width;
+
+            video.currentTime = ratio * video.duration;
+            updateProgressUI();
+          };
+
+          let isDragging = false;
+
+          progressTrack.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            seek(event.clientX);
+          });
+
+          progressTrack.addEventListener('touchstart', (event) => {
+            const touch = event.touches[0];
+            if (!touch) {
+              return;
+            }
+
+            isDragging = true;
+            seek(touch.clientX);
+          }, { passive: true });
+
+          window.addEventListener('mousemove', (event) => {
+            if (!isDragging) {
+              return;
+            }
+
+            seek(event.clientX);
+          });
+
+          window.addEventListener('touchmove', (event) => {
+            if (!isDragging) {
+              return;
+            }
+
+            const touch = event.touches[0];
+            if (!touch) {
+              return;
+            }
+
+            seek(touch.clientX);
+          }, { passive: true });
+
+          window.addEventListener('mouseup', () => {
+            if (isDragging) {
+              isDragging = false;
+            }
+          });
+
+          window.addEventListener('touchend', () => {
+            if (isDragging) {
+              isDragging = false;
+            }
+          });
+
+          progressTrack.addEventListener('click', (event) => {
+            seek(event.clientX);
+          });
+
+          progress.addEventListener('keydown', (event) => {
+            if (!Number.isFinite(video.duration) || video.duration === 0) {
+              return;
+            }
+
+            const stepSeconds = Math.max(video.duration * 0.05, 5);
+            let handled = true;
+
+            switch (event.key) {
+              case 'ArrowRight':
+              case 'ArrowUp':
+                video.currentTime = Math.min(video.currentTime + stepSeconds, video.duration);
+                break;
+              case 'ArrowLeft':
+              case 'ArrowDown':
+                video.currentTime = Math.max(video.currentTime - stepSeconds, 0);
+                break;
+              case 'Home':
+                video.currentTime = 0;
+                break;
+              case 'End':
+                video.currentTime = video.duration;
+                break;
+              case 'PageUp':
+                video.currentTime = Math.min(video.currentTime + stepSeconds * 2, video.duration);
+                break;
+              case 'PageDown':
+                video.currentTime = Math.max(video.currentTime - stepSeconds * 2, 0);
+                break;
+              default:
+                handled = false;
+            }
+
+            if (handled) {
+              event.preventDefault();
+              updateProgressUI();
+            }
+          });
+
+          if (video.readyState >= 1) {
+            setDuration();
+            updateBuffered();
+            updateProgressUI();
+          }
+        }
       }
     });
   </script>
