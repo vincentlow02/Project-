@@ -487,7 +487,41 @@
           isBlack = false;
         });
       }
+// --- Click event for the "Back" button on the save page ---
+      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg) {
+        saveBackBtn.addEventListener('click', () => {
+          // 1. Hide the save page and show the main content
+          savePage.classList.add('hidden');
+          pageContent.classList.remove('hidden');
+          
+          // 2. Swap the 'active' class back to Home
+          saveButton.classList.remove('active');
+          homeButton.classList.add('active');
+          
+          // 3. Reset icon color (your logic)
+          starIconImg.src = 'assets/star.svg';
+          isBlack = false;
+        });
+      }
 
+      // ========================================
+      // Home Button (Go back to main content)
+      // ========================================
+      if (homeButton && saveButton && savePage && pageContent && starIconImg) {
+        homeButton.addEventListener('click', () => {
+          // 1. Show the main content and hide the save page
+          pageContent.classList.remove('hidden');
+          savePage.classList.add('hidden');
+
+          // 2. Swap the 'active' class back to Home
+          saveButton.classList.remove('active');
+          homeButton.classList.add('active');
+
+          // 3. Reset the star icon color
+          starIconImg.src = 'assets/star.svg';
+          isBlack = false;
+        });
+      }
      // ========================================
 // Geolocation Display (Stable Version)
 // ========================================
@@ -579,6 +613,14 @@ showUserLocation();
           setTimeout(() => {
             profilePage.classList.add('hidden');
           }, 600);
+        });
+      }
+
+
+      if (saveButton && starIconImg) {
+        saveButton.addEventListener('click', () => {
+          // Change the star icon to black
+          starIconImg.src = 'assets/starblack.svg';
         });
       }
     });
