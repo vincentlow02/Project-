@@ -1,0 +1,127 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body.search-results-page {
+  overflow: hidden;
+}
+
+body.sidebar-expanded {
+  overflow: hidden;
+}
+
+#page-content {
+  position: relative;
+  margin-left: 100px;
+  width: calc(100vw - 100px);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#page-content.sidebar-expanded {
+  margin-left: 340px;
+  width: calc(100vw - 340px);
+}
+
+#page-content.main-content {
+  background: transparent;
+}
+
+#page-content.sidebar-collapsed {
+  margin-left: 100px;
+  width: calc(100vw - 100px);
+}
+
+.main-content-canvas {
+  position: relative;
+  width: min(1200px, 100%);
+  aspect-ratio: 2857 / 1117;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hokkaido-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hokkaido-layout .hokkaido-logo-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hokkaido-layout .hokkaido-video-container {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: min(70vw, 960px);
+  max-width: 100%;
+  aspect-ratio: 1260 / 710;
+}
+
+.hokkaido-layout .vimeo-wrapper,
+.hokkaido-layout .vimeo-iframe,
+.hokkaido-layout .hokkaido-video-frame {
+  border-radius: 32px;
+}
+
+.hokkaido-layout .hokkaido-logo {
+  position: absolute;
+  top: 6%;
+  left: 7%;
+  width: min(220px, 20%);
+}
+
+.hokkaido-layout .ques-icon {
+  position: absolute;
+  bottom: 12%;
+  right: -6%;
+  width: min(320px, 26%);
+}
+
+.hokkaido-layout .rectangle-comment {
+  position: absolute;
+  top: 12%;
+  left: 12%;
+  width: min(520px, 45%);
+}
+
+.hokkaido-layout .subtitle-container {
+  left: 14%;
+  top: 20%;
+  width: min(460px, 38%);
+}
