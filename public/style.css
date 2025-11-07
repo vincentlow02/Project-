@@ -1,0 +1,665 @@
+/* ========================================
+   来自 HTML <style> 块
+   ======================================== */
+.ques-icon {
+  position: absolute;
+  top: 512px; /* 控制ques在Rectangle上的纵向位置 */
+  left: -670px; /* 控制ques的横向位置 */
+  width: 360px; /* 调整大小 */
+  z-index: 11; /* 比 logo 略高，确保显示在上层 */
+  transition: transform 0.3s ease;
+}
+
+.ques-icon:hover {
+  transform: scale(1.05);
+}
+
+/* ================================
+     Hokkaido Logo Overlay
+     ================================ */
+.hokkaido-logo-container {
+  position: relative; /* 让内部 absolute 定位参考这个容器 */
+  display: inline-block;
+}
+
+/* 让 logo 叠在 Rectangle205.svg 上方 */
+.hokkaido-logo {
+  position: absolute;
+  top: 17px; /* 调整 logo 距离矩形顶部的距离 */
+  left: -590px; /* 调整 logo 距离矩形左侧的距离 */
+  width: 220px; /* 可根据需求调整 logo 大小 */
+  z-index: 10; /* 确保 logo 显示在 Rectangle205.svg 上层 */
+  transition: transform 0.3s ease;
+}
+
+/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+.hokkaido-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Vimeo player container positioned where the frame should sit */
+.hokkaido-video-container {
+  position: absolute;
+  top: 69px; /* 调整到矩形上适合的位置 */
+  left: -900px;
+  width: min(860px, 60vw);
+  aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
+  border-radius: 1203px;
+}
+
+/* Wrapper keeps the iframe sized to the container */
+.vimeo-wrapper {
+  position: absolute;
+  top: 14px; /* 对齐 SVG 内部矩形的起始高度 */
+  right: 10px;
+  bottom: 3px;
+  left: 0px;
+  overflow: hidden;
+  border-radius: 44px; /* 匹配 SVG 的圆角 */
+  z-index: 1;
+  transform: scale(1.034);
+}
+
+.vimeo-iframe {
+  position: absolute;
+  inset: 0;
+  width: 101%;
+  height: 99%;
+  border: 0;
+  object-fit: cover; /* 填满容器且保持比例 */
+  border-radius: 20px;
+}
+
+/* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
+.vimeo-toggle-hitbox {
+  position: absolute;
+  top: 10px;
+  left: 3px;
+  right: 3px;
+  bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
+  cursor: pointer;
+  z-index: 2;
+  background: transparent;
+}
+
+/* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
+.hokkaido-video-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.rectangle-comment {
+  position: absolute;
+  top: 50px; /* 距离视频顶部 */
+  left: 20px; /* 距离视频左侧 */
+  width: 610px; /* 可根据需求调整大小 */
+  height: auto;
+  z-index: 20; /* 必须比 iframe 和 frame 高 */
+  pointer-events: none; /* 保证点击事件透传到视频 */
+}
+
+.subtitle-container {
+  position: absolute;
+  top: 60px;
+  left: 40px;
+  width: min(560px, calc(100% - 160px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  z-index: 9999;
+  pointer-events: none;
+  font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+
+.subtitle-line {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre-wrap;
+}
+
+.subtitle-text {
+  display: inline;
+}
+
+.subtitle-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+}
+
+.subtitle-description {
+  font-size: 10px;
+  font-weight: 400;
+  color: black;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  max-width: 540px;
+  text-align: left;
+}
+
+.subtitle-description .subtitle-text {
+  display: inline;
+}
+
+.subtitle-cursor {
+  margin-left: 0.2em;
+  width: 0.4em;
+  animation: subtitle-cursor-blink 1.05s steps(1, start) infinite;
+  opacity: 0;
+}
+
+.subtitle-line.is-typing .subtitle-cursor {
+  opacity: 1;
+}
+
+.subtitle-line.is-complete .subtitle-cursor {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes subtitle-cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+html, body {
+  /* 修复：React中，#root 是 100% 宽度，所以我们在这里设置 body */
+  /* 你的原始CSS中，html, body 设置了154vw */
+  /* width: 154vw; */ 
+  height: 101vh;
+  overflow-y: hidden;
+  /* overflow-x: auto; */ /* 这将被 #page-content 处理 */
+  scroll-behavior: smooth;
+  
+  /* 来自你的 style.css 文件的附加重置 */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color:white;
+  color: #ffffff;
+}
+
+/* body, #root, .App {
+  width: 154vw;
+  height: 101vh;
+} */
+
+
+body.is-custom-fullscreen,
+html.is-custom-fullscreen {
+  overflow: hidden;
+}
+
+.custom-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 12000;
+}
+
+body.is-custom-fullscreen .custom-fullscreen-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-fullscreen-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  justify-content: stretch;
+  background: transparent;
+}
+
+.custom-fullscreen-video-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  background: #000;
+}
+
+.custom-fullscreen-video-viewport {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.custom-fullscreen-sidebar {
+  flex: 0 0 300px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #181818;
+  overflow-y: auto;
+}
+
+.custom-fullscreen-close {
+  align-self: flex-end;
+  background: #eeeeee;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.custom-fullscreen-close:hover {
+  background: #dddddd;
+}
+
+.custom-fullscreen-sidebar h2,
+.custom-fullscreen-sidebar h3 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.custom-fullscreen-sidebar h2 {
+  font-size: 20px;
+}
+
+.custom-fullscreen-sidebar h3 {
+  font-size: 16px;
+  color: #555555;
+}
+
+.custom-fullscreen-sidebar p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.custom-fullscreen-sidebar ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.custom-fullscreen-sidebar li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.custom-fullscreen-sidebar li:last-child {
+  margin-bottom: 0;
+}
+
+body.is-custom-fullscreen
+.custom-fullscreen-video-viewport
+.hokkaido-video-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  max-width: none;
+  border-radius: 0;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+
+body.is-custom-fullscreen
+.hokkaido-video-container .vimeo-wrapper {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  transform: none;
+  z-index: 1;
+}
+
+body.is-custom-fullscreen
+.hokkaido-video-container .vimeo-iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+body.is-custom-fullscreen
+.hokkaido-video-container .vimeo-iframe {
+  pointer-events: auto;
+}
+
+body.is-custom-fullscreen
+.hokkaido-video-container .vimeo-toggle-hitbox,
+body.is-custom-fullscreen
+.hokkaido-video-container .hokkaido-video-frame,
+body.is-custom-fullscreen
+.hokkaido-video-container .rectangle-comment,
+body.is-custom-fullscreen
+.hokkaido-video-container .subtitle-container {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .custom-fullscreen-wrapper {
+    flex-direction: column;
+  }
+
+  .custom-fullscreen-video-area {
+    flex: 1 1 auto;
+  }
+
+  .custom-fullscreen-sidebar {
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+    border-top: 1px solid #eeeeee;
+  }
+}
+
+
+/* ========================================
+   来自 style.css 文件
+   ======================================== */
+
+/* ... (省略了 style.css 的 1. BASIC RESET & PAGE SETUP, 
+          因为上面的 <style> 块已经处理了) ... */
+
+/* ========================================
+   2. SCROLL CONTAINER & PAGE LAYOUT
+   ======================================== */
+.container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Hide scrollbar */
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.page {
+    /* width: 100%; (这在你的HTML中) */
+   /* width: 154vw; (这在你的HTML中) */
+    height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    /* justify-content: center; */ /* 被 #searchInterface 覆盖 */
+    /* align-items: center; */ /* 被 #searchInterface 覆盖 */
+    text-align: center;
+    overflow: hidden;
+}
+
+/* ... (省略了 3. PAGE CONTENT STYLES, 4. VIDEO BACKGROUND, 
+          5. PAGE 1 - ICONS, 6. PROGRESS BAR, 7. FADE IN, 
+          8. PAGE 2 & 3, 9. TYPOGRAPHY, 10. LOGO STYLES) ... */
+
+/* 重要的部分 */
+#page-content {
+    flex-grow: 1;
+    /* padding: 47px; (你的HTML中没有这个) */
+    height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    transition: margin-left 0.01s cubic-bezier(0.25, 1, 0.5, 1);
+  
+    /* ⬇️ 这是关键，来自你的 <style> 块 ⬇️ */
+    width: 154vw; 
+    overflow-x: auto; 
+}
+
+/* 你的原始HTML中没有 .search-results-page body */
+/* 但是你的 body 有 class="search-results-page" */
+/* 你的 style.css 有这个... */
+body.search-results-page #page-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* scroll-snap-type: x mandatory; (这可能导致问题，暂时注释掉) */
+}
+
+body.search-results-page #page-content::-webkit-scrollbar {
+    height: 8px;
+}
+
+body.search-results-page #page-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body.search-results-page #page-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 999px;
+}
+
+/* ... (省略了 style.css 中的 .video-modules-track, .video-module) ... */
+
+
+/* ========================================
+   11. SEARCH INTERFACE
+   ======================================== */
+#searchInterface {
+    justify-content: initial;
+    align-items: initial;
+    background-color: white;
+    color: #333;
+}
+
+
+/* ========================================
+   12. SIDEBAR STYLES (侧边栏样式) - [已修复]
+   ======================================== */
+#sidebar {
+    display: flex;  
+    flex-shrink: 0; 
+    height: 100vh;   
+    position: relative; /* 修复：从 'fixed' 改为 'relative' 或 'sticky' 以便随父元素滚动 */
+    /* 你的JS正在控制 'left' 属性，所以 position: fixed 可能是故意的 */
+    position: fixed; /* 保持与你的JS逻辑一致 */
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: #ffffff; 
+}
+
+.sidebar-icon-bar {
+    width: 100px; 
+    flex-shrink: 0; 
+    height: 100%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    padding-top: 20px; 
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0; 
+    background-color: #fcfcfc; 
+}
+
+
+/* 侧边栏展开时的内容面板 */
+#sidebar .sidebar-content-panel {
+    width: 240px; 
+    padding: 20px;
+    box-sizing: border-box;
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.3s ease, 
+                padding 0.3s ease;
+    overflow-x: hidden; 
+    overflow-y: auto;  
+    white-space: nowrap;
+    opacity: 1; 
+}
+
+/* 当侧边栏有 .collapsed (折叠) 类时的内容面板 */
+#sidebar.collapsed .sidebar-content-panel {
+    width: 0; 
+    padding: 20px 0;
+    pointer-events: none;
+    opacity: 0; 
+    border-right: none; 
+}
+
+/* 侧边栏的导航区域 (图标的父容器) */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 36px;
+    width: 100%; 
+}
+
+.sidebar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 8px;
+    width: 100%; 
+   cursor: pointer;
+}
+
+/* 修复你的切换按钮 */
+#sidebar-toggle {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+
+.sidebar-item .icon img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.sidebar-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #332;
+    letter-spacing: 0.08em;
+    text-align: center;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 折叠时隐藏标签 */
+#sidebar.collapsed .sidebar-label {
+  display: none;
+}
+
+/* 激活的 .sidebar-item (来自你的HTML) */
+.sidebar-item.active {
+  /* 在这里添加激活样式，例如 */
+  background-color: #f0f0f0;
+}
+
+
+/* ========================================
+   13. PANEL STYLES
+   ======================================== */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.panel-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.panel-section .subheader {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 1rem;
+}
+
+/* ... (省略了 style.css 中所有其余的样式 
+   14. TOP RIGHT NAV
+   15. WIDGET CONTAINER
+   16. BACKGROUND VIDEO
+   17. SEARCH BAR
+   18. UTILITY CLASSES
+   19. ADDITIONAL ANIMATIONS
+   20. PROFILE PAGE
+   21. INLINE STYLE REPLACEMENTS
+   22. SEARCH RESULTS PAGE
+   23. SAVE PAGE
+   24. TRAVEL VIDEO MODULE
+   ... 因为它们在你的示例HTML中没有被使用) ... */
+
+/* 修复：确保 .page 在 #searchInterface 上下文中正确工作 */
+#searchInterface {
+  display: flex;
+  width: 154vw; /* 确保 section 占满你设置的宽度 */
+  height: 101vh;
+}
+
+/* 修复：确保 #page-content 在 sidebar 旁边正确对齐 */
+#page-content {
+  margin-left: 100px; /* sidebar-icon-bar 的宽度 */
+  width: calc(154vw - 100px); /* 剩余宽度 */
+  transition: margin-left 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#page-content.sidebar-collapsed {
+   /* 这是你原始JS中的逻辑，但它在 style.css 中缺失了 */
+   /* React 版本将通过 props 处理这个 */
+}
+
+/* 当 sidebar 展开时 */
+#page-content.sidebar-expanded {
+  margin-left: calc(100px + 240px); /* icon-bar + content-panel */
+  width: calc(154vw - 100px - 240px);
+}
