@@ -445,6 +445,7 @@
       // The '?.' is optional chaining, a safe way to get the parent
       const homeButton = document.querySelector('.sidebar-item img[alt="Home"]')?.closest('.sidebar-item');
       const saveButton = document.querySelector('.sidebar-item img[alt="Saved"]')?.closest('.sidebar-item');
+      const searchIconImg = document.querySelector('.sidebar-item img[alt="Home"]');
 
       // Get the star image just to toggle its color
       const starIconImg = document.querySelector('.sidebar-item img[alt="Saved"]');
@@ -453,7 +454,7 @@
 
       // --- Click event for the "Saved" button ---
       // Check if all elements exist before adding listeners
-      if (saveButton && homeButton && savePage && pageContent && starIconImg) {
+      if (saveButton && homeButton && savePage && pageContent && starIconImg && searchIconImg) {
         
         // **Listen on the whole button, not just the icon**
         saveButton.addEventListener('click', () => {
@@ -467,12 +468,13 @@
           
           // 3. Toggle icon color (your logic)
           starIconImg.src = 'assets/starblack.svg';
+          searchIconImg.src = 'assets/searchwhite.svg';
           isBlack = true;
         });
       }
 
       // --- Click event for the "Back" button on the save page ---
-      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg) {
+      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg && searchIconImg) {
         saveBackBtn.addEventListener('click', () => {
           // 1. Hide the save page and show the main content
           savePage.classList.add('hidden');
@@ -484,11 +486,12 @@
           
           // 3. Reset icon color (your logic)
           starIconImg.src = 'assets/star.svg';
+          searchIconImg.src = 'assets/search-icon.svg';
           isBlack = false;
         });
       }
 // --- Click event for the "Back" button on the save page ---
-      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg) {
+      if (saveBackBtn && homeButton && saveButton && savePage && pageContent && starIconImg && searchIconImg) {
         saveBackBtn.addEventListener('click', () => {
           // 1. Hide the save page and show the main content
           savePage.classList.add('hidden');
@@ -500,6 +503,7 @@
           
           // 3. Reset icon color (your logic)
           starIconImg.src = 'assets/star.svg';
+          searchIconImg.src = 'assets/search-icon.svg';
           isBlack = false;
         });
       }
@@ -507,7 +511,7 @@
       // ========================================
       // Home Button (Go back to main content)
       // ========================================
-      if (homeButton && saveButton && savePage && pageContent && starIconImg) {
+      if (homeButton && saveButton && savePage && pageContent && starIconImg && searchIconImg) {
         homeButton.addEventListener('click', () => {
           // 1. Show the main content and hide the save page
           pageContent.classList.remove('hidden');
@@ -519,6 +523,7 @@
 
           // 3. Reset the star icon color
           starIconImg.src = 'assets/star.svg';
+          searchIconImg.src = 'assets/search-icon.svg';
           isBlack = false;
         });
       }
@@ -617,10 +622,11 @@ showUserLocation();
       }
 
 
-      if (saveButton && starIconImg) {
+      if (saveButton && starIconImg && searchIconImg) {
         saveButton.addEventListener('click', () => {
           // Change the star icon to black
           starIconImg.src = 'assets/starblack.svg';
+          searchIconImg.src = 'assets/searchwhite.svg';
         });
       }
     });
