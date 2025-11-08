@@ -1,0 +1,360 @@
+.ques-icon {
+  position: absolute;
+  top: 512px; /* 控制ques在Rectangle上的纵向位置 */
+  left: -670px; /* 控制ques的横向位置 */
+  width: 360px; /* 调整大小 */
+  z-index: 11; /* 比 logo 略高，确保显示在上层 */
+  transition: transform 0.3s ease;
+}
+
+.ques-icon:hover {
+  transform: scale(1.05);
+}
+
+/* ================================
+   Hokkaido Logo Overlay
+   ================================ */
+.hokkaido-logo-container {
+  position: relative; /* 让内部 absolute 定位参考这个容器 */
+  display: inline-block;
+}
+
+/* 让 logo 叠在 Rectangle205.svg 上方 */
+.hokkaido-logo {
+  position: absolute;
+  top: 17px; /* 调整 logo 距离矩形顶部的距离 */
+  left: -590px; /* 调整 logo 距离矩形左侧的距离 */
+  width: 220px; /* 可根据需求调整 logo 大小 */
+  z-index: 10; /* 确保 logo 显示在 Rectangle205.svg 上层 */
+  transition: transform 0.3s ease;
+}
+
+/* 可选：添加一个 hover 动效，让 logo 稍微放大一点 */
+.hokkaido-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Vimeo player container positioned where the frame should sit */
+.hokkaido-video-container {
+  position: absolute;
+  top: 69px; /* 调整到矩形上适合的位置 */
+  left: -900px;
+  width: min(860px, 60vw);
+  aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
+  border-radius: 1203px;
+}
+
+/* Wrapper keeps the iframe sized to the container */
+.vimeo-wrapper {
+  position: absolute;
+  top: 14px; /* 对齐 SVG 内部矩形的起始高度 */
+  right: 10px;
+  bottom: 3px;
+  left: 0px;
+  overflow: hidden;
+  border-radius: 44px; /* 匹配 SVG 的圆角 */
+  z-index: 1;
+  transform: scale(1.034);
+}
+
+.vimeo-iframe {
+  position: absolute;
+  inset: 0;
+  width: 101%;
+  height: 99%;
+  border: 0;
+  object-fit: cover; /* 填满容器且保持比例 */
+  border-radius: 20px;
+}
+
+/* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
+.vimeo-toggle-hitbox {
+  position: absolute;
+  top: 10px;
+  left: 3px;
+  right: 3px;
+  bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
+  cursor: pointer;
+  z-index: 2;
+  background: transparent;
+}
+
+/* decorative frame remains visible, pointer-events disabled to keep iframe clickable */
+.hokkaido-video-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.rectangle-comment {
+  position: absolute;
+  top: 50px; /* 距离视频顶部 */
+  left: 20px; /* 距离视频左侧 */
+  width: 610px; /* 可根据需求调整大小 */
+  height: auto;
+  z-index: 20; /* 必须比 iframe 和 frame 高 */
+  pointer-events: none; /* 保证点击事件透传到视频 */
+}
+
+.subtitle-container {
+  position: absolute;
+  top: 60px;
+  left: 40px;
+  width: min(560px, calc(100% - 160px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  z-index: 9999;
+  pointer-events: none;
+  font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+
+.subtitle-line {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre-wrap;
+}
+
+.subtitle-text {
+  display: inline;
+}
+
+.subtitle-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+}
+
+.subtitle-description {
+  font-size: 10px;
+  font-weight: 400;
+  color: black;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  max-width: 540px;
+  text-align: left;
+}
+
+.subtitle-description .subtitle-text {
+  display: inline;
+}
+
+.subtitle-cursor {
+  margin-left: 0.2em;
+  width: 0.4em;
+  animation: subtitle-cursor-blink 1.05s steps(1, start) infinite;
+  opacity: 0;
+}
+
+.subtitle-line.is-typing .subtitle-cursor {
+  opacity: 1;
+}
+
+.subtitle-line.is-complete .subtitle-cursor {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes subtitle-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+html,
+body {
+  width: 154vw; /* 页面宽度是视窗宽度的两倍，可根据需要调 */
+  height: 101vh; /* 高度与视窗一致 */
+  overflow-y: hidden;
+  overflow-x: auto; /* 手动滚动（非auto） */
+  scroll-behavior: smooth;
+}
+
+body.is-custom-fullscreen,
+html.is-custom-fullscreen {
+  overflow: hidden;
+}
+
+.custom-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 12000;
+}
+
+body.is-custom-fullscreen .custom-fullscreen-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-fullscreen-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  justify-content: stretch;
+  background: transparent;
+}
+
+.custom-fullscreen-video-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  background: #000;
+}
+
+.custom-fullscreen-video-viewport {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.custom-fullscreen-sidebar {
+  flex: 0 0 300px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #181818;
+  overflow-y: auto;
+}
+
+.custom-fullscreen-close {
+  align-self: flex-end;
+  background: #eeeeee;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.custom-fullscreen-close:hover {
+  background: #dddddd;
+}
+
+.custom-fullscreen-sidebar h2,
+.custom-fullscreen-sidebar h3 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.custom-fullscreen-sidebar h2 {
+  font-size: 20px;
+}
+
+.custom-fullscreen-sidebar h3 {
+  font-size: 16px;
+  color: #555555;
+}
+
+.custom-fullscreen-sidebar p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.custom-fullscreen-sidebar ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.custom-fullscreen-sidebar li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.custom-fullscreen-sidebar li:last-child {
+  margin-bottom: 0;
+}
+
+body.is-custom-fullscreen .custom-fullscreen-video-viewport .hokkaido-video-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  max-width: none;
+  border-radius: 0;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-wrapper {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  transform: none;
+  z-index: 1;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-iframe {
+  pointer-events: auto;
+}
+
+body.is-custom-fullscreen .hokkaido-video-container .vimeo-toggle-hitbox,
+body.is-custom-fullscreen .hokkaido-video-container .hokkaido-video-frame,
+body.is-custom-fullscreen .hokkaido-video-container .rectangle-comment,
+body.is-custom-fullscreen .hokkaido-video-container .subtitle-container {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .custom-fullscreen-wrapper {
+    flex-direction: column;
+  }
+
+  .custom-fullscreen-video-area {
+    flex: 1 1 auto;
+  }
+
+  .custom-fullscreen-sidebar {
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+    border-top: 1px solid #eeeeee;
+  }
+}
+
