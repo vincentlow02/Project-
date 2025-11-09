@@ -5,71 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="sidebar" class="collapsed">
-    <div class="sidebar-icon-bar">
-      <div class="sidebar-item" id="sidebar-toggle">
-        <div class="icon">
-          <img src="assets/arrow-left.svg" alt="Toggle Sidebar">
-        </div>
-      </div>
-
-      <div class="sidebar-nav">
-        <div class="sidebar-item">
+<body class="keep-page">
+  <div class="keep-layout">
+    <div id="sidebar">
+      <div class="sidebar-icon-bar">
+        <div class="sidebar-item" id="sidebar-toggle">
           <div class="icon">
-            <img src="assets/plus.svg" alt="New">
+            <a href="index.html#save-page">
+              <img src="assets/arrow-left.svg" alt="Back to Saved">
+            </a>
           </div>
         </div>
 
-        <div class="sidebar-item active">
-          <div class="icon">
-            <img src="assets/search-icon.svg" alt="Home">
-          </div>
-          <span class="sidebar-label">ホーム</span>
-        </div>
-
-        <div class="sidebar-item">
-          <div class="icon">
-            <img src="assets/star.svg" alt="Saved">
-          </div>
-          <span class="sidebar-label">保存</span>
-        </div>
-
-        <div class="sidebar-item">
-          <div class="icon">
-            <img src="assets/discover.svg" alt="Discover">
-          </div>
-          <span class="sidebar-label">発見</span>
-        </div>
+        <div class="sidebar-nav"></div>
       </div>
     </div>
 
-    <div class="sidebar-content-panel">
-      <div class="panel-header">
-        <span class="panel-title">ホーム</span>
-        <img src="assets/pin.svg" alt="Pin">
-      </div>
-
-      <div class="panel-section">
-        <h3 class="subheader">チャット</h3>
-        <ul class="chat-list">
-          <li>海外旅行おすすめ</li>
-        </ul>
-      </div>
+    <div class="keep-scroll">
+      <main class="keep-content">
+        <h1 class="keep-title">Otaru</h1>
+        <div class="keep-frame">
+          <img src="assets/savebig.svg" alt="Saved frame" class="keep-frame-image">
+          <div class="keep-frame-video">
+            <iframe
+              src="https://player.vimeo.com/video/1133040806?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0&background=1"
+              title="Otaru Experience"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        <p class="keep-subtitle">北海道冬の魅力：札幌＆小樽</p>
+        <p class="keep-description">
+          小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた<br>街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが<br>楽しめます。
+        </p>
+        <img src="assets/line.svg" alt="" class="keep-divider">
+        <p class="keep-label">小樽市街と駅周辺</p>
+        <img src="assets/spot01.svg" alt="Otaru Spot" class="keep-spot-image">
+      </main>
     </div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebar = document.getElementById('sidebar');
-      const sidebarToggle = document.getElementById('sidebar-toggle');
-
-      if (sidebar && sidebarToggle) {
-        sidebarToggle.addEventListener('click', () => {
-          sidebar.classList.toggle('collapsed');
-        });
-      }
-    });
+    document.addEventListener('DOMContentLoaded', () => {});
   </script>
 </body>
 </html>

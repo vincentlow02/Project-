@@ -223,31 +223,31 @@
         <!-- <div id="save-back-btn" class="save-back-arrow">
           <img src="assets/arrow-left.svg" alt="Back">
         </div> -->
-        <h1>お気に入り</h1> </div>
+        <h1>お気に入り</h1>
+      </div>
 
-      <div class="save-grid">
-        
-       <div class="save-card">
-          
+      <div class="save-video-frame">
+        <img src="assets/save.svg" alt="Saved frame" class="save-frame">
+        <div class="save-video">
           <iframe
-            class="card-image"
-            src="https://player.vimeo.com/video/1133040806?autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0"
+            src="https://player.vimeo.com/video/1133040806?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0&background=1"
+            title="Hokkaido Experience"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
-            title="Hokkaido Experience"
-            width="640"
-            height="360"
-            frameborder="0"
-          >
-          </iframe>
-          
-          <div class="card-info">
-            <h3>札幌・小樽 冬の旅行ガイド</h3> <p>10月16日 17:01</p>
-              <button type="button" class="card-open-btn" data-target="keep.html">Open</button>
-          </div>
+          ></iframe>
         </div>
+      </div>
 
+      <div class="save-tab">
+        <img src="assets/whitetab.svg" alt="Saved items tab" class="save-tab-image">
+        <div class="save-tab-content">
+          <div class="save-tab-info">
+            <h2 class="save-tab-title">札幌・小樽 冬の旅行ガイド</h2>
+            <p class="save-tab-time" id="save-tab-time">--:--</p>
+          </div>
+          <button type="button" class="card-open-btn" data-target="keep.html">Open</button>
         </div>
+      </div>
     </div>
   </section>
 
@@ -281,6 +281,32 @@
       const mainContent = document.getElementById('mainContent');
       const savePage = document.getElementById('save-page');
       const searchInput = document.querySelector('.search-bar input');
+      const pageContentRoot = document.getElementById('page-content');
+
+      if (window.location.hash === '#save-page') {
+        mainContent?.classList.add('hidden');
+        searchInterface?.classList.remove('hidden');
+        savePage?.classList.remove('hidden');
+        pageContentRoot?.classList.add('hidden');
+
+        const homeButtonInit = document.querySelector('.sidebar-item img[alt="Home"]')?.closest('.sidebar-item');
+        const saveButtonInit = document.querySelector('.sidebar-item img[alt="Saved"]')?.closest('.sidebar-item');
+        const starIconInit = document.querySelector('.sidebar-item img[alt="Saved"]');
+        const searchIconInit = document.querySelector('.sidebar-item img[alt="Home"]');
+
+        if (homeButtonInit && saveButtonInit) {
+          homeButtonInit.classList.remove('active');
+          saveButtonInit.classList.add('active');
+        }
+
+        if (starIconInit) {
+          starIconInit.src = 'assets/starblack.svg';
+        }
+
+        if (searchIconInit) {
+          searchIconInit.src = 'assets/searchwhite.svg';
+        }
+      }
 
       // ========================================
       // Audio Icon (Mute/Unmute)
@@ -401,7 +427,7 @@
       // ========================================
       const sidebar = document.getElementById('sidebar');
       const sidebarToggle = document.getElementById('sidebar-toggle');
-      const pageContent = document.getElementById('page-content');
+      const pageContent = pageContentRoot;
       
       if (sidebarToggle && sidebar && pageContent) {
         sidebarToggle.addEventListener('click', () => {
@@ -415,6 +441,7 @@
       // ========================================
       const timeDisplay = document.getElementById('time-display');
       const dateDisplay = document.getElementById('date-display');
+      const saveTabTime = document.getElementById('save-tab-time');
       
       function updateClock() {
         const now = new Date();
@@ -426,7 +453,11 @@
         const hours = now.getHours();
         let minutes = now.getMinutes();
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        timeDisplay.textContent = `${hours}:${minutes}`;
+        const timeString = `${hours}:${minutes}`;
+        timeDisplay.textContent = timeString;
+        if (saveTabTime) {
+          saveTabTime.textContent = timeString;
+        }
       }
       
       updateClock();

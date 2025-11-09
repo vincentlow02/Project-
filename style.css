@@ -427,6 +427,7 @@ body.search-results-page .video-module-bg {
     position: relative;
     z-index: 100;
     background-color: #ffffff; /* 确保侧边栏有背景色 */
+    overflow-y: auto;
 }
 
 /* * 关键修复 #2:
@@ -1091,11 +1092,6 @@ body.search-results-page .widget-container {
     position: relative;
     z-index: 1;
     display: none;
-    overflow-y: auto;
-    width: 100%;
-    height: 100vh;
-    padding: 40px 20px;
-    box-sizing: border-box;
 }
 
 #save-page:not(.hidden) {
@@ -1110,11 +1106,17 @@ body.search-results-page .widget-container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    height: 180vh;
+    overflow-y: auto;
+    padding: 40px 20px 80px;
+    box-sizing: border-box;
+    margin-left: 50px;
 }
 
 .save-header {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     margin-bottom: 32px;
 }
 
@@ -1122,6 +1124,81 @@ body.search-results-page .widget-container {
     font-size: 2.2rem;
     color: #000;
     margin: 0;
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+}
+
+.save-illustration {
+    display: block;
+    margin: 0 0 20px 0;
+    width: min(60%, 320px);
+    max-width: 270px;
+}
+
+.save-tab {
+    position: relative;
+    display: block;
+    width: min(60%, 320px);
+    max-width: 270px;
+    margin: 16px 0 24px 0;
+}
+
+.save-tab-image {
+    display: block;
+    width: 100%;
+    max-width: none;
+}
+
+.save-tab-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    gap: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+
+.save-tab-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: calc(100% - 90px);
+}
+
+.save-tab-title {
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #0a0a0a;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.save-tab-time {
+    font-size: 0.8rem;
+    color: #6b6b6b;
+    margin: 0;
+    letter-spacing: 0.08em;
+}
+
+.save-tab-content .card-open-btn {
+    pointer-events: auto;
+    padding: 4px 14px;
+    font-size: 0.72rem;
+    border-radius: 8px;
+    background: #d9d9d9;
+    color: #040404;
+    flex-shrink: 0;
+    white-space: nowrap;
+    align-self: flex-end;
+    margin-bottom:1px;
 }
 
 #save-back-btn.save-back-arrow {
@@ -1155,51 +1232,7 @@ body.search-results-page .widget-container {
     gap: 24px;
 }
 
-.save-card {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease-out;
-}
-
-.save-card:hover {
-    transform: translateY(-5px);
-}
-
-.save-card .card-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    background-color: #eee;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.save-card .card-info {
-    padding: 16px;
-    color: #333;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.save-card h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #000;
-    margin: 0 0 4px 0;
-}
-
-.save-card p {
-    font-size: 0.85rem;
-    color: #777;
-    margin: 0 0 16px 0;
-    flex-grow: 1;
-}
-
-.save-card .card-open-btn {
+.card-open-btn {
     background: #f0f0f0;
     border: none;
     border-radius: 20px;
@@ -1208,12 +1241,216 @@ body.search-results-page .widget-container {
     font-weight: 500;
     color: #333;
     cursor: pointer;
-    align-self: flex-start;
     transition: background 0.2s;
 }
 
-.save-card .card-open-btn:hover {
+.card-open-btn:hover {
     background: #e0e0e0;
+}
+
+.save-video-frame {
+    position: relative;
+    width: min(60%, 320px);
+    max-width: 270px;
+    margin: 16px 0 24px 0;
+}
+
+.save-frame {
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.save-video {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 19px;
+    background: #000;
+    z-index: 1;
+}
+
+.save-video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 17px;
+    transform: scale(1.4);
+    transform-origin: center;
+}
+
+.keep-page {
+    background: #f3f3f3;
+}
+
+.keep-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.keep-scroll {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f3f3f3;
+}
+
+.keep-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.keep-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+}
+
+.keep-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.keep-page .sidebar-icon-bar {
+    background: #fff;
+}
+
+.keep-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: 16vh;
+    width: 100%;
+    padding-left: 25vw;
+    padding-top: 6vh;
+    padding-bottom: 35vh;
+    background: #f3f3f3;
+}
+
+.keep-title {
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 500;
+    font-size: 2rem;
+    color: #111;
+    letter-spacing: 0.08em;
+    margin: 0;
+}
+
+.keep-frame {
+    position: relative;
+    margin-top: 24px;
+    width: min(80%, 640px);
+}
+
+.keep-frame-image {
+    width: 100%;
+    display: block;
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+}
+
+.keep-frame-video {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+    overflow: hidden;
+    border-radius: 18px;
+    z-index: 1;
+    background: #000;
+}
+
+.keep-frame-video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+    transform: scale(1.05);
+    transform-origin: center;
+}
+
+.keep-divider {
+    margin-top: 28px;
+    width: min(80%, 640px);
+    height: 1px;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.keep-label {
+    margin-top: 29px;
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color:black;
+    letter-spacing: 0.04em;
+}
+
+.keep-spot-image {
+    margin-top: 20px;
+    width: min(70%, 297px);
+    height: auto;
+    border-radius: 16px;
+}
+
+.keep-subtitle {
+    margin-top: 20px;
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color:black;
+    letter-spacing: 0.04em;
+}
+
+.keep-description {
+    margin-top: 17px;
+    font-family: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.7;
+    max-width: min(80%, 680px);
+}
+
+.keep-frame {
+    position: relative;
+    margin-top: 24px;
+    width: min(80%, 650px);
+}
+
+.keep-frame-image {
+    width: 100%;
+    display: block;
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+}
+
+.keep-frame-video {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+    overflow: hidden;
+    border-radius: 14px;
+    z-index: 1;
+    background: #000;
+}
+
+.keep-frame-video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+    transform: scale(1.05);
+    transform-origin: center;
 }
 
 /* ========================================
