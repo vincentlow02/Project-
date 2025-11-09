@@ -427,6 +427,20 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
     };
   }
 
+  function restoreSidebarDataset(container, data = {}) {
+    const context = container ? fullscreenContexts.get(container) : null;
+    if (!context) {
+      return;
+    }
+
+    context.sidebarData = {
+      title: data.title || '',
+      subtitle: data.subtitle || '',
+      description: data.description || '',
+      list: Array.isArray(data.list) ? [...data.list] : [],
+    };
+  }
+
   // 3a. 确保 Context 存在，并创建/存储 *唯一* 的 player 实例
   function ensureContext(container) {
     let context = fullscreenContexts.get(container);
@@ -436,8 +450,9 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
         container,
         originalParent: container.parentNode,
         placeholder: null,
-        player: iframe ? new Vimeo.Player(iframe) : null, // [核心] 创建唯一的 player
-        originalSrc: iframe ? iframe.src : '' // [核心] 保存 iframe 源
+        player: iframe ? new Vimeo.Player(iframe) : null,
+        originalSrc: iframe ? iframe.src : '',
+        sidebarData: {}
       };
       if (context.player) {
          console.log("Vimeo: 唯一的播放器已创建。");
@@ -446,6 +461,17 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
     } else if (!context.originalParent || !context.originalParent.isConnected) {
       context.originalParent = container.parentNode;
     }
+
+    const freshData = getSidebarData(container);
+    if (
+      freshData.title ||
+      freshData.subtitle ||
+      freshData.description ||
+      (freshData.list && freshData.list.length)
+    ) {
+      context.sidebarData = freshData;
+    }
+
     return context;
   }
 
@@ -483,7 +509,7 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
       exitCustomFullscreen();
     }
     ensurePlaceholder(context);
-    populateSidebar(getSidebarData(container));
+    populateSidebar(context.sidebarData || {});
     moveContainerIntoViewport(container);
     overlay.setAttribute('aria-hidden', 'false');
     bodyEl.classList.add('is-custom-fullscreen');
@@ -522,7 +548,6 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
     overlay.setAttribute('aria-hidden', 'true');
     bodyEl.classList.remove('is-custom-fullscreen');
     htmlEl.classList.remove('is-custom-fullscreen');
-    sidebarContent.innerHTML = '';
 
     // 1. 先把 container 移回原位
     const targetParent = (placeholder && placeholder.parentNode) || originalParent || container.parentNode;
@@ -557,8 +582,7 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
         const newIframe = document.createElement('iframe');
         newIframe.className = 'vimeo-iframe';
         newIframe.src = originalSrc; // [关键] 使用保存的 src
-CONCAT:
-        newIframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        newIframe.allow = 'autoplay; fullscreen; picture-in-picture';
         newIframe.allowFullscreen = true;
         newIframe.title = 'Hokkaido Experience';
         vimeoWrapper.appendChild(newIframe);
@@ -575,36 +599,41 @@ CONCAT:
         console.log("Vimeo: 重建完成。");
         }
       }
-  }
+
+  if (contextToRebuild.sidebarData) {
+    restoreSidebarDataset(container, contextToRebuild.sidebarData);
+  }
+
+  }
 
   // 3d. 绑定关闭事件
-  closeButton?.addEventListener('click', () => exitCustomFullscreen());
-  overlay?.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
-  wrapper?.addEventListener('click', (e) => e.stopPropagation());
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
+  closeButton?.addEventListener('click', () => exitCustomFullscreen());
+  overlay?.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
+  wrapper?.addEventListener('click', (e) => e.stopPropagation());
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
 
   // 3e. 循环所有视频容器，初始化 *所有* 功能
-  const containers = document.querySelectorAll('[data-custom-fullscreen]');
-  containers.forEach((container) => {
-    const context = ensureContext(container); // 创建 context 和 *唯一* 的 player
-    if (context && context.player) {
-      initializeFullscreenEvents(container); // 绑定 [ ] 按钮
+  const containers = document.querySelectorAll('[data-custom-fullscreen]');
+  containers.forEach((container) => {
+    const context = ensureContext(container); // 创建 context 和 *唯一* 的 player
+    if (context && context.player) {
+      initializeFullscreenEvents(container); // 绑定 [ ] 按钮
       initializeSubtitleEvents(context.player); // 绑定字幕
       initializeHitboxEvents(container);
-   }
+    }
 
     // (根据你的要求，我们忽略了 .vimeo-toggle-hitbox)
 
-    // 保留这些自定义事件
-    container.addEventListener('custom-fullscreen:open', () => {
-      enterCustomFullscreenFor(container);
-    });
-    container.addEventListener('custom-fullscreen:close', () => {
-      if (activeContext && activeContext.container === container) {
-        exitCustomFullscreen();
-      }
-    });
-  });
+    // 保留这些自定义事件
+    container.addEventListener('custom-fullscreen:open', () => {
+      enterCustomFullscreenFor(container);
+    });
+    container.addEventListener('custom-fullscreen:close', () => {
+      if (activeContext && activeContext.container === container) {
+        exitCustomFullscreen();
+      }
+    });
+  });
 
 });
 </script>
