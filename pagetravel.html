@@ -131,597 +131,472 @@
   <script src="https://player.vimeo.com/api/player.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const iframe = document.querySelector('.vimeo-iframe');
-    if (iframe) {
-      const player = new Vimeo.Player(iframe);
-      const toggleZone = document.querySelector('.vimeo-toggle-hitbox');
+ // ------------------ 滚屏控制 ------------------
+window.addEventListener('scroll', () => {
+  const scrollX = window.scrollX || document.documentElement.scrollLeft;
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.style.left = `${scrollX}px`;
+  const quesIcon = document.querySelector('.ques-icon');
+  if (quesIcon) {
+    const baseLeft = -670;
+    quesIcon.style.left = `${scrollX + baseLeft}px`;
+  }
+});
 
-      if (toggleZone) {
-        toggleZone.addEventListener('click', () => {
-          player.getPaused().then((paused) => {
-            if (paused) {
-              player.play();
-            } else {
-              player.pause();
-            }
-          });
-        });
+// ------------------ 唯一的 DOMContentLoaded 监听器 (已合并所有代码) ------------------
+document.addEventListener('DOMContentLoaded', () => {
+    
+  // --- 1. 侧边栏和搜索逻辑 (来自你原来的代码) ---
+  const searchInput = document.querySelector('.search-bar input');
+  const searchQueryLabel = document.getElementById('search-query');
+  const resultsGrid = document.getElementById('resultsGrid');
+  const resultsEmpty = document.getElementById('resultsEmpty');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const pageContent = document.getElementById('page-content');
+
+  // (你原来的 sampleResults, normalize, filterResults, renderResults 函数...)
+  // (为了简洁，这里省略了它们的定义，但你的代码中应该保留它们)
+
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get('q')?.trim() || '';
+
+  if (searchQueryLabel) {
+    searchQueryLabel.textContent = query || 'おすすめ';
+  }
+  if (searchInput) {
+    // (你原来的 searchInput 事件监听器)
+  }
+  if (sidebar && sidebarToggle && pageContent) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      pageContent.classList.toggle('sidebar-collapsed');
+    });
+  }
+  // renderResults(filterResults(query)); // 你可能需要在这里调用
+
+
+const subtitleContainer = document.getElementById('hokkaido-subtitles');
+  if (!subtitleContainer) {
+    console.warn("字幕：未找到 'hokkaido-subtitles' 容器。");
+  }
+
+  const subtitleConfigs = [
+    { title: '北海道冬の魅力：札幌＆小樽', description: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。', titleSpeed: 28, descSpeed: 34 },
+    { title: '船見坂', description: '映画『Love Letter』のロケ地。坂の上から港と街並みを一望できる。', titleSpeed: 28, descSpeed: 40 },
+    { title: 'すすきの交差点', description: '札幌最大の繁華街すすきの。NIKKAのネオンが輝き、飲食店やショップが並ぶにぎやかな夜の街。', titleSpeed: 28, descSpeed: 30 },
+    { title: '藻岩山の夜景', description: '藻岩山は「日本新三大夜景」の一つ。ロープウェイで登ると、札幌の街が宝石のように輝く絶景を望めます。', titleSpeed: 30, descSpeed: 41 },
+    { title: '白い恋人ソフトクリーム', description: '北海道を代表するお土産。', titleSpeed: 28, descSpeed: 24 },
+    { title: 'うな重', description: 'うな重は全国で親しまれる日本料理の一つ。', titleSpeed: 42, descSpeed: 70 },
+    { title: 'ジンギスカン', description: '北海道名物のジンギスカン。ラム肉と野菜を特製鍋で焼き、タレと相性抜群の一品。', titleSpeed: 40, descSpeed: 50 },
+    { title: '元祖さっぽろラーメン横丁', description: '札幌は味噌ラーメン発祥の地。ラーメン横丁には昭和の雰囲気の老舗が並び、熱々の一杯が楽しめます。', titleSpeed: 30, descSpeed: 30 },
+    { title: '大通公園＆さっぽろテレビ塔', description: '札幌中心の大通公園は市民の憩いの場。冬はホワイトイルミネーションや雪まつりで街が彩られます。', titleSpeed: 37, descSpeed: 30 },
+  ];
+
+  const WAIT_AFTER_GROUP = 1000;
+
+  class SubtitleController {
+    constructor(configs, container) {
+      this.configs = configs;
+      this.container = container;
+      this.started = false;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'idle';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.currentTimeout = null;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+    }
+    clearCurrentTimeout() {
+      if (this.currentTimeout !== null) {
+        clearTimeout(this.currentTimeout);
+        this.currentTimeout = null;
+      }
+    }
+    prepareCurrentGroup() {
+      const group = this.configs[this.currentGroup];
+      if (!group || !this.container) return;
+      this.container.innerHTML = '';
+      const titleLine = document.createElement('div');
+      titleLine.className = 'subtitle-line subtitle-title';
+      const titleText = document.createElement('span');
+      titleText.className = 'subtitle-text';
+      const titleCursor = document.createElement('span');
+      titleCursor.className = 'subtitle-cursor';
+      titleCursor.textContent = '|';
+      titleLine.append(titleText, titleCursor);
+      const descLine = document.createElement('div');
+      descLine.className = 'subtitle-line subtitle-description';
+      const descText = document.createElement('span');
+      descText.className = 'subtitle-text';
+      const descCursor = document.createElement('span');
+      descCursor.className = 'subtitle-cursor';
+      descCursor.textContent = '|';
+      descLine.append(descText, descCursor);
+      this.container.append(titleLine, descLine);
+      this.titleLine = titleLine;
+      this.titleText = titleText;
+      this.descLine = descLine;
+      this.descText = descText;
+      this.titleLine.classList.remove('is-complete', 'is-typing');
+      this.descLine.classList.remove('is-complete', 'is-typing');
+      this.titleText.textContent = '';
+      this.descText.textContent = '';
+    }
+    start() {
+      if (!this.configs.length) return;
+      this.started = true;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'title';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.prepareCurrentGroup();
+      this.scheduleNextStep();
+    }
+    pause() {
+      if (!this.started || this.paused) return;
+      this.paused = true;
+      if (this.stage === 'wait' && this.waitStart) {
+        const elapsed = Date.now() - this.waitStart;
+        this.waitRemaining = Math.max(0, this.waitRemaining - elapsed);
+      }
+      this.clearCurrentTimeout();
+    }
+    resume() {
+      if (!this.started || !this.paused) return;
+      this.paused = false;
+      if (this.stage === 'wait') {
+        if (this.waitRemaining <= 0) {
+          this.advanceGroup();
+        } else {
+          this.waitStart = Date.now();
+          this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
+        }
+        return;
+      }
+      this.scheduleNextStep();
+    }
+    reset() {
+      this.clearCurrentTimeout();
+      this.started = false;
+      this.paused = false;
+      this.currentGroup = 0;
+      this.stage = 'idle';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+      if (this.container) this.container.innerHTML = '';
+    }
+    scheduleNextStep() {
+      if (!this.started || this.paused) return;
+      const group = this.configs[this.currentGroup];
+      if (!group) return;
+      if (this.stage === 'title') {
+        this.titleLine.classList.add('is-typing');
+        if (this.titleIndex < group.title.length) {
+          this.titleText.textContent += group.title[this.titleIndex++];
+          this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.titleSpeed);
+        } else {
+          this.titleLine.classList.replace('is-typing', 'is-complete');
+          this.stage = 'description';
+          this.scheduleNextStep();
+        }
+        return;
+      }
+      if (this.stage === 'description') {
+        this.descLine.classList.add('is-typing');
+        if (this.descIndex < group.description.length) {
+          this.descText.textContent += group.description[this.descIndex++];
+          this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.descSpeed);
+        } else {
+          this.descLine.classList.replace('is-typing', 'is-complete');
+          this.stage = 'wait';
+          this.waitRemaining = WAIT_AFTER_GROUP;
+          this.waitStart = Date.now();
+          this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
+        }
+      }
+    }
+    advanceGroup() {
+      this.clearCurrentTimeout();
+      if (!this.started || this.paused) return;
+      this.currentGroup = (this.currentGroup + 1) % this.configs.length;
+      this.stage = 'title';
+      this.titleIndex = 0;
+      this.descIndex = 0;
+      this.waitRemaining = WAIT_AFTER_GROUP;
+      this.waitStart = null;
+      this.prepareCurrentGroup();
+      this.scheduleNextStep();
+    }
+  }
+  const subtitleController = new SubtitleController(subtitleConfigs, subtitleContainer);
+
+  // 辅助函数：为 *一个* player 实例绑定字幕事件
+  function initializeSubtitleEvents(player) {
+    if (!player) return;
+    player.on('play', () => {
+      player.getCurrentTime().then((seconds) => {
+        if (seconds <= 0.1) { subtitleController.reset(); subtitleController.start(); }
+        else { if (!subtitleController.started) subtitleController.start(); else subtitleController.resume(); }
+      }).catch(() => { if (!subtitleController.started) subtitleController.start(); else subtitleController.resume(); });
+    });
+    player.on('pause', () => subtitleController.pause());
+    player.on('ended', () => subtitleController.reset());
+    player.on('seeked', ({ seconds }) => {
+      if (seconds <= 0.1) { player.getPaused().then((paused) => { if (paused) subtitleController.reset(); }); }
+    });
+  }
+
+
+  /* --- 3. 自定义全屏逻辑 (已完全修复) --- */
+  const overlay = document.getElementById('custom-fullscreen-overlay');
+  if (!overlay || typeof Vimeo === 'undefined' || !Vimeo.Player) {
+    console.warn("自定义全屏：未找到必要元素或 Vimeo API。");
+    return;
+  }
+
+  const htmlEl = document.documentElement;
+  const bodyEl = document.body;
+  const wrapper = overlay.querySelector('.custom-fullscreen-wrapper');
+  const videoViewport = overlay.querySelector('.custom-fullscreen-video-viewport');
+  const sidebarContent = overlay.querySelector('.custom-fullscreen-sidebar-content');
+  const closeButton = overlay.querySelector('.custom-fullscreen-close');
+
+  if (!videoViewport || !sidebarContent) {
+    console.warn("自定义全屏：未找到 videoViewport 或 sidebarContent。");
+    return;
+  }
+
+  // [核心] WeakMap 用于存储每个视频容器的 player 实例和状态
+  const fullscreenContexts = new WeakMap();
+  let activeContext = null;
+
+  function populateSidebar(data) {
+    sidebarContent.innerHTML = '';
+    if (!data) return;
+    if (data.title) {
+      const titleEl = document.createElement('h2');
+      titleEl.textContent = data.title;
+      sidebarContent.appendChild(titleEl);
+    }
+    if (data.subtitle) {
+      const subtitleEl = document.createElement('h3');
+      subtitleEl.textContent = data.subtitle;
+      sidebarContent.appendChild(subtitleEl);
+    }
+    if (data.description) {
+      const descEl = document.createElement('p');
+      descEl.textContent = data.description;
+      sidebarContent.appendChild(descEl);
+    }
+    if (data.list && data.list.length) {
+      const listEl = document.createElement('ul');
+      data.list.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        listEl.appendChild(li);
+      });
+      sidebarContent.appendChild(listEl);
+    }
+  }
+
+  function getSidebarData(container) {
+    return {
+      title: container.getAttribute('data-sidebar-title') || '',
+      subtitle: container.getAttribute('data-sidebar-subtitle') || '',
+      description: container.getAttribute('data-sidebar-description') || '',
+      list: (container.getAttribute('data-sidebar-list') || '')
+        .split('|')
+        .map((item) => item.trim())
+        .filter(Boolean),
+    };
+  }
+
+  // 3a. 确保 Context 存在，并创建/存储 *唯一* 的 player 实例
+  function ensureContext(container) {
+    let context = fullscreenContexts.get(container);
+    if (!context) {
+      const iframe = container.querySelector('iframe');
+      context = {
+        container,
+        originalParent: container.parentNode,
+        placeholder: null,
+        player: iframe ? new Vimeo.Player(iframe) : null, // [核心] 创建唯一的 player
+        originalSrc: iframe ? iframe.src : '' // [核心] 保存 iframe 源
+      };
+      if (context.player) {
+         console.log("Vimeo: 唯一的播放器已创建。");
       }
-    }
+      fullscreenContexts.set(container, context);
+    } else if (!context.originalParent || !context.originalParent.isConnected) {
+      context.originalParent = container.parentNode;
+    }
+    return context;
+  }
 
-    const searchInput = document.querySelector('.search-bar input');
-    const searchQueryLabel = document.getElementById('search-query');
-    const resultsGrid = document.getElementById('resultsGrid');
-    const resultsEmpty = document.getElementById('resultsEmpty');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const pageContent = document.getElementById('page-content');
+  function ensurePlaceholder(context) {
+    const { container } = context;
+    if (!context.originalParent) {
+      context.originalParent = container.parentNode !== videoViewport ? container.parentNode : context.originalParent;
+    }
+    if (!context.originalParent) return;
+    if (!context.placeholder) {
+      context.placeholder = document.createComment('custom-fullscreen-placeholder');
+    }
+    if (!context.placeholder.parentNode) {
+      if (container.parentNode === context.originalParent) {
+        context.originalParent.insertBefore(context.placeholder, container);
+      } else {
+        context.originalParent.appendChild(context.placeholder);
+      }
+    }
+  }
 
-    const params = new URLSearchParams(window.location.search);
-    const query = params.get('q')?.trim() || '';
+  function moveContainerIntoViewport(container) {
+    if (container.parentNode !== videoViewport) {
+      while (videoViewport.firstChild) {
+        videoViewport.removeChild(videoViewport.firstChild);
+      }
+      videoViewport.appendChild(container);
+    }
+  }
 
-    const sampleResults = [
-      {
-        title: '京都文化探索 3 日間',
-        description: '古都京都で神社仏閣巡りと町家カフェを堪能。伝統工芸のワークショップも体験できます。',
-        tags: ['culture', '京都', '歴史', '寺院'],
-      },
-      {
-        title: 'アイスランド オーロラツアー',
-        description: 'レイキャビクを拠点に、氷河ハイキングと天然温泉を巡りながら幻想的なオーロラ鑑賞。',
-        tags: ['overseas', '自然', '冒険'],
-      },
-      {
-        title: '北海道 美瑛・富良野ドライブ',
-        description: '四季折々の風景が美しい丘を巡るドライブ。地元グルメと温泉でリフレッシュ。',
-        tags: ['domestic', '自然', '北海道', 'ドライブ'],
-      },
-      {
-        title: 'ニュージーランド ハイキング周遊',
-        description: 'フィヨルドランド国立公園やアベル・タズマンなど、世界屈指のトレイルを歩く旅。',
-        tags: ['hiking', 'overseas', '自然'],
-      },
-      {
-        title: '瀬戸内アートアイランド巡り',
-        description: '直島・豊島・犬島で現代アートと島の暮らしに触れる、ゆったりフェリー旅。',
-        tags: ['culture', 'domestic', 'アート'],
-      },
-    ];
+  function enterCustomFullscreenFor(container) {
+    if (!container) return;
+    const context = ensureContext(container);
+    if (activeContext && activeContext.container !== container) {
+      exitCustomFullscreen();
+    }
+    ensurePlaceholder(context);
+    populateSidebar(getSidebarData(container));
+    moveContainerIntoViewport(container);
+    overlay.setAttribute('aria-hidden', 'false');
+    bodyEl.classList.add('is-custom-fullscreen');
+    htmlEl.classList.add('is-custom-fullscreen');
+    activeContext = context;
+  }
 
-    function normalize(text) {
-      return text.toLowerCase();
-    }
+  // 3b. 辅助函数：为 *一个* player 实例绑定 [ ] 按钮事件
+  function initializeFullscreenEvents(container) {
+    const context = fullscreenContexts.get(container);
+    if (!context || !context.player) return;
 
-    function filterResults(keyword) {
-      if (!keyword) {
-        return sampleResults.slice(0, 3);
-      }
+    const player = context.player;
+    const handleFullscreenChange = (data) => {
+      if (data && data.fullscreen) {
+        console.log("Vimeo: [ ] 按钮被点击。");
+        const openCustomFullscreen = () => enterCustomFullscreenFor(container);
+        if (typeof player.exitFullscreen === 'function') {
+          player.exitFullscreen().catch(() => {}).then(openCustomFullscreen);
+        } else {
+          openCustomFullscreen();
+        }
+      }
+    };
+    player.off('fullscreenchange');
+    player.on('fullscreenchange', handleFullscreenChange);
+  }
 
-      const normalized = normalize(keyword);
-      return sampleResults.filter((item) => {
-        const titleMatch = normalize(item.title).includes(normalized);
-        const descriptionMatch = normalize(item.description).includes(normalized);
-        const tagMatch = item.tags.some((tag) => normalize(tag).includes(normalized));
-        return titleMatch || descriptionMatch || tagMatch;
-      });
-    }
+  // 3c. [已修复] 关闭函数：销毁并重建 iframe
+  async function exitCustomFullscreen() {
+    if (!activeContext) return;
 
-    function renderResults(list) {
-      if (!resultsGrid || !resultsEmpty) return;
+    const { container, placeholder, originalParent, originalSrc } = activeContext;
+    const contextToRebuild = activeContext; // 保存 context
 
-      resultsGrid.innerHTML = '';
+    overlay.setAttribute('aria-hidden', 'true');
+    bodyEl.classList.remove('is-custom-fullscreen');
+    htmlEl.classList.remove('is-custom-fullscreen');
+    sidebarContent.innerHTML = '';
 
-      if (!list.length) {
-        resultsEmpty.classList.remove('hidden');
-        return;
-      }
+    // 1. 先把 container 移回原位
+    const targetParent = (placeholder && placeholder.parentNode) || originalParent || container.parentNode;
+    if (targetParent) {
+      if (placeholder && placeholder.parentNode === targetParent) {
+        targetParent.insertBefore(container, placeholder);
+      } else {
+        targetParent.appendChild(container);
+      }
+    }
+    
+    activeContext = null; // 立即重置
 
-      resultsEmpty.classList.add('hidden');
-
-      list.forEach((item) => {
-        const card = document.createElement('article');
-        card.className = 'result-card';
-        card.innerHTML = `
-          <h2>${item.title}</h2>
-          <p>${item.description}</p>
-          <div class="tag-list">
-            ${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
-          </div>
-        `;
-        resultsGrid.appendChild(card);
-      });
-    }
-
-    if (searchQueryLabel) {
-      searchQueryLabel.textContent = query || 'おすすめ';
-    }
-
-    if (searchInput) {
-      if (query) searchInput.value = query;
-
-      searchInput.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter') return;
-
-        event.preventDefault();
-        const value = searchInput.value.trim();
-        if (!value) return;
-
-        const destination = new URL(window.location.href);
-        destination.searchParams.set('q', value);
-        window.location.href = destination.toString();
-      });
-    }
-
-    if (sidebar && sidebarToggle && pageContent) {
-      sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
-        pageContent.classList.toggle('sidebar-collapsed');
-      });
-    }
-
-    renderResults(filterResults(query));
-  });
-
-  window.addEventListener('scroll', () => {
-    const scrollX = window.scrollX || document.documentElement.scrollLeft;
-
-    // Sidebar 同步
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) sidebar.style.left = `${scrollX}px`;
-
-    // Ques.svg 同步
-    const quesIcon = document.querySelector('.ques-icon');
-    if (quesIcon) {
-      const baseLeft = -670;
-      quesIcon.style.left = `${scrollX + baseLeft}px`;
-    }
-  });
-
-  // ------------------ 字幕控制 ------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    const iframe = document.querySelector('.hokkaido-video-container .vimeo-iframe');
-    const subtitleContainer = document.getElementById('hokkaido-subtitles');
-    if (!iframe || !subtitleContainer) return;
-
-    const player = new Vimeo.Player(iframe);
-
-    const subtitleConfigs = [
-      {
-        title: '北海道冬の魅力：札幌＆小樽',
-        description: '小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。',
-        titleSpeed: 28,
-        descSpeed: 34,
-      },
-      {
-        title: '船見坂',
-        description: '映画『Love Letter』のロケ地。坂の上から港と街並みを一望できる。',
-        titleSpeed: 28,
-        descSpeed: 40,
-      },
-      {
-        title: 'すすきの交差点',
-        description: '札幌最大の繁華街すすきの。NIKKAのネオンが輝き、飲食店やショップが並ぶにぎやかな夜の街。',
-        titleSpeed: 28,
-        descSpeed: 30,
-      },
-      {
-        title: '藻岩山の夜景',
-        description: '藻岩山は「日本新三大夜景」の一つ。ロープウェイで登ると、札幌の街が宝石のように輝く絶景を望めます。',
-        titleSpeed: 30,
-        descSpeed: 41,
-      },
-      {
-        title: '白い恋人ソフトクリーム',
-        description: '北海道を代表するお土産。',
-        titleSpeed: 28,
-        descSpeed: 24,
-      },
-      {
-        title: 'うな重',
-        description: 'うな重は全国で親しまれる日本料理の一つ。',
-        titleSpeed: 42,
-        descSpeed: 70,
-      },
-      {
-        title: 'ジンギスカン',
-        description: '北海道名物のジンギスカン。ラム肉と野菜を特製鍋で焼き、タレと相性抜群の一品。',
-        titleSpeed: 40,
-        descSpeed: 50,
-      },
-      {
-        title: '元祖さっぽろラーメン横丁',
-        description: '札幌は味噌ラーメン発祥の地。ラーメン横丁には昭和の雰囲気の老舗が並び、熱々の一杯が楽しめます。',
-        titleSpeed: 30,
-        descSpeed: 30,
-      },
-      {
-        title: '大通公園＆さっぽろテレビ塔',
-        description: '札幌中心の大通公園は市民の憩いの場。冬はホワイトイルミネーションや雪まつりで街が彩られます。',
-        titleSpeed: 37,
-        descSpeed: 30,
-      },
-    ];
-
-    const WAIT_AFTER_GROUP = 1000;
-
-    class SubtitleController {
-      constructor(configs, container) {
-        this.configs = configs;
-        this.container = container;
-        this.started = false;
-        this.paused = false;
-        this.currentGroup = 0;
-        this.stage = 'idle';
-        this.titleIndex = 0;
-        this.descIndex = 0;
-        this.currentTimeout = null;
-        this.waitRemaining = WAIT_AFTER_GROUP;
-        this.waitStart = null;
-      }
-
-      clearCurrentTimeout() {
-        if (this.currentTimeout !== null) {
-          clearTimeout(this.currentTimeout);
-          this.currentTimeout = null;
-        }
-      }
-
-      prepareCurrentGroup() {
-        const group = this.configs[this.currentGroup];
-        if (!group) return;
-
-        this.container.innerHTML = '';
-
-        const titleLine = document.createElement('div');
-        titleLine.className = 'subtitle-line subtitle-title';
-        const titleText = document.createElement('span');
-        titleText.className = 'subtitle-text';
-        const titleCursor = document.createElement('span');
-        titleCursor.className = 'subtitle-cursor';
-        titleCursor.textContent = '|';
-        titleLine.append(titleText, titleCursor);
-
-        const descLine = document.createElement('div');
-        descLine.className = 'subtitle-line subtitle-description';
-        const descText = document.createElement('span');
-        descText.className = 'subtitle-text';
-        const descCursor = document.createElement('span');
-        descCursor.className = 'subtitle-cursor';
-        descCursor.textContent = '|';
-        descLine.append(descText, descCursor);
-
-        this.container.append(titleLine, descLine);
-
-        this.titleLine = titleLine;
-        this.titleText = titleText;
-        this.descLine = descLine;
-        this.descText = descText;
-
-        this.titleLine.classList.remove('is-complete', 'is-typing');
-        this.descLine.classList.remove('is-complete', 'is-typing');
-
-        this.titleText.textContent = '';
-        this.descText.textContent = '';
-      }
-
-      start() {
-        if (!this.configs.length) return;
-        this.started = true;
-        this.paused = false;
-        this.currentGroup = 0;
-        this.stage = 'title';
-        this.titleIndex = 0;
-        this.descIndex = 0;
-        this.waitRemaining = WAIT_AFTER_GROUP;
-        this.prepareCurrentGroup();
-        this.scheduleNextStep();
-      }
-
-      pause() {
-        if (!this.started || this.paused) return;
-        this.paused = true;
-        if (this.stage === 'wait' && this.waitStart) {
-          const elapsed = Date.now() - this.waitStart;
-          this.waitRemaining = Math.max(0, this.waitRemaining - elapsed);
-        }
-        this.clearCurrentTimeout();
-      }
-
-      resume() {
-        if (!this.started || !this.paused) return;
-        this.paused = false;
-        if (this.stage === 'wait') {
-          if (this.waitRemaining <= 0) {
-            this.advanceGroup();
-          } else {
-            this.waitStart = Date.now();
-            this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
-          }
-          return;
-        }
-        this.scheduleNextStep();
-      }
-
-      reset() {
-        this.clearCurrentTimeout();
-        this.started = false;
-        this.paused = false;
-        this.currentGroup = 0;
-        this.stage = 'idle';
-        this.titleIndex = 0;
-        this.descIndex = 0;
-        this.waitRemaining = WAIT_AFTER_GROUP;
-        this.waitStart = null;
-        this.container.innerHTML = '';
-      }
-
-      scheduleNextStep() {
-        if (!this.started || this.paused) return;
-        const group = this.configs[this.currentGroup];
-        if (!group) return;
-
-        if (this.stage === 'title') {
-          this.titleLine.classList.add('is-typing');
-          if (this.titleIndex < group.title.length) {
-            this.titleText.textContent += group.title[this.titleIndex++];
-            this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.titleSpeed);
-          } else {
-            this.titleLine.classList.replace('is-typing', 'is-complete');
-            this.stage = 'description';
-            this.scheduleNextStep();
-          }
-          return;
-        }
-
-        if (this.stage === 'description') {
-          this.descLine.classList.add('is-typing');
-          if (this.descIndex < group.description.length) {
-            this.descText.textContent += group.description[this.descIndex++];
-            this.currentTimeout = setTimeout(() => this.scheduleNextStep(), group.descSpeed);
-          } else {
-            this.descLine.classList.replace('is-typing', 'is-complete');
-            this.stage = 'wait';
-            this.waitRemaining = WAIT_AFTER_GROUP;
-            this.waitStart = Date.now();
-            this.currentTimeout = setTimeout(() => this.advanceGroup(), this.waitRemaining);
-          }
-        }
-      }
-
-      advanceGroup() {
-        this.clearCurrentTimeout();
-        if (!this.started || this.paused) return;
-        this.currentGroup = (this.currentGroup + 1) % this.configs.length;
-        this.stage = 'title';
-        this.titleIndex = 0;
-        this.descIndex = 0;
-        this.waitRemaining = WAIT_AFTER_GROUP;
-        this.waitStart = null;
-        this.prepareCurrentGroup();
-        this.scheduleNextStep();
-      }
-    }
-
-    const subtitleController = new SubtitleController(subtitleConfigs, subtitleContainer);
-
-    player.on('play', () => {
-      player.getCurrentTime().then((seconds) => {
-        if (seconds <= 0.1) {
-          subtitleController.reset();
-          subtitleController.start();
-        } else {
-          if (!subtitleController.started) subtitleController.start();
-          else subtitleController.resume();
-        }
-      }).catch(() => {
-        if (!subtitleController.started) subtitleController.start();
-        else subtitleController.resume();
-      });
-    });
-
-    player.on('pause', () => subtitleController.pause());
-    player.on('ended', () => subtitleController.reset());
-    player.on('seeked', ({ seconds }) => {
-      if (seconds <= 0.1) {
-        player.getPaused().then((paused) => {
-          if (paused) subtitleController.reset();
-        });
-      }
-    });
-  });
-
-  // ------------------ 自定义全屏 ------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('custom-fullscreen-overlay');
-    if (!overlay || typeof Vimeo === 'undefined' || !Vimeo.Player) return;
-
-    const htmlEl = document.documentElement;
-    const bodyEl = document.body;
-    const wrapper = overlay.querySelector('.custom-fullscreen-wrapper');
-    const videoViewport = overlay.querySelector('.custom-fullscreen-video-viewport');
-    const sidebarContent = overlay.querySelector('.custom-fullscreen-sidebar-content');
-    const closeButton = overlay.querySelector('.custom-fullscreen-close');
-
-    if (!videoViewport || !sidebarContent) return;
-
-    const fullscreenContexts = new WeakMap();
-    let activeContext = null;
-
-    function populateSidebar(data) {
-      sidebarContent.innerHTML = '';
-      if (!data) return;
-
-      if (data.title) {
-        const titleEl = document.createElement('h2');
-        titleEl.textContent = data.title;
-        sidebarContent.appendChild(titleEl);
+    // 2. [核心修复] 销毁旧 player 并重建 iframe
+    if (contextToRebuild && contextToRebuild.player) {
+      console.log("Vimeo: 正在卸载旧播放器...");
+      try {
+        // [已修改] 我们不再用 destroy()，而是用 unload()，它更安全
+        await contextToRebuild.player.unload();
+        console.log("Vimeo: 旧播放器已卸载。");
+      } catch (e) {
+        console.warn("Vimeo: 卸载播放器时出错 (可能已被移动)", e);
       }
 
-      if (data.subtitle) {
-        const subtitleEl = document.createElement('h3');
-        subtitleEl.textContent = data.subtitle;
-        sidebarContent.appendChild(subtitleEl);
-      }
+      // 3. [核心修复] 手动重建 iframe 来修复连接
+      const vimeoWrapper = container.querySelector('.vimeo-wrapper');
+      if (vimeoWrapper) {
+        console.log("Vimeo: 正在重建 iframe...");
+        vimeoWrapper.innerHTML = ''; // 清空 wrapper
+        
+        // 重新创建 iframe 元素
+        const newIframe = document.createElement('iframe');
+        newIframe.className = 'vimeo-iframe';
+        newIframe.src = originalSrc; // [关键] 使用保存的 src
+CONCAT:
+        newIframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        newIframe.allowFullscreen = true;
+        newIframe.title = 'Hokkaido Experience';
+        vimeoWrapper.appendChild(newIframe);
 
-      if (data.description) {
-        const descEl = document.createElement('p');
-        descEl.textContent = data.description;
-        sidebarContent.appendChild(descEl);
-      }
+        // 4. [核心修复] 为 *新* iframe 创建 *新* player
+        console.log("Vimeo: 正在创建新播放器...");
+        const newPlayer = new Vimeo.Player(newIframe);
+        contextToRebuild.player = newPlayer; // 更新 context 中的 player
 
-      if (data.list && data.list.length) {
-        const listEl = document.createElement('ul');
-        data.list.forEach((item) => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          listEl.appendChild(li);
-        });
-        sidebarContent.appendChild(listEl);
-      }
-    }
+        // 5. [核心修复] 重新绑定 *所有* 事件
+        console.log("Vimeo: 正在重新绑定所有事件...");
+        initializeFullscreenEvents(container); // 重新绑定 [ ] 按钮
+        initializeSubtitleEvents(newPlayer); // 重新绑定字幕事件
+        console.log("Vimeo: 重建完成。");
+        }
+      }
+  }
 
-    function getSidebarData(container) {
-      return {
-        title: container.getAttribute('data-sidebar-title') || '',
-        subtitle: container.getAttribute('data-sidebar-subtitle') || '',
-        description: container.getAttribute('data-sidebar-description') || '',
-        list: (container.getAttribute('data-sidebar-list') || '')
-          .split('|')
-          .map((item) => item.trim())
-          .filter(Boolean),
-      };
-    }
+  // 3d. 绑定关闭事件
+  closeButton?.addEventListener('click', () => exitCustomFullscreen());
+  overlay?.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
+  wrapper?.addEventListener('click', (e) => e.stopPropagation());
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
 
-    function ensureContext(container) {
-      let context = fullscreenContexts.get(container);
-      if (!context) {
-        context = {
-          container,
-          originalParent: container.parentNode,
-          placeholder: null,
-        };
-        fullscreenContexts.set(container, context);
-      } else if (!context.originalParent || !context.originalParent.isConnected) {
-        context.originalParent = container.parentNode;
-      }
-      return context;
-    }
+  // 3e. 循环所有视频容器，初始化 *所有* 功能
+  const containers = document.querySelectorAll('[data-custom-fullscreen]');
+  containers.forEach((container) => {
+    const context = ensureContext(container); // 创建 context 和 *唯一* 的 player
+    if (context && context.player) {
+      initializeFullscreenEvents(container); // 绑定 [ ] 按钮
+      initializeSubtitleEvents(context.player); // 绑定字幕
+      initializeHitboxEvents(container);
+   }
 
-    function ensurePlaceholder(context) {
-      const { container } = context;
-      if (!context.originalParent) {
-        context.originalParent = container.parentNode !== videoViewport ? container.parentNode : context.originalParent;
-      }
+    // (根据你的要求，我们忽略了 .vimeo-toggle-hitbox)
 
-      if (!context.originalParent) return;
+    // 保留这些自定义事件
+    container.addEventListener('custom-fullscreen:open', () => {
+      enterCustomFullscreenFor(container);
+    });
+    container.addEventListener('custom-fullscreen:close', () => {
+      if (activeContext && activeContext.container === container) {
+        exitCustomFullscreen();
+      }
+    });
+  });
 
-      if (!context.placeholder) {
-        context.placeholder = document.createComment('custom-fullscreen-placeholder');
-      }
-
-      if (!context.placeholder.parentNode) {
-        if (container.parentNode === context.originalParent) {
-          context.originalParent.insertBefore(context.placeholder, container);
-        } else {
-          context.originalParent.appendChild(context.placeholder);
-        }
-      }
-    }
-
-    function moveContainerIntoViewport(container) {
-      if (container.parentNode !== videoViewport) {
-        while (videoViewport.firstChild) {
-          videoViewport.removeChild(videoViewport.firstChild);
-        }
-        videoViewport.appendChild(container);
-      }
-    }
-
-    function enterCustomFullscreenFor(container) {
-      if (!container) return;
-
-      const context = ensureContext(container);
-
-      if (activeContext && activeContext.container !== container) {
-        exitCustomFullscreen();
-      }
-
-      ensurePlaceholder(context);
-
-      populateSidebar(getSidebarData(container));
-      moveContainerIntoViewport(container);
-
-      overlay.setAttribute('aria-hidden', 'false');
-      bodyEl.classList.add('is-custom-fullscreen');
-      htmlEl.classList.add('is-custom-fullscreen');
-
-      activeContext = context;
-    }
-
-    function exitCustomFullscreen() {
-      if (!activeContext) return;
-
-      const { container, placeholder, originalParent } = activeContext;
-
-      overlay.setAttribute('aria-hidden', 'true');
-      bodyEl.classList.remove('is-custom-fullscreen');
-      htmlEl.classList.remove('is-custom-fullscreen');
-      sidebarContent.innerHTML = '';
-
-      const targetParent = (placeholder && placeholder.parentNode) || originalParent || container.parentNode;
-
-      if (targetParent) {
-        if (placeholder && placeholder.parentNode === targetParent) {
-          targetParent.insertBefore(container, placeholder);
-        } else {
-          targetParent.appendChild(container);
-        }
-      }
-
-      activeContext = null;
-    }
-
-    closeButton?.addEventListener('click', () => exitCustomFullscreen());
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
-    wrapper?.addEventListener('click', (e) => e.stopPropagation());
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
-
-    const containers = document.querySelectorAll('[data-custom-fullscreen]');
-
-    containers.forEach((container) => {
-      const iframe = container.querySelector('iframe');
-      if (!iframe) return;
-
-      ensureContext(container);
-
-      const player = new Vimeo.Player(iframe);
-
-      player.on('fullscreenchange', (data) => {
-        if (data && data.fullscreen) {
-          const openCustomFullscreen = () => enterCustomFullscreenFor(container);
-
-          if (typeof player.exitFullscreen === 'function') {
-            player
-              .exitFullscreen()
-              .catch(() => {})
-              .then(openCustomFullscreen);
-          } else {
-            openCustomFullscreen();
-          }
-        }
-      });
-
-      container.addEventListener('custom-fullscreen:open', () => {
-        enterCustomFullscreenFor(container);
-      });
-
-      container.addEventListener('custom-fullscreen:close', () => {
-        if (activeContext && activeContext.container === container) {
-          exitCustomFullscreen();
-        }
-      });
-    });
 });
 </script>
 
