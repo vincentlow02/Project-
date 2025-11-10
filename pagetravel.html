@@ -94,9 +94,9 @@
         <div class="hokkaido-video-container"
              data-custom-fullscreen
              data-sidebar-title="Otaru"
-             data-sidebar-subtitle="北海道の魅力：札幌＆小樽"
-             data-sidebar-description="小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪化粧した街並みがロマンチックな雰囲気を醸し出します。"
-             data-sidebar-list="雪景色で輝く小樽運河|札幌・すすきののナイトライフ|石造り倉庫とカフェ巡り">
+             data-sidebar-subtitle="北海道冬の魅力：札幌＆小樽"
+             data-sidebar-description="小樽は、北海道を代表する港町で、レトロな運河や石造りの倉庫群が魅力です。冬には雪に包まれた街並みがロマンチックな雰囲気を醸し出し、夜には大都市にも負けないイルミネーションとグルメが楽しめます。"
+
 
           <!-- Vimeo iframe sits beneath the decorative frame -->
           <div class="vimeo-wrapper">
@@ -117,6 +117,19 @@
           <div id="hokkaido-subtitles" class="subtitle-container"></div>
         </div>
       </div>
+
+      <section class="finland-section">
+        <img src="assets/Finland.svg" alt="Finland" class="finland-logo">
+        <div class="finland-video-container">
+          <img src="assets/finlandvideo.svg" alt="Finland Video Frame" class="finland-video-frame">
+          <div class="finland-video-wrapper">
+            <iframe class="finland-vimeo-iframe"
+                    src="https://player.vimeo.com/video/1133091141?autoplay=0&muted=0&controls=1&title=0&byline=0&portrait=0&fullscreen=0"
+                    allow="autoplay; picture-in-picture"
+                    title="Finland Experience"></iframe>
+          </div>
+        </div>
+      </section>
     </main>
   </section>
 
@@ -127,7 +140,9 @@
       </div>
 
       <aside class="custom-fullscreen-sidebar">
-        <button type="button" class="custom-fullscreen-close">✖ 关闭</button>
+        <button type="button" class="custom-fullscreen-close" aria-label="Close fullscreen">
+          <img src="assets/close.svg" alt="">
+        </button>
         <div class="custom-fullscreen-sidebar-content"></div>
       </aside>
     </div>
@@ -351,10 +366,21 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
     if (!player) return;
     player.on('play', () => {
       player.getCurrentTime().then((seconds) => {
-        if (seconds <= 0.1) { subtitleController.reset(); subtitleController.start(); }
-        else { if (!subtitleController.started) subtitleController.start(); else subtitleController.resume(); }
-      }).catch(() => { if (!subtitleController.started) subtitleController.start(); else subtitleController.resume(); });
-    });
+        if (seconds <= 0.1) {
+          subtitleController.reset();
+          subtitleController.start();
+          return;
+        }
+
+        if (!subtitleController.started) {
+          subtitleController.start();
+        } else {
+          subtitleController.resume();
+        }
+      }).catch(() => {
+        if (!subtitleController.started) subtitleController.start(); else subtitleController.resume();
+      });
+    });
     player.on('pause', () => subtitleController.pause());
     player.on('ended', () => subtitleController.reset());
     player.on('seeked', ({ seconds }) => {
@@ -386,34 +412,45 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
   const fullscreenContexts = new WeakMap();
   let activeContext = null;
 
-  function populateSidebar(data) {
-    sidebarContent.innerHTML = '';
-    if (!data) return;
-    if (data.title) {
-      const titleEl = document.createElement('h2');
-      titleEl.textContent = data.title;
-      sidebarContent.appendChild(titleEl);
-    }
-    if (data.subtitle) {
-      const subtitleEl = document.createElement('h3');
-      subtitleEl.textContent = data.subtitle;
-      sidebarContent.appendChild(subtitleEl);
-    }
-    if (data.description) {
-      const descEl = document.createElement('p');
-      descEl.textContent = data.description;
-      sidebarContent.appendChild(descEl);
-    }
-    if (data.list && data.list.length) {
-      const listEl = document.createElement('ul');
-      data.list.forEach((item) => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        listEl.appendChild(li);
-      });
-      sidebarContent.appendChild(listEl);
-    }
-  }
+  function populateSidebar(data) {
+    sidebarContent.innerHTML = '';
+    if (!data) {
+      return false;
+    }
+
+    let hasContent = false;
+
+    if (data.title) {
+      const titleEl = document.createElement('h2');
+      titleEl.textContent = data.title;
+      sidebarContent.appendChild(titleEl);
+      hasContent = true;
+    }
+    if (data.subtitle) {
+      const subtitleEl = document.createElement('h3');
+      subtitleEl.textContent = data.subtitle;
+      sidebarContent.appendChild(subtitleEl);
+      hasContent = true;
+    }
+    if (data.description) {
+      const descEl = document.createElement('p');
+      descEl.textContent = data.description;
+      sidebarContent.appendChild(descEl);
+      hasContent = true;
+    }
+    if (data.list && data.list.length) {
+      const listEl = document.createElement('ul');
+      data.list.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        listEl.appendChild(li);
+      });
+      sidebarContent.appendChild(listEl);
+      hasContent = true;
+    }
+
+    return hasContent;
+  }
 
   function getSidebarData(container) {
     return {
@@ -470,6 +507,8 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
       (freshData.list && freshData.list.length)
     ) {
       context.sidebarData = freshData;
+    } else {
+      context.sidebarData = {};
     }
 
     return context;
@@ -509,7 +548,8 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
       exitCustomFullscreen();
     }
     ensurePlaceholder(context);
-    populateSidebar(context.sidebarData || {});
+    const hasSidebarContent = populateSidebar(context.sidebarData || {});
+    overlay.classList.toggle('is-sidebar-hidden', !hasSidebarContent);
     moveContainerIntoViewport(container);
     overlay.setAttribute('aria-hidden', 'false');
     bodyEl.classList.add('is-custom-fullscreen');
@@ -562,12 +602,28 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
     activeContext = null; // 立即重置
 
     // 2. [核心修复] 销毁旧 player 并重建 iframe
-    if (contextToRebuild && contextToRebuild.player) {
-      console.log("Vimeo: 正在卸载旧播放器...");
+    if (contextToRebuild && contextToRebuild.player) {
+      console.log("Vimeo: 正在卸载旧播放器...");
+
+      let resumePlayback = false;
+      let resumeTime = null;
+
+      try {
+        const paused = await contextToRebuild.player.getPaused();
+        resumePlayback = !paused;
+      } catch (e) {
+        resumePlayback = false;
+      }
+
+      try {
+        resumeTime = await contextToRebuild.player.getCurrentTime();
+      } catch (e) {
+        resumeTime = null;
+      }
+
       try {
         // [已修改] 我们不再用 destroy()，而是用 unload()，它更安全
         await contextToRebuild.player.unload();
-        console.log("Vimeo: 旧播放器已卸载。");
       } catch (e) {
         console.warn("Vimeo: 卸载播放器时出错 (可能已被移动)", e);
       }
@@ -597,8 +653,18 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
         initializeFullscreenEvents(container); // 重新绑定 [ ] 按钮
         initializeSubtitleEvents(newPlayer); // 重新绑定字幕事件
         console.log("Vimeo: 重建完成。");
-        }
-      }
+
+        if (typeof resumeTime === 'number') {
+          newPlayer.setCurrentTime(resumeTime).catch(() => {});
+        }
+
+        if (resumePlayback) {
+          newPlayer.play().catch(() => {
+            newPlayer.ready().then(() => newPlayer.play()).catch(() => {});
+          });
+        }
+      }
+    }
 
   if (contextToRebuild.sidebarData) {
     restoreSidebarDataset(container, contextToRebuild.sidebarData);

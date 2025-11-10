@@ -280,7 +280,7 @@ html, body {
 #page-content-logo {
     position: absolute;
     top: 40%;
-    left: 52%;
+    left: 49%;
     transform: translate(-50%, -50%);
     width: 200px;
     height: auto;
@@ -368,27 +368,27 @@ body.search-results-page .video-module-bg {
 
 .page-content-button:nth-child(1) {
     top: 94px;
-    left: 370px;
+    left: 280px;
 }
 
 .page-content-button:nth-child(2) {
     top: 94px;
-    left: 290px;
+    left: 200px;
 }
 
 .page-content-button:nth-child(3) {
     top: 94px;
-    left: -27px;
+    left: -117px;
 }
 
 .page-content-button:nth-child(4) {
     top: 94px;
-    left: -127px;
+    left: -217px;
 }
 
 .page-content-button:nth-child(5) {
     top: 94px;
-    left: -180px;
+    left: -270px;
 }
 
 .page-content-button img {
@@ -638,7 +638,7 @@ body.search-results-page .video-module-bg {
     font-size: 15px;
     color: #111;
     position: relative;
-    left: 70px;
+    left: 20px;
     top: -14px;
 }
 
@@ -648,7 +648,7 @@ body.search-results-page .video-module-bg {
     color: #111;
     letter-spacing: 1px;
     position: relative;
-    left: 70px;
+    left: 20px;
     top: -22px;
 }
 
@@ -658,7 +658,7 @@ body.search-results-page .video-module-bg {
     align-items: flex-start;
     gap: 12px;
     position: relative;
-    left: 70px;
+    left: 20px;
     top: -20px;
 }
 
@@ -727,7 +727,7 @@ body.search-results-page .video-module-bg {
 .search-bar {
     position: absolute;
     top: 45%;
-    left: 39%;
+    left: 33%;
     transform: translate(-50%, -50%);
     width: 450px;
     height: 60px;
@@ -1741,3 +1741,185 @@ body.search-results-page .widget-container {
         color: #1f1f1f;
     }
 }
+
+.finland-section {
+    position: absolute;
+    top: 137px;
+    right: 120px;
+    width: 857px;
+    max-width: 100%;
+    z-index: 2;
+}
+
+.finland-logo {
+    position: absolute;
+    top: -62px;
+    right: 370px;
+    width: min(140px, 17vw);
+    height: auto;
+    z-index: 3;
+    transition: transform 0.3s ease;
+}
+
+.finland-logo:hover {
+    transform: scale(1.05);
+}
+
+.finland-video-container {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.finland-video-frame {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.finland-video-wrapper {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #000;
+    z-index: 1;
+}
+
+.finland-vimeo-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+    transform: scale(1.05);
+    transform-origin: center;
+}
+
+/* ========== Overlay 样式保持不变 ========== */
+.custom-fullscreen-overlay {
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 9999;
+  }
+  
+  .custom-fullscreen-overlay[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .custom-fullscreen-overlay.is-sidebar-hidden .custom-fullscreen-wrapper {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  
+  .custom-fullscreen-overlay.is-sidebar-hidden .custom-fullscreen-sidebar {
+    display: none;
+  }
+  
+  /* ========== 全体容器布局 ========== */
+  .custom-fullscreen-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    width: min(1200px, 92vw);
+    max-height: 186vh;
+  }
+  
+  /* 视频部分 */
+  .custom-fullscreen-video-area {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    min-height: 720px;
+  }
+  
+  .custom-fullscreen-video-viewport {
+    position: absolute;
+    inset: 0;
+  }
+  
+  /* ========== Sidebar（右侧栏） ========== */
+  .custom-fullscreen-sidebar {
+    background: rgba(255, 255, 255, 0.94);
+    padding: 40px 30px; /* 增加内边距 */
+    overflow-y: auto;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    font-family: "Noto Sans JP", "SF Pro", "Segoe UI", sans-serif;
+    position: relative;
+  }
+  
+  /* 关闭按钮 */
+  .custom-fullscreen-sidebar button.custom-fullscreen-close {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .custom-fullscreen-sidebar button.custom-fullscreen-close img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* ========== Sidebar 内容区块（可自由移动） ========== */
+  .custom-fullscreen-sidebar-content {
+    position: relative; /* 🔹让里面的文字可定位移动 */
+    margin-top: 40px;   /* 🔹与上方按钮拉开距离 */
+  }
+  
+  /* 你可以调整整个文字区块的位置 */
+  .custom-fullscreen-sidebar-content.move-down {
+    transform: translateY(40px); /* 整体下移 */
+  }
+  
+  .custom-fullscreen-sidebar-content h2 {
+    font-size: 2000px;
+    font-weight: 700;
+    margin: 0;
+    color: #111;
+    letter-spacing: 0.02em;
+    position: absolute;
+    top: -39px;
+  }
+  
+  .custom-fullscreen-sidebar-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #181717;
+    position: absolute;
+    top:1px;
+  }
+  
+  .custom-fullscreen-sidebar-content p {
+    font-size: 0.90rem;
+    line-height: 1.7;
+    color: #1f1e1e;
+    position: absolute;
+    top: 33px;
+  }
+  
+  /* 若需要段落进一步下移 */
+  .custom-fullscreen-sidebar-content p.move {
+    position: relative;
+    top: 20px;
+  }
+  
