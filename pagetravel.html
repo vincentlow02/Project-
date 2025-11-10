@@ -437,6 +437,25 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
       descEl.textContent = data.description;
       sidebarContent.appendChild(descEl);
       hasContent = true;
+
+      const dividerEl = document.createElement('img');
+      dividerEl.src = 'assets/line.svg';
+      dividerEl.alt = '';
+      dividerEl.className = 'custom-fullscreen-sidebar-divider';
+      sidebarContent.appendChild(dividerEl);
+
+      if (data.title && data.title.trim() === 'Otaru') {
+        const extraHeading = document.createElement('p');
+        extraHeading.textContent = '小樽市街と駅周辺';
+        extraHeading.className = 'custom-fullscreen-sidebar-subheading';
+        sidebarContent.appendChild(extraHeading);
+
+        const spotImage = document.createElement('img');
+        spotImage.src = 'assets/spot01.svg';
+        spotImage.alt = 'Otaru Spot';
+        spotImage.className = 'custom-fullscreen-sidebar-image';
+        sidebarContent.appendChild(spotImage);
+      }
     }
     if (data.list && data.list.length) {
       const listEl = document.createElement('ul');

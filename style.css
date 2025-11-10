@@ -1882,44 +1882,64 @@ body.search-results-page .widget-container {
   
   /* ========== Sidebar 内容区块（可自由移动） ========== */
   .custom-fullscreen-sidebar-content {
-    position: relative; /* 🔹让里面的文字可定位移动 */
-    margin-top: 40px;   /* 🔹与上方按钮拉开距离 */
-  }
-  
-  /* 你可以调整整个文字区块的位置 */
-  .custom-fullscreen-sidebar-content.move-down {
-    transform: translateY(40px); /* 整体下移 */
-  }
-  
-  .custom-fullscreen-sidebar-content h2 {
-    font-size: 2000px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.custom-fullscreen-sidebar-content.move-down {
+    transform: translateY(16px);
+}
+
+.custom-fullscreen-sidebar-content h2 {
+    font-size: 1.55rem;
     font-weight: 700;
     margin: 0;
     color: #111;
     letter-spacing: 0.02em;
-    position: absolute;
-    top: -39px;
-  }
-  
-  .custom-fullscreen-sidebar-content h3 {
-    font-size: 1.1rem;
+}
+
+.custom-fullscreen-sidebar-content h3 {
+    font-size: 1.05rem;
     font-weight: 600;
+    margin: 0;
     color: #181717;
-    position: absolute;
-    top:1px;
-  }
-  
-  .custom-fullscreen-sidebar-content p {
-    font-size: 0.90rem;
+}
+
+.custom-fullscreen-sidebar-content p {
+    font-size: 0.94rem;
     line-height: 1.7;
+    margin: 0;
     color: #1f1e1e;
-    position: absolute;
-    top: 33px;
-  }
-  
-  /* 若需要段落进一步下移 */
-  .custom-fullscreen-sidebar-content p.move {
-    position: relative;
-    top: 20px;
-  }
-  
+}
+
+.custom-fullscreen-sidebar-divider {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 12px 0 8px;
+    object-fit: cover;
+    align-self: stretch;
+}
+
+.custom-fullscreen-sidebar-subheading {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+}
+
+.custom-fullscreen-sidebar-image {
+    width: 100%;
+    height: auto;
+    margin-top: 7px;
+    border-radius: 12px;
+}
+
+.custom-fullscreen-sidebar-content ul {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.6;
+}
+ 
