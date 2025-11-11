@@ -1,3 +1,9 @@
-<svg width="358" height="87" viewBox="0 0 358 87" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="358" height="87" viewBox="0 0 358 87" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="358" height="87" rx="18" fill="#F6F6F6"/>
+<text x="28" y="38" fill="#181818" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif" font-size="18" font-weight="600">札幌・小樽 冬の旅行ガイド</text>
+<text x="28" y="64" fill="#555555" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif" font-size="14" font-weight="500">2025年11月11日 15:31</text>
+<a xlink:href="../keep.html" target="_blank">
+  <rect x="252" y="48" width="76" height="28" rx="7" fill="#333333"/>
+  <text x="290" y="67" text-anchor="middle" fill="#FFFFFF" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif" font-size="13" font-weight="600">open</text>
+</a>
 </svg>

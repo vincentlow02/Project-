@@ -412,7 +412,13 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
   const fullscreenContexts = new WeakMap();
   let activeContext = null;
 
+  const SIDEBAR_TYPING_SPEED = 28;
+  const SIDEBAR_PAUSE_AFTER_TEXT = 160;
+  const SIDEBAR_PAUSE_AFTER_MEDIA = 300;
+  let sidebarRevealToken = null;
+
   function populateSidebar(data) {
+    cancelSidebarReveal();
     sidebarContent.innerHTML = '';
     if (!data) {
       return false;
@@ -620,6 +626,20 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
         spotExtraCaptionEighth.textContent = '札幌中心部に広がる大通公園は、市民の憩いの場であり、多くのイベントの会場です。映像に映る「さっぽろホワイトイルミネーション」では、公園全体が光に包まれ、テレビ塔も美しく輝きます。冬には「さっぽろ雪まつり」も開催され、札幌の冬を象徴する場所です。';
         spotExtraCaptionEighth.className = 'custom-fullscreen-sidebar-caption-secondary';
         sidebarContent.appendChild(spotExtraCaptionEighth);
+
+        const tabCard = document.createElement('object');
+        tabCard.type = 'image/svg+xml';
+        tabCard.data = 'assets/tab02.svg';
+        tabCard.className = 'custom-fullscreen-sidebar-image-secondary custom-fullscreen-sidebar-tab';
+        tabCard.setAttribute('aria-label', '札幌・小樽 冬の旅行ガイド');
+        sidebarContent.appendChild(tabCard);
+
+        const quesCard = document.createElement('object');
+        quesCard.type = 'image/svg+xml';
+        quesCard.data = 'assets/ques02.svg';
+        quesCard.className = 'custom-fullscreen-sidebar-image-secondary custom-fullscreen-sidebar-ques';
+        quesCard.setAttribute('aria-label', '関連情報');
+        sidebarContent.appendChild(quesCard);
       }
     }
     if (data.list && data.list.length) {
@@ -633,7 +653,141 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
       hasContent = true;
     }
 
+    if (hasContent) {
+      const revealNodes = sidebarContent.querySelectorAll('h2, h3, p, ul, li, img, object');
+      revealNodes.forEach((node) => {
+        node.classList.add('sidebar-reveal');
+        node.classList.remove('is-visible');
+        if (node.matches('h2, h3, p, li') && !node.dataset.sidebarOriginalText) {
+          node.dataset.sidebarOriginalText = node.textContent;
+        }
+      });
+      startSidebarReveal(sidebarContent);
+    }
+
     return hasContent;
+  }
+
+  function cancelSidebarReveal() {
+    if (!sidebarRevealToken) {
+      return;
+    }
+    sidebarRevealToken.cancelled = true;
+    if (sidebarRevealToken.activeTimeout) {
+      clearTimeout(sidebarRevealToken.activeTimeout);
+    }
+    sidebarRevealToken = null;
+  }
+
+  function startSidebarReveal(container) {
+    if (!container) {
+      return;
+    }
+
+    cancelSidebarReveal();
+
+    const token = { cancelled: false, activeTimeout: null };
+    sidebarRevealToken = token;
+
+    const nodes = Array.from(container.children);
+    if (!nodes.length) {
+      sidebarRevealToken = null;
+      return;
+    }
+
+    nodes
+      .reduce((promise, node) => promise.then(() => {
+        if (token.cancelled) {
+          return undefined;
+        }
+        return revealSidebarNode(node, token);
+      }), Promise.resolve())
+      .finally(() => {
+        if (sidebarRevealToken === token) {
+          sidebarRevealToken = null;
+        }
+      });
+  }
+
+  function revealSidebarNode(node, token) {
+    if (!node || !token || token.cancelled) {
+      return Promise.resolve();
+    }
+
+    node.classList.add('sidebar-reveal');
+    node.classList.remove('is-visible');
+
+    if (node.matches('h2, h3, p, li')) {
+      return new Promise((resolve) => playSidebarTypewriter(node, token, resolve));
+    }
+
+    if (node.matches('ul')) {
+      node.classList.add('is-visible');
+      const items = Array.from(node.children);
+      return items.reduce((promise, child) => promise.then(() => revealSidebarNode(child, token)), Promise.resolve());
+    }
+
+    if (node.matches('img, object')) {
+      node.classList.add('is-visible');
+      return new Promise((resolve) => {
+        token.activeTimeout = setTimeout(() => {
+          token.activeTimeout = null;
+          resolve();
+        }, SIDEBAR_PAUSE_AFTER_MEDIA);
+      });
+    }
+
+    node.classList.add('is-visible');
+    return Promise.resolve();
+  }
+
+  function playSidebarTypewriter(element, token, done) {
+    const originalText = element.dataset.sidebarOriginalText ?? element.textContent ?? '';
+    element.dataset.sidebarOriginalText = originalText;
+
+    element.textContent = '';
+    element.classList.add('is-visible');
+
+    if (!originalText.length) {
+      token.activeTimeout = setTimeout(() => {
+        token.activeTimeout = null;
+        done();
+      }, SIDEBAR_PAUSE_AFTER_TEXT);
+      return;
+    }
+
+    const cursor = document.createElement('span');
+    cursor.className = 'sidebar-typing-cursor';
+    cursor.textContent = '|';
+    element.appendChild(cursor);
+
+    let index = 0;
+
+    const typeNext = () => {
+      if (token.cancelled) {
+        cursor.remove();
+        element.textContent = originalText;
+        done();
+        return;
+      }
+
+      if (index < originalText.length) {
+        element.insertBefore(document.createTextNode(originalText[index]), cursor);
+        index += 1;
+        token.activeTimeout = setTimeout(() => {
+          token.activeTimeout = null;
+          typeNext();
+        }, SIDEBAR_TYPING_SPEED);
+      } else {
+        cursor.remove();
+        token.activeTimeout = setTimeout(() => {
+          token.activeTimeout = null;
+          done();
+        }, SIDEBAR_PAUSE_AFTER_TEXT);
+      }
+    };
+
+    typeNext();
   }
 
   function getSidebarData(container) {
@@ -765,6 +919,8 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
   // 3c. [已修复] 关闭函数：销毁并重建 iframe
   async function exitCustomFullscreen() {
     if (!activeContext) return;
+
+    cancelSidebarReveal();
 
     const { container, placeholder, originalParent, originalSrc } = activeContext;
     const contextToRebuild = activeContext; // 保存 context

@@ -248,6 +248,34 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
   overflow-y: auto;
 }
 
+.sidebar-reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.sidebar-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.sidebar-typing-cursor {
+  display: inline-block;
+  width: 0.45em;
+  margin-left: 0.1em;
+  animation: sidebar-cursor-blink 1s steps(1, start) infinite;
+}
+
+@keyframes sidebar-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
 .custom-fullscreen-close {
   align-self: flex-end;
   background: #eeeeee;
@@ -368,6 +396,17 @@ body.is-custom-fullscreen .hokkaido-video-container .subtitle-container {
   margin-top: 12px;
   border-radius: 12px;
   display: block;
+}
+
+.custom-fullscreen-sidebar-tab {
+  margin-top: 18px;
+  margin-bottom: 28px;
+  pointer-events: auto;
+}
+
+.custom-fullscreen-sidebar-ques {
+  margin-bottom: 32px;
+  pointer-events: none;
 }
 
 .custom-fullscreen-sidebar-caption-secondary {

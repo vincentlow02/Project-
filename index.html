@@ -179,7 +179,7 @@
         <div class="time" id="time-display"></div>
         <div class="weather">
           <div class="weather-main">
-            <img class="weather-icon" src="assets/weather-icon.svg" alt="Weather">
+            <span class="weather-icon" role="img" aria-label="Weather">☁️</span>
             <span class="temperature">19°</span>
           </div>
           <div class="location" id="location-display">取得中...</div>
@@ -567,10 +567,65 @@
           isBlack = false;
         });
       }
-     // ========================================
-// Geolocation Display (Stable Version)
+// ========================================
+// Geolocation & Weather Display
 // ========================================
 const locationDisplay = document.getElementById('location-display');
+const temperatureDisplay = document.querySelector('.temperature');
+const weatherIconDisplay = document.querySelector('.weather-icon');
+const DEFAULT_LOCATION_TEXT = 'Hachioji, Tokyo, Japan';
+const FALLBACK_COORDINATES = { lat: 35.6667, lon: 139.3399 };
+
+function renderTemperature(value) {
+  if (!temperatureDisplay) {
+    return;
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    temperatureDisplay.textContent = `${Math.round(value)}°`;
+  } else {
+    temperatureDisplay.textContent = '--';
+  }
+}
+
+const WEATHER_ICON_MAP = new Map([
+  [[0], '☀️'], // Clear sky
+  [[1, 2], '🌤️'], // Mainly clear, partly cloudy
+  [[3], '☁️'], // Overcast
+  [[45, 48], '🌫️'], // Fog
+  [[51, 53, 55, 56, 57], '🌦️'], // Drizzle
+  [[61, 63, 65], '🌧️'], // Rain
+  [[66, 67], '🌧️'], // Freezing rain
+  [[71, 73, 75, 77], '🌨️'], // Snowfall
+  [[80, 81, 82], '🌧️'], // Rain showers
+  [[85, 86], '🌨️'], // Snow showers
+  [[95], '⛈️'], // Thunderstorm
+  [[96, 99], '⛈️'], // Thunderstorm with hail
+]);
+
+function getWeatherIcon(code) {
+  if (!Number.isFinite(code)) {
+    return '☁️';
+  }
+  for (const [codes, icon] of WEATHER_ICON_MAP.entries()) {
+    if (codes.includes(code)) {
+      return icon;
+    }
+  }
+  return '☁️';
+}
+
+function renderWeatherIcon(code) {
+  if (!weatherIconDisplay) {
+    return;
+  }
+  const icon = getWeatherIcon(code);
+  weatherIconDisplay.textContent = icon;
+  if (Number.isFinite(code)) {
+    weatherIconDisplay.setAttribute('aria-label', `Weather code ${code}`);
+  } else {
+    weatherIconDisplay.setAttribute('aria-label', 'Weather');
+  }
+}
 
 async function fetchLocationName(lat, lon) {
   try {
@@ -588,7 +643,6 @@ async function fetchLocationName(lat, lon) {
 
     if (data.address) {
       const addr = data.address;
-      // 按优先顺序拼接位置字段
       const locationText = [
         addr.city || addr.town || addr.village || addr.municipality,
         addr.suburb || addr.neighbourhood,
@@ -598,36 +652,71 @@ async function fetchLocationName(lat, lon) {
         .filter(Boolean)
         .join(', ');
 
-      return locationText || "Unknown Location";
+      return locationText || 'Unknown Location';
     }
-    return "Unknown Location";
+    return 'Unknown Location';
   } catch (err) {
     console.warn('Location fetch error:', err);
-    return "Hachioji, Tokyo, Japan";
+    return DEFAULT_LOCATION_TEXT;
+  }
+}
+
+async function updateWeatherForecast(lat, lon) {
+  if (!temperatureDisplay) {
+    return;
+  }
+
+  renderTemperature(null);
+  renderWeatherIcon(null);
+
+  try {
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
+    );
+    if (!res.ok) {
+      throw new Error('Weather request failed');
+    }
+    const data = await res.json();
+    const temperature = data?.current?.temperature_2m;
+    const weatherCode = data?.current?.weather_code;
+    renderTemperature(temperature);
+    renderWeatherIcon(weatherCode);
+  } catch (err) {
+    console.warn('Weather fetch error:', err);
+    renderTemperature(null);
+    renderWeatherIcon(null);
   }
 }
 
 async function showUserLocation() {
   if (!locationDisplay) return;
 
-  // 初始状态提示
-  locationDisplay.textContent = "Locating...";
+  locationDisplay.textContent = 'Locating...';
+  renderTemperature(null);
+  renderWeatherIcon(null);
+
+  const applyFallback = () => {
+    locationDisplay.textContent = DEFAULT_LOCATION_TEXT;
+    updateWeatherForecast(FALLBACK_COORDINATES.lat, FALLBACK_COORDINATES.lon);
+  };
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const { latitude, longitude } = pos.coords;
+        updateWeatherForecast(latitude, longitude);
         const locationText = await fetchLocationName(latitude, longitude);
         locationDisplay.textContent = locationText;
       },
       (err) => {
         console.warn('Geolocation error:', err);
-        locationDisplay.textContent = "Hachioji, Tokyo, Japan";
+        applyFallback();
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
     );
   } else {
-    locationDisplay.textContent = "Location not supported";
+    locationDisplay.textContent = 'Location not supported';
+    updateWeatherForecast(FALLBACK_COORDINATES.lat, FALLBACK_COORDINATES.lon);
   }
 }
 
