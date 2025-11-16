@@ -404,21 +404,27 @@
       }
 
       // ========================================
-      // Saved Card Open Buttons
+      // Saved Card Open Buttons (Event Delegation)
       // ========================================
-      const cardOpenButtons = document.querySelectorAll('.card-open-btn');
+      document.addEventListener('click', (e) => {
+        const button = e.target.closest('.card-open-btn');
+        if (!button) return;
 
-      cardOpenButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const target = button.dataset.target?.trim() || 'keep.html';
+        e.preventDefault();
+        e.stopPropagation();
 
-          try {
-            const targetUrl = new URL(target, window.location.href);
-            window.location.href = targetUrl.toString();
-          } catch (error) {
-            console.warn('Invalid target URL for card-open-btn:', target, error);
-          }
-        });
+        const target = button.dataset.target?.trim() || 'keep.html';
+
+        // Use relative path - browser will resolve it automatically
+        if (target.startsWith('http://') || target.startsWith('https://') || target.startsWith('//')) {
+          // Absolute URL
+          window.location.href = target;
+        } else {
+          // Relative path - construct from current location
+          const url = new URL(window.location.href);
+          url.pathname = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1) + target;
+          window.location.href = url.toString();
+        }
       });
 
       // ========================================

@@ -390,27 +390,32 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
 
 
   /* --- 3. 自定义全屏逻辑 (已完全修复) --- */
-  const overlay = document.getElementById('custom-fullscreen-overlay');
-  if (!overlay || typeof Vimeo === 'undefined' || !Vimeo.Player) {
-    console.warn("自定义全屏：未找到必要元素或 Vimeo API。");
+  const overlay = document.getElementById('custom-fullscreen-overlay');
+  const htmlEl = document.documentElement;
+  const bodyEl = document.body;
+  const wrapper = overlay?.querySelector('.custom-fullscreen-wrapper');
+  const videoViewport = overlay?.querySelector('.custom-fullscreen-video-viewport');
+  const sidebarContent = overlay?.querySelector('.custom-fullscreen-sidebar-content');
+  const closeButton = overlay?.querySelector('.custom-fullscreen-close');
+
+  // 当 Vimeo API 不可用时的降级：关闭即刷新
+  if (!overlay || typeof Vimeo === 'undefined' || !Vimeo.Player) {
+    console.warn("自定义全屏：未找到必要元素或 Vimeo API。(降级为关闭即刷新)");
+    const hardReload = () => {
+      overlay?.setAttribute('aria-hidden', 'true');
+      bodyEl.classList.remove('is-custom-fullscreen');
+      htmlEl.classList.remove('is-custom-fullscreen');
+      setTimeout(() => window.location.reload(), 10);
+    };
+    closeButton?.addEventListener('click', hardReload);
+    overlay?.addEventListener('click', (e) => { if (e.target === overlay) hardReload(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hardReload(); });
     return;
   }
 
-  const htmlEl = document.documentElement;
-  const bodyEl = document.body;
-  const wrapper = overlay.querySelector('.custom-fullscreen-wrapper');
-  const videoViewport = overlay.querySelector('.custom-fullscreen-video-viewport');
-  const sidebarContent = overlay.querySelector('.custom-fullscreen-sidebar-content');
-  const closeButton = overlay.querySelector('.custom-fullscreen-close');
-
-  if (!videoViewport || !sidebarContent) {
-    console.warn("自定义全屏：未找到 videoViewport 或 sidebarContent。");
-    return;
-  }
-
-  // [核心] WeakMap 用于存储每个视频容器的 player 实例和状态
-  const fullscreenContexts = new WeakMap();
-  let activeContext = null;
+  // [核心] WeakMap 用于存储每个视频容器的 player 实例和状态
+  const fullscreenContexts = new WeakMap();
+  let activeContext = null;
 
   const SIDEBAR_TYPING_SPEED = 28;
   const SIDEBAR_PAUSE_AFTER_TEXT = 160;
@@ -1013,11 +1018,16 @@ const subtitleContainer = document.getElementById('hokkaido-subtitles');
   }
 
   // 3d. 绑定关闭事件
-  closeButton?.addEventListener('click', () => exitCustomFullscreen());
-  overlay?.addEventListener('click', (e) => { if (e.target === overlay) exitCustomFullscreen(); });
+  function navigateBackToPage() {
+    try { exitCustomFullscreen?.(); } catch (_) {}
+    // 显式回到 pagetravel.html，确保重新加载
+    window.location.href = 'pagetravel.html';
+  }
+  closeButton?.addEventListener('click', navigateBackToPage);
+  overlay?.addEventListener('click', (e) => { if (e.target === overlay) navigateBackToPage(); });
   wrapper?.addEventListener('click', (e) => e.stopPropagation());
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitCustomFullscreen(); });
-
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') navigateBackToPage(); });
+  
   // 3e. 循环所有视频容器，初始化 *所有* 功能
   const containers = document.querySelectorAll('[data-custom-fullscreen]');
   containers.forEach((container) => {

@@ -1,8 +1,8 @@
 .ques-icon {
   position: absolute;
-  top: 520px; /* 控制ques在Rectangle上的纵向位置 */
-  left: -670px; /* 控制ques的横向位置 */
-  width: 360px; /* 调整大小 */
+  top: clamp(320px, 52vw, 520px); /* 控制ques在Rectangle上的纵向位置 */
+  left: -670px; /* 保持固定位置，偏向左 */
+  width: clamp(220px, 36vw, 360px); /* 调整大小 */
   z-index: 11; /* 比 logo 略高，确保显示在上层 */
   transition: transform 0.3s ease;
 }
@@ -22,9 +22,9 @@
 /* 让 logo 叠在 Rectangle205.svg 上方 */
 .hokkaido-logo {
   position: absolute;
-  top: 17px; /* 调整 logo 距离矩形顶部的距离 */
-  left: -590px; /* 调整 logo 距离矩形左侧的距离 */
-  width: 220px; /* 可根据需求调整 logo 大小 */
+  top: clamp(11px, 1.7vw, 17px); /* 调整 logo 距离矩形顶部的距离 */
+  left: -590px; /* 保持固定位置，偏向左 */
+  width: clamp(140px, 22vw, 220px); /* 可根据需求调整 logo 大小 */
   z-index: 10; /* 确保 logo 显示在 Rectangle205.svg 上层 */
   transition: transform 0.3s ease;
 }
@@ -37,22 +37,22 @@
 /* Vimeo player container positioned where the frame should sit */
 .hokkaido-video-container {
   position: absolute;
-  top: 69px; /* 调整到矩形上适合的位置 */
-  left: -900px;
-  width: min(860px, 60vw);
+  top: clamp(42px, 6.9vw, 69px); /* 调整到矩形上适合的位置 */
+  left: -900px; /* 保持固定位置，偏向左 */
+  width: min(clamp(540px, 60vw, 860px), 60vw);
   aspect-ratio: 1260 / 710; /* 与 SVG 原始宽高比一致 */
-  border-radius: 1203px;
+  border-radius: clamp(750px, 120vw, 1203px);
 }
 
 /* Wrapper keeps the iframe sized to the container */
 .vimeo-wrapper {
   position: absolute;
-  top: 14px; /* 对齐 SVG 内部矩形的起始高度 */
-  right: 10px;
-  bottom: 3px;
+  top: clamp(8px, 1.4vw, 14px); /* 对齐 SVG 内部矩形的起始高度 */
+  right: clamp(6px, 1vw, 10px);
+  bottom: clamp(2px, 0.3vw, 3px);
   left: 0px;
   overflow: hidden;
-  border-radius: 44px; /* 匹配 SVG 的圆角 */
+  border-radius: clamp(28px, 4.4vw, 44px); /* 匹配 SVG 的圆角 */
   z-index: 1;
   transform: scale(1.034);
 }
@@ -64,16 +64,16 @@
   height: 99%;
   border: 0;
   object-fit: cover; /* 填满容器且保持比例 */
-  border-radius: 20px;
+  border-radius: clamp(12px, 2vw, 20px);
 }
 
 /* 点击区域用于触发播放/暂停，预留底部空间给原生控制条 */
 .vimeo-toggle-hitbox {
   position: absolute;
-  top: 10px;
-  left: 3px;
-  right: 3px;
-  bottom: calc(3px + 80px); /* 预留底部控制条，避免遮挡 */
+  top: clamp(6px, 1vw, 10px);
+  left: clamp(2px, 0.3vw, 3px);
+  right: clamp(2px, 0.3vw, 3px);
+  bottom: calc(clamp(2px, 0.3vw, 3px) + clamp(50px, 8vw, 80px)); /* 预留底部控制条，避免遮挡 */
   cursor: pointer;
   z-index: 2;
   background: transparent;
@@ -92,23 +92,25 @@
 
 .rectangle-comment {
   position: absolute;
-  top: 50px; /* 距离视频顶部 */
-  left: 20px; /* 距离视频左侧 */
-  width: 610px; /* 可根据需求调整大小 */
+  top: 50px; /* 固定在视频顶部 50px */
+  left: 20px; /* 固定在视频左侧 20px */
+  width: clamp(380px, 61vw, 610px); /* 尺寸随屏幕缩放 */
   height: auto;
   z-index: 20; /* 必须比 iframe 和 frame 高 */
   pointer-events: none; /* 保证点击事件透传到视频 */
+  transform-origin: right bottom; /* 从右下角开始缩放 */
+  will-change: transform;
 }
 
 .subtitle-container {
   position: absolute;
-  top: 60px;
-  left: 40px;
-  width: min(560px, calc(100% - 160px));
+  top: clamp(36px, 6vw, 60px);
+  left: clamp(24px, 4vw, 40px);
+  width: min(clamp(350px, 56vw, 560px), calc(100% - clamp(100px, 16vw, 160px)));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: clamp(2px, 0.4vw, 4px);
   z-index: 9999;
   pointer-events: none;
   font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
@@ -125,20 +127,20 @@
 }
 
 .subtitle-title {
-  font-size: 14px;
+  font-size: clamp(10px, 1.4vw, 14px);
   font-weight: 700;
   color: black;
-  letter-spacing: 0.06em;
+  letter-spacing: clamp(0.04em, 0.06vw, 0.06em);
   line-height: 1.25;
 }
 
 .subtitle-description {
-  font-size: 10px;
+  font-size: clamp(8px, 1vw, 10px);
   font-weight: 400;
   color: black;
   line-height: 1.7;
-  letter-spacing: 0.03em;
-  max-width: 540px;
+  letter-spacing: clamp(0.02em, 0.03vw, 0.03em);
+  max-width: clamp(340px, 54vw, 540px);
   text-align: left;
 }
 
@@ -147,8 +149,8 @@
 }
 
 .subtitle-cursor {
-  margin-left: 0.2em;
-  width: 0.4em;
+  margin-left: clamp(0.15em, 0.2vw, 0.2em);
+  width: clamp(0.3em, 0.4vw, 0.4em);
   animation: subtitle-cursor-blink 1.05s steps(1, start) infinite;
   opacity: 0;
 }
@@ -236,21 +238,23 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
 }
 
 .custom-fullscreen-sidebar {
-  flex: 0 0 360px;
-  max-width: 360px;
+  flex: 0 0 clamp(240px, 36vw, 360px);
+  max-width: clamp(240px, 36vw, 360px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 32px;
+  gap: clamp(14px, 2.2vw, 20px);
+  padding: clamp(20px, 3.2vw, 32px);
   box-sizing: border-box;
   background: #ffffff;
   color: #181818;
   overflow-y: auto;
+  max-height: 100vh; /* 防止溢出屏幕高度 */
+  font-size: clamp(12px, 1.2vw, 16px); /* 基础字号随屏幕缩放 */
 }
 
 .sidebar-reveal {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(clamp(5px, 0.8vw, 8px));
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -261,8 +265,8 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
 
 .sidebar-typing-cursor {
   display: inline-block;
-  width: 0.45em;
-  margin-left: 0.1em;
+  width: clamp(0.35em, 0.45vw, 0.45em);
+  margin-left: clamp(0.08em, 0.1vw, 0.1em);
   animation: sidebar-cursor-blink 1s steps(1, start) infinite;
 }
 
@@ -280,10 +284,11 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
   align-self: flex-end;
   background: #eeeeee;
   border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
+  border-radius: clamp(4px, 0.6vw, 6px);
+  padding: clamp(6px, 0.8vw, 8px) clamp(9px, 1.2vw, 12px);
   cursor: pointer;
   font-weight: 600;
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
   transition: background 0.2s ease;
 }
 
@@ -299,27 +304,27 @@ body.is-custom-fullscreen .custom-fullscreen-overlay {
 }
 
 .custom-fullscreen-sidebar h2 {
-  font-size: 20px;
+  font-size: clamp(16px, 2.2vw, 20px);
 }
 
 .custom-fullscreen-sidebar h3 {
-  font-size: 16px;
+  font-size: clamp(13px, 1.8vw, 16px);
   color: #555555;
 }
 
 .custom-fullscreen-sidebar p {
   margin: 0;
-  font-size: 14px;
+  font-size: clamp(11px, 1.5vw, 14px);
   line-height: 1.6;
 }
 
 .custom-fullscreen-sidebar ul {
   margin: 0;
-  padding-left: 20px;
+  padding-left: clamp(14px, 2vw, 20px);
 }
 
 .custom-fullscreen-sidebar li {
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 8px);
   line-height: 1.5;
 }
 
@@ -370,50 +375,50 @@ body.is-custom-fullscreen .hokkaido-video-container .subtitle-container {
 }
 
 .custom-fullscreen-sidebar-caption {
-  font-size: 0.85rem;
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
   line-height: 1.5;
   color: #333333;
-  margin-top: 8px;
+  margin-top: clamp(6px, 0.8vw, 8px);
 }
 
 .custom-fullscreen-sidebar-divider-line {
   width: 100%;
-  height: 1px;
+  height: clamp(0.5px, 0.1vw, 1px);
   background-color: #d8d8d8;
-  margin: 18px 0 12px;
+  margin: clamp(12px, 2vw, 18px) 0 clamp(8px, 1.3vw, 12px);
 }
 
 .custom-fullscreen-sidebar-extra-title {
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
   font-weight: 600;
   color: #222222;
-  margin-top: 24px;
+  margin-top: clamp(16px, 2.5vw, 24px);
 }
 
 .custom-fullscreen-sidebar-image-secondary {
   width: 100%;
   height: auto;
-  margin-top: 12px;
-  border-radius: 12px;
+  margin-top: clamp(8px, 1.3vw, 12px);
+  border-radius: clamp(8px, 1.2vw, 12px);
   display: block;
 }
 
 .custom-fullscreen-sidebar-tab {
-  margin-top: 18px;
-  margin-bottom: 28px;
+  margin-top: clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(18px, 2.8vw, 28px);
   pointer-events: auto;
 }
 
 .custom-fullscreen-sidebar-ques {
-  margin-bottom: 32px;
+  margin-bottom: clamp(20px, 3.2vw, 32px);
   pointer-events: none;
 }
 
 .custom-fullscreen-sidebar-caption-secondary {
-  font-size: 0.85rem;
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
   line-height: 1.5;
   color: #3a3a3a;
-  margin-top: 10px;
+  margin-top: clamp(7px, 1vw, 10px);
 }
 
 @media (max-width: 1024px) {
